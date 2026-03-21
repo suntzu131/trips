@@ -1089,9 +1089,14 @@ table.booking tr:last-child td { border-bottom: none; }
     /* Trip toggle — smaller */
     .trip-toggle { font-size: 12px; padding: 6px 14px; }
 
-    /* ── Day nav — horizontal scroll ──────────────────────────────────────── */
-    .day-nav { padding: 8px 12px; }
-    .nav-pill { font-size: 12px; padding: 6px 12px; }
+    /* ── Day nav — slim single row, hide filter row entirely ─────────────── */
+    .day-nav { padding: 6px 8px; margin-bottom: 8px; }
+    .day-nav-inner { gap: 5px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 0 4px; }
+    .day-nav-inner.filter-row { display: none; } /* filters hidden on mobile — content first */
+    .nav-pill { font-size: 11px; padding: 5px 10px; flex-shrink: 0; }
+    .nav-label { font-size: 10px; }
+    .nav-show-all { font-size: 10px; padding: 4px 8px; }
+    .nav-sep { display: none; }
 
     /* ── Story arc — compact ──────────────────────────────────────────────── */
     .story-arc { padding: 16px; margin: 0 8px 16px; border-radius: 12px; }
@@ -3485,6 +3490,7 @@ function showAllDays() {
     });
     document.querySelectorAll('.time-block').forEach(function(b) {
         b.classList.remove('dim');
+        b.style.display = '';
     });
     document.querySelectorAll('.nav-filter').forEach(function(f) {
         f.classList.remove('active-filter');
@@ -3492,9 +3498,9 @@ function showAllDays() {
 }
 
 function filterByCity(city) {
-    // Clear other filters
+    // Clear all filters
     document.querySelectorAll('.nav-filter').forEach(function(f) { f.classList.remove('active-filter'); });
-    document.querySelectorAll('.time-block').forEach(function(b) { b.classList.remove('dim'); });
+    document.querySelectorAll('.time-block').forEach(function(b) { b.classList.remove('dim'); b.style.display = ''; });
 
     var btn = document.querySelector('[data-filter-city="' + city + '"]');
     if (btn && btn.classList.contains('active-filter')) {
@@ -3505,19 +3511,19 @@ function filterByCity(city) {
 
     filterActive = null;
     document.querySelectorAll('.day-section').forEach(function(s) {
-        var dayCity = s.getAttribute('data-city');
-        if (dayCity && dayCity.toLowerCase() === city.toLowerCase()) {
+        var dayCity = (s.getAttribute('data-city') || '').trim();
+        var match = dayCity.toLowerCase().indexOf(city.toLowerCase()) !== -1;
+        if (match) {
             s.style.display = '';
             s.classList.remove('dim');
         } else {
-            s.classList.add('dim');
-            s.style.display = '';
+            s.style.display = 'none'; /* hide, not dim — clearer feedback */
         }
     });
 }
 
 function filterByType(type) {
-    // Clear city filters
+    // Clear city filters, show all days
     document.querySelectorAll('.nav-filter[data-filter-city]').forEach(function(f) { f.classList.remove('active-filter'); });
     document.querySelectorAll('.day-section').forEach(function(s) { s.style.display = ''; s.classList.remove('dim'); });
 
@@ -3529,13 +3535,14 @@ function filterByType(type) {
     document.querySelectorAll('.nav-filter[data-filter-type]').forEach(function(f) { f.classList.remove('active-filter'); });
     if (btn) btn.classList.add('active-filter');
 
-    // Dim blocks that don't match the type
+    // Hide blocks that don't match the type (not dim — hide)
     document.querySelectorAll('.time-block').forEach(function(b) {
         var blockType = b.getAttribute('data-block-type') || '';
-        if (blockType === type || (type === 'food' && blockType === 'meal')) {
+        if (blockType === type || (type === 'food' && (blockType === 'meal' || blockType === 'food'))) {
             b.classList.remove('dim');
+            b.style.display = '';
         } else {
-            b.classList.add('dim');
+            b.style.display = 'none';
         }
     });
 }
