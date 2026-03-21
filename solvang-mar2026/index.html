@@ -1246,19 +1246,48 @@ table.booking tr:last-child td { border-bottom: none; }
     .toolbar { top: auto; bottom: 72px; right: 8px; gap: 4px; flex-direction: column; z-index: 200; }
     .toolbar button { width: 30px; height: 30px; font-size: 13px; box-shadow: 0 1px 4px rgba(0,0,0,0.12); }
 
-    /* Trip toggle — icon-only circle on mobile, no text */
-    .trip-toggle {
-        top: 8px; left: 8px; right: auto; bottom: auto;
-        width: 36px; height: 36px;
-        padding: 0;
-        border-radius: 50%;
-        z-index: 200;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-        gap: 0;
+    /* Trip toggle — HIDDEN on mobile, replaced by mode-bar at bottom */
+    .trip-toggle { display: none !important; }
+
+    /* ── Mode bar — persistent bottom toggle (mobile only) ────────────── */
+    .mode-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 44px;
+        background: var(--paper);
+        border-top: 1px solid var(--line);
+        display: flex;
+        align-items: center;
         justify-content: center;
-        font-size: 16px;
+        z-index: 300;
+        box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
     }
-    .trip-toggle #trip-toggle-label { display: none; } /* hide text, show only emoji */
+    .mode-bar button {
+        border: none;
+        background: transparent;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--sea);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        padding: 8px 20px;
+        border-radius: 20px;
+    }
+    body.trip-mode .mode-bar button { color: var(--accent); }
+
+    /* Body padding to account for mode-bar */
+    body { padding-bottom: 48px; }
+    body.trip-mode { padding-bottom: 112px; } /* mode-bar (44px) + trip-bottom-bar (60px) + gap */
+
+    /* Trip bottom bar sits ABOVE mode-bar on mobile */
+    .trip-bottom-bar { bottom: 44px; }
+
+    /* Toolbar — position above mode-bar */
+    .toolbar { bottom: 100px; }
 
     /* ── Day nav — slimmer, no overlap ───────────────────────────────────── */
     .day-nav { padding: 4px 6px; margin-bottom: 4px; }
@@ -1478,9 +1507,12 @@ body:not(.trip-mode) [data-view="trip"] { display: none !important; }
     letter-spacing: 0.05em;
 }
 
-/* In trip mode, add bottom padding for the bar */
+/* In trip mode, add bottom padding for the bar (desktop) */
 body.trip-mode { padding-bottom: 68px; }
 body.trip-mode .day-nav { display: none; } /* hide top day nav in trip mode — bottom bar handles it */
+
+/* Mode bar — hidden on desktop, shown on mobile via 480px media query */
+.mode-bar { display: none; }
 
 /* Trip Mode toggle button */
 .trip-toggle {
@@ -2275,6 +2307,44 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
     </div>
     
     
+    <div class="block-alternatives">
+      <button class="alt-toggle" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded')==='true'?'false':'true'); this.nextElementSibling.classList.toggle('open')" aria-expanded="false">
+        <span class="alt-arrow">&#x25BC;</span>
+        <span>2 more options</span>
+      </button>
+      <div class="alt-list">
+        
+        <div class="alt-card">
+          
+          <div class="alt-card-body">
+            <div class="alt-card-name">Solvang Vintage Motorcycle Museum</div>
+            <div class="alt-card-vibe">Over 100 rare vintage motorcycles from 1903–present. Small but fascinating — kids love the old bikes. Cash only.</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">$10/adult, kids free</span>
+              <a href="https://www.yelp.com/biz/solvang-vintage-motorcycle-museum-solvang" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=320+Alisal+Rd,+Solvang,+CA+93463" target="_blank">📍 Map</a>
+              <a href="tel:8056869522">📞 Call</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="alt-card">
+          
+          <div class="alt-card-body">
+            <div class="alt-card-name">Wildling Museum of Art &amp; Nature</div>
+            <div class="alt-card-vibe">Nature-focused art museum with rotating exhibits. Kids 17 &amp; under FREE. Craft workshops available.</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">$5/adult, kids free</span>
+              <a href="https://www.yelp.com/biz/wildling-museum-solvang" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=1511+Mission+Dr,+Solvang,+CA+93463" target="_blank">📍 Map</a>
+              <a href="tel:8056881082">📞 Call</a>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    
   </div>
   
   
@@ -2330,6 +2400,30 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
         <span class="photo-credit">Photo: Wikimedia Commons</span>
     </div>
     
+    
+    <div class="block-alternatives">
+      <button class="alt-toggle" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded')==='true'?'false':'true'); this.nextElementSibling.classList.toggle('open')" aria-expanded="false">
+        <span class="alt-arrow">&#x25BC;</span>
+        <span>1 more option</span>
+      </button>
+      <div class="alt-list">
+        
+        <div class="alt-card">
+          
+          <div class="alt-card-body">
+            <div class="alt-card-name">Sunny Fields Park</div>
+            <div class="alt-card-vibe">Scandinavian-themed playground with viking ship and castles. BBQ grills, volleyball courts, picnic area. Quieter than HCA.</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">Free</span>
+              <a href="https://www.yelp.com/biz/sunny-fields-park-solvang" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=900+Alamo+Pintado+Rd,+Solvang,+CA+93463" target="_blank">📍 Map</a>
+              <a href="tel:8056887529">📞 Call</a>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
     
   </div>
   
@@ -2656,6 +2750,44 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
     </div>
     
     
+    <div class="block-alternatives">
+      <button class="alt-toggle" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded')==='true'?'false':'true'); this.nextElementSibling.classList.toggle('open')" aria-expanded="false">
+        <span class="alt-arrow">&#x25BC;</span>
+        <span>2 more options</span>
+      </button>
+      <div class="alt-list">
+        
+        <div class="alt-card">
+          
+          <div class="alt-card-body">
+            <div class="alt-card-name">Elverhøj Museum of History &amp; Art</div>
+            <div class="alt-card-vibe">Solvang’s Danish heritage museum in a hand-crafted 1950s farmhouse. Activity sheets for kids. Quiet and charming.</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">$5/adult, kids under 12 free</span>
+              <a href="https://www.yelp.com/biz/elverhoj-museum-of-history-and-art-solvang" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=1624+Elverhoy+Way,+Solvang,+CA+93463" target="_blank">📍 Map</a>
+              <a href="tel:8056861211">📞 Call</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="alt-card">
+          
+          <div class="alt-card-body">
+            <div class="alt-card-name">Solvang Vintage Motorcycle Museum</div>
+            <div class="alt-card-vibe">Over 100 rare vintage motorcycles from 1903–present. Small but fascinating — kids love the old bikes. Cash only.</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">$10/adult, kids free</span>
+              <a href="https://www.yelp.com/biz/solvang-vintage-motorcycle-museum-solvang" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=320+Alisal+Rd,+Solvang,+CA+93463" target="_blank">📍 Map</a>
+              <a href="tel:8056869522">📞 Call</a>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    
   </div>
   
   
@@ -2711,6 +2843,44 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
         <span class="photo-credit">Photo: Wikimedia Commons</span>
     </div>
     
+    
+    <div class="block-alternatives">
+      <button class="alt-toggle" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded')==='true'?'false':'true'); this.nextElementSibling.classList.toggle('open')" aria-expanded="false">
+        <span class="alt-arrow">&#x25BC;</span>
+        <span>2 more options</span>
+      </button>
+      <div class="alt-list">
+        
+        <div class="alt-card">
+          
+          <div class="alt-card-body">
+            <div class="alt-card-name">Solvang Trolley &amp; Carriage Tour</div>
+            <div class="alt-card-vibe">Horse-drawn trolley tour through downtown Solvang. Learn the town’s Danish history. ~25 min ride. Kids love it.</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">~$15/adult, $10/child</span>
+              <a href="https://www.yelp.com/biz/solvang-trolley-and-carriage-solvang" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=1618+Copenhagen+Dr,+Solvang,+CA+93463" target="_blank">📍 Map</a>
+              <a href="tel:8057948958">📞 Call</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="alt-card">
+          
+          <div class="alt-card-body">
+            <div class="alt-card-name">Dascomb Cellars Wine Tasting</div>
+            <div class="alt-card-vibe">Boutique family winery on Mission Dr. Pinot Noir &amp; Sangiovese. Cheese pairings available. Kid-friendly atmosphere.</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">$15–$20/tasting</span>
+              <a href="https://www.yelp.com/biz/dascomb-cellars-solvang-2" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=1623+Mission+Dr,+Solvang,+CA+93463" target="_blank">📍 Map</a>
+              <a href="tel:8056919175">📞 Call</a>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
     
   </div>
   
@@ -3261,6 +3431,44 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
     </div>
     
     
+    <div class="block-alternatives">
+      <button class="alt-toggle" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded')==='true'?'false':'true'); this.nextElementSibling.classList.toggle('open')" aria-expanded="false">
+        <span class="alt-arrow">&#x25BC;</span>
+        <span>2 more options</span>
+      </button>
+      <div class="alt-list">
+        
+        <div class="alt-card">
+          
+          <div class="alt-card-body">
+            <div class="alt-card-name">Santa Barbara Maritime Museum</div>
+            <div class="alt-card-vibe">Harbor-side maritime history museum. Model ships, fishing exhibits, virtual ship simulator. Educational and fun for kids.</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">$12/adult, $7/child (6–17), under 6 free</span>
+              <a href="https://www.yelp.com/biz/santa-barbara-maritime-museum-santa-barbara" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=113+Harbor+Way,+Santa+Barbara,+CA+93109" target="_blank">📍 Map</a>
+              <a href="tel:8059628404">📞 Call</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="alt-card">
+          
+          <div class="alt-card-body">
+            <div class="alt-card-name">Funk Zone Walk</div>
+            <div class="alt-card-vibe">Santa Barbara’s eclectic arts district — galleries, street art, wine tasting rooms, breweries. Great for a casual stroll.</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">Free to walk</span>
+              <a href="https://www.yelp.com/biz/the-funk-zone-santa-barbara" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=Funk+Zone,+Santa+Barbara,+CA+93101" target="_blank">📍 Map</a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    
   </div>
   
   
@@ -3317,6 +3525,44 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
     </div>
     
     
+    <div class="block-alternatives">
+      <button class="alt-toggle" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded')==='true'?'false':'true'); this.nextElementSibling.classList.toggle('open')" aria-expanded="false">
+        <span class="alt-arrow">&#x25BC;</span>
+        <span>2 more options</span>
+      </button>
+      <div class="alt-list">
+        
+        <div class="alt-card">
+          
+          <div class="alt-card-body">
+            <div class="alt-card-name">MOXI, The Wolf Museum of Exploration + Innovation</div>
+            <div class="alt-card-vibe">Hands-on science museum — kids can touch everything. Three floors of interactive exhibits. Sky Garden rooftop has ocean views.</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">$15/adult, $10/child (3–12), under 3 free</span>
+              <a href="https://www.yelp.com/biz/moxi-the-wolf-museum-of-exploration-innovation-santa-barbara" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=125+State+St,+Santa+Barbara,+CA+93101" target="_blank">📍 Map</a>
+              <a href="tel:8057705000">📞 Call</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="alt-card">
+          
+          <div class="alt-card-body">
+            <div class="alt-card-name">Santa Barbara Museum of Natural History</div>
+            <div class="alt-card-vibe">Full natural history museum with dinosaur bones, planetarium, butterfly garden. Walk-ins welcome. Near Mission Canyon.</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">$19/adult, $12/child (2–12), under 2 free</span>
+              <a href="https://www.yelp.com/biz/santa-barbara-museum-of-natural-history-santa-barbara" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=2559+Puesta+Del+Sol,+Santa+Barbara,+CA+93105" target="_blank">📍 Map</a>
+              <a href="tel:8056824711">📞 Call</a>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    
   </div>
   
   
@@ -3372,6 +3618,44 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
         <span class="photo-credit">Photo: Wikimedia Commons</span>
     </div>
     
+    
+    <div class="block-alternatives">
+      <button class="alt-toggle" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded')==='true'?'false':'true'); this.nextElementSibling.classList.toggle('open')" aria-expanded="false">
+        <span class="alt-arrow">&#x25BC;</span>
+        <span>2 more options</span>
+      </button>
+      <div class="alt-list">
+        
+        <div class="alt-card">
+          
+          <div class="alt-card-body">
+            <div class="alt-card-name">East Beach</div>
+            <div class="alt-card-vibe">Santa Barbara’s widest beach — volleyball courts, playground, long flat stretch for running. Great for kids to burn energy.</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">Free</span>
+              <a href="https://www.yelp.com/biz/east-beach-santa-barbara" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=1400+Cabrillo+Blvd,+Santa+Barbara,+CA+93103" target="_blank">📍 Map</a>
+              <a href="tel:8058972680">📞 Call</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="alt-card">
+          
+          <div class="alt-card-body">
+            <div class="alt-card-name">Butterfly Beach</div>
+            <div class="alt-card-vibe">Upscale Montecito beach with stunning views. Soft sand, gentle waves, easy access via street parking. No facilities — bring supplies.</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">Free</span>
+              <a href="https://www.yelp.com/biz/butterfly-beach-santa-barbara" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=Butterfly+Beach,+Montecito,+CA+93108" target="_blank">📍 Map</a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
     
   </div>
   
@@ -4512,6 +4796,14 @@ Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brop
 </nav>
 
 
+<div class="mode-bar no-print" id="mode-bar">
+    <button onclick="toggleTripMode()" id="mode-bar-btn">
+        <span id="mode-bar-icon">&#x1F5FA;&#xFE0F;</span>
+        <span id="mode-bar-label">Trip Mode</span>
+    </button>
+</div>
+
+
 <a class="sos-fab no-print" data-view="trip" id="sos-fab"
    href="tel:911"
    title="Emergency call">
@@ -4891,6 +5183,14 @@ function isDuringTrip() {
     var isMobile = window.innerWidth <= 768;
     var duringTrip = isDuringTrip();
 
+    // Sync mode-bar labels to trip-mode state
+    function syncModeBar(isActive) {
+        var modeLabel = document.getElementById('mode-bar-label');
+        var modeIcon = document.getElementById('mode-bar-icon');
+        if (modeLabel) modeLabel.textContent = isActive ? 'Full View' : 'Trip Mode';
+        if (modeIcon) modeIcon.textContent = isActive ? '\uD83D\uDCCB' : '\uD83D\uDDFA\uFE0F';
+    }
+
     // Auto-enable trip mode on mobile during trip dates
     if (isMobile && duringTrip) {
         document.body.classList.add('trip-mode');
@@ -4898,6 +5198,7 @@ function isDuringTrip() {
         var dayIdx = getTripDayIndex(todayISO);
         if (dayIdx > 0) showDayOnly(dayIdx);
         updateBottomTabs(dayIdx);
+        syncModeBar(true);
     }
 
     // Restore saved preference
@@ -4905,6 +5206,7 @@ function isDuringTrip() {
         var saved = localStorage.getItem('trip-mode-' + document.title);
         if (saved === 'true') {
             document.body.classList.add('trip-mode');
+            syncModeBar(true);
             var todayISO = getTodayStr();
             var dayIdx = getTripDayIndex(todayISO);
             if (dayIdx > 0) {
@@ -4922,6 +5224,12 @@ function toggleTripMode() {
     var label = document.getElementById('trip-toggle-label');
     if (icon) icon.textContent = active ? '\uD83D\uDCCB' : '\uD83D\uDDFA\uFE0F';
     if (label) label.textContent = active ? 'Full View' : 'Trip Mode';
+
+    // Update mode-bar (mobile bottom toggle)
+    var modeLabel = document.getElementById('mode-bar-label');
+    var modeIcon = document.getElementById('mode-bar-icon');
+    if (modeLabel) modeLabel.textContent = active ? 'Full View' : 'Trip Mode';
+    if (modeIcon) modeIcon.textContent = active ? '\uD83D\uDCCB' : '\uD83D\uDDFA\uFE0F';
 
     // Close info panel if open
     var panel = document.getElementById('info-panel');
