@@ -1109,15 +1109,19 @@ table.booking tr:last-child td { border-bottom: none; }
     .toolbar { top: auto; bottom: 72px; right: 8px; gap: 4px; flex-direction: column; z-index: 200; }
     .toolbar button { width: 30px; height: 30px; font-size: 13px; box-shadow: 0 1px 4px rgba(0,0,0,0.12); }
 
-    /* Trip toggle — tiny pill, top-left corner, out of the way */
+    /* Trip toggle — icon-only circle on mobile, no text */
     .trip-toggle {
-        top: 6px; left: 6px; right: auto; bottom: auto;
-        font-size: 9px; padding: 3px 8px;
-        border-radius: 16px; z-index: 200;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.12);
-        gap: 3px;
+        top: 8px; left: 8px; right: auto; bottom: auto;
+        width: 36px; height: 36px;
+        padding: 0;
+        border-radius: 50%;
+        z-index: 200;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+        gap: 0;
+        justify-content: center;
+        font-size: 16px;
     }
-    .trip-toggle span:first-child { font-size: 11px; }
+    .trip-toggle #trip-toggle-label { display: none; } /* hide text, show only emoji */
 
     /* ── Day nav — slimmer, no overlap ───────────────────────────────────── */
     .day-nav { padding: 4px 6px; margin-bottom: 4px; }
