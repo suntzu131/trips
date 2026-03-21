@@ -1037,7 +1037,7 @@ table.booking tr:last-child td { border-bottom: none; }
 .glance-chip.sun { background: #fffde7; color: #f57f17; border-color: rgba(245,127,23,0.3); }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   RESPONSIVE
+   RESPONSIVE — Tablet (≤900px)
    ═══════════════════════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
     .packing-grid { grid-template-columns: 1fr !important; }
@@ -1052,6 +1052,133 @@ table.booking tr:last-child td { border-bottom: none; }
     .glance-bar { padding: 12px 20px; }
     .time-blocks { padding: 12px 12px; }
     .type-icon { width: 36px; min-width: 36px; font-size: 16px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — Phone (≤480px) — Complete mobile overhaul
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+    /* Page wrapper — edge to edge */
+    .page { padding: 8px 0 48px; max-width: 100%; }
+
+    /* ── Hero — compact, not overwhelming ─────────────────────────────────── */
+    .hero { border-radius: 0; margin-bottom: 16px; }
+    .hero-gradient { padding: 20px 16px 16px; }
+    .hero h1 { font-size: 20px; letter-spacing: -0.3px; }
+    .hero .tagline { font-size: 12px; margin-bottom: 10px; }
+    .hero .countdown { font-size: 11px; padding: 3px 10px; margin-bottom: 10px; }
+
+    /* Traveler chips — smaller, tighter */
+    .traveler-chips { gap: 5px; margin-bottom: 12px; }
+    .traveler-chip { font-size: 11px; padding: 3px 10px; }
+    .traveler-chip .chip-age { font-size: 10px; }
+
+    /* Hero body — compact meta */
+    .hero-body { padding: 12px 16px 14px; }
+    .hero-meta { font-size: 12px; gap: 6px; padding-bottom: 10px; margin-bottom: 10px; }
+
+    /* Day pills — horizontal scroll instead of wrap */
+    .day-pills { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; gap: 5px; }
+    .day-pill { font-size: 11px; padding: 4px 10px; white-space: nowrap; flex-shrink: 0; }
+    .shortcut-label { font-size: 10px; margin-bottom: 6px; }
+
+    /* ── Toolbar — smaller, out of the way ────────────────────────────────── */
+    .toolbar { top: 8px; right: 8px; gap: 5px; }
+    .toolbar button { width: 34px; height: 34px; font-size: 15px; }
+
+    /* Trip toggle — smaller */
+    .trip-toggle { font-size: 12px; padding: 6px 14px; }
+
+    /* ── Day nav — horizontal scroll ──────────────────────────────────────── */
+    .day-nav { padding: 8px 12px; }
+    .nav-pill { font-size: 12px; padding: 6px 12px; }
+
+    /* ── Story arc — compact ──────────────────────────────────────────────── */
+    .story-arc { padding: 16px; margin: 0 8px 16px; border-radius: 12px; }
+    .story-arc h2 { font-size: 15px; }
+    .story-arc p { font-size: 13px; }
+    .story-chapters { gap: 8px; margin-top: 12px; }
+    .story-chapter { padding: 10px 14px; border-radius: 8px; }
+    .story-chapter h4 { font-size: 12px; }
+    .story-chapter p { font-size: 11px; }
+
+    /* ── Section titles ───────────────────────────────────────────────────── */
+    .section-title { font-size: 15px; margin: 20px 12px 12px; }
+
+    /* ── Day sections — full width, compact ───────────────────────────────── */
+    .day-section, .day-wrap { border-radius: 0; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .day-header { padding: 14px 14px 10px; }
+    .day-number { font-size: 10px; letter-spacing: 1px; }
+    .day-header h2 { font-size: 16px; margin-bottom: 4px; }
+    .day-header-meta { font-size: 11px; gap: 6px; }
+    .day-header-meta .meta-pill { padding: 2px 8px; font-size: 10px; }
+
+    /* ── Glance bar — compact chips ───────────────────────────────────────── */
+    .glance-bar { padding: 8px 12px; }
+    .glance-chip { font-size: 10px; padding: 3px 8px; }
+
+    /* ── Time blocks — STACK on mobile ────────────────────────────────────── */
+    .time-blocks { padding: 8px; }
+    .time-block { flex-direction: column; border-radius: 10px; margin-bottom: 8px; }
+    .time-col {
+        width: 100%; min-width: 100%;
+        flex-direction: row; justify-content: flex-start; gap: 6px;
+        padding: 8px 12px;
+        border-right: none; border-bottom: 1px solid var(--line);
+    }
+    .time-start { font-size: 13px; }
+    .time-end { font-size: 11px; margin-top: 0; }
+    .time-end::before { content: '–'; margin-right: 2px; }
+    .block-content { padding: 10px 12px; }
+    .block-type-badge { font-size: 9px; padding: 2px 8px; }
+    .block-name { font-size: 14px; margin-bottom: 4px; }
+    .block-narrative { font-size: 12px; }
+    .block-note { font-size: 11px; }
+    .block-address { font-size: 11px; }
+
+    /* QR column — hide on mobile (can't scan your own phone screen) */
+    .block-qr { display: none; }
+
+    /* Type icon — inline with time */
+    .type-icon { width: 28px; min-width: 28px; font-size: 14px; border-right: none; border-bottom: none; }
+
+    /* ── Nap callout ──────────────────────────────────────────────────────── */
+    .callout { margin: 8px 8px 4px; padding: 10px 14px; font-size: 12px; border-radius: 8px; }
+
+    /* ── Budget card ──────────────────────────────────────────────────────── */
+    .budget-card { border-radius: 0; margin: 0 0 16px; }
+    .budget-header { padding: 14px 16px; }
+    .budget-header h3 { font-size: 14px; }
+    table.budget td { padding: 8px 16px; font-size: 13px; }
+
+    /* ── Packing card ─────────────────────────────────────────────────────── */
+    .packing-card { padding: 14px 16px; border-radius: 0; }
+    .packing-section-title { font-size: 12px; }
+    .packing-item { font-size: 13px; padding: 4px 0; }
+
+    /* ── Booking card ─────────────────────────────────────────────────────── */
+    .booking-card { border-radius: 0; }
+    table.booking td { padding: 8px 12px; font-size: 12px; }
+    table.booking th { padding: 8px 12px; font-size: 10px; }
+
+    /* ── Emergency card ───────────────────────────────────────────────────── */
+    .emergency-card { border-radius: 0; margin: 0 0 16px; padding: 14px 16px; }
+    .emergency-card h3 { font-size: 13px; }
+    table.emergency td { font-size: 12px; padding: 4px 8px 4px 0; }
+    table.emergency td:first-child { width: auto; white-space: normal; }
+
+    /* ── Travelers table ──────────────────────────────────────────────────── */
+    .travelers-card { border-radius: 0; }
+    table.travelers th, table.travelers td { padding: 8px 12px; font-size: 12px; }
+
+    /* ── Section cards ────────────────────────────────────────────────────── */
+    .section-card { padding: 14px; border-radius: 0; }
+
+    /* ── Photo placeholder — hide on mobile ───────────────────────────────── */
+    .photo-placeholder { display: none; }
+
+    /* ── Footer ───────────────────────────────────────────────────────────── */
+    .footer { font-size: 10px; padding: 14px 12px 8px; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -1247,11 +1374,11 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
     <div class="traveler-chips">
       
       <span class="traveler-chip">
-        Dan<span class="chip-age">&middot; 40yr</span>
+        Dan<span class="chip-age">&middot; 43yr</span>
       </span>
       
       <span class="traveler-chip">
-        Minako<span class="chip-age">&middot; 38yr</span>
+        Minako<span class="chip-age">&middot; 47yr</span>
       </span>
       
       <span class="traveler-chip">
