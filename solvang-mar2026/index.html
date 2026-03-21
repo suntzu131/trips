@@ -1105,11 +1105,19 @@ table.booking tr:last-child td { border-bottom: none; }
     .shortcut-label { font-size: 10px; margin-bottom: 6px; }
 
     /* ── Toolbar — move to bottom-right to avoid day-nav overlap ────────── */
-    .toolbar { top: auto; bottom: 80px; right: 12px; gap: 5px; flex-direction: column; }
-    .toolbar button { width: 34px; height: 34px; font-size: 15px; }
+    /* Toolbar — small vertical stack, bottom-right, above bottom bar */
+    .toolbar { top: auto; bottom: 72px; right: 8px; gap: 4px; flex-direction: column; z-index: 200; }
+    .toolbar button { width: 30px; height: 30px; font-size: 13px; box-shadow: 0 1px 4px rgba(0,0,0,0.12); }
 
-    /* Trip toggle — move to bottom-right above toolbar */
-    .trip-toggle { top: auto; bottom: 140px; right: 12px; left: auto; font-size: 11px; padding: 5px 10px; }
+    /* Trip toggle — tiny pill, top-left corner, out of the way */
+    .trip-toggle {
+        top: 6px; left: 6px; right: auto; bottom: auto;
+        font-size: 9px; padding: 3px 8px;
+        border-radius: 16px; z-index: 200;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+        gap: 3px;
+    }
+    .trip-toggle span:first-child { font-size: 11px; }
 
     /* ── Day nav — slimmer, no overlap ───────────────────────────────────── */
     .day-nav { padding: 4px 6px; margin-bottom: 4px; }
