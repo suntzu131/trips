@@ -1104,15 +1104,15 @@ table.booking tr:last-child td { border-bottom: none; }
     .day-pill { font-size: 11px; padding: 4px 10px; white-space: nowrap; flex-shrink: 0; }
     .shortcut-label { font-size: 10px; margin-bottom: 6px; }
 
-    /* ── Toolbar — smaller, out of the way ────────────────────────────────── */
-    .toolbar { top: 8px; right: 8px; gap: 5px; }
+    /* ── Toolbar — move to bottom-right to avoid day-nav overlap ────────── */
+    .toolbar { top: auto; bottom: 80px; right: 12px; gap: 5px; flex-direction: column; }
     .toolbar button { width: 34px; height: 34px; font-size: 15px; }
 
-    /* Trip toggle — smaller */
-    .trip-toggle { font-size: 12px; padding: 6px 14px; }
+    /* Trip toggle — move to bottom-right above toolbar */
+    .trip-toggle { top: auto; bottom: 140px; right: 12px; left: auto; font-size: 11px; padding: 5px 10px; }
 
-    /* ── Day nav — slim single row, hide filter row entirely ─────────────── */
-    .day-nav { padding: 6px 8px; margin-bottom: 8px; }
+    /* ── Day nav — slimmer, no overlap ───────────────────────────────────── */
+    .day-nav { padding: 4px 6px; margin-bottom: 4px; }
     .day-nav-inner { gap: 5px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 0 4px; }
     .day-nav-inner.filter-row { display: none; } /* filters hidden on mobile — content first */
     .nav-pill { font-size: 11px; padding: 5px 10px; flex-shrink: 0; }
@@ -3326,93 +3326,149 @@ Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brop
 
 <h2 class="section-title" data-view="planning">Packing Checklist</h2>
 
-
-
 <div class="packing-card" id="packing-list" data-view="planning">
-  <div class="packing-section-title">For Everyone</div>
-  <div class="packing-grid">
-    
-    <label class="packing-item" data-item="Passport (valid 6+ months past return)">
-      <input type="checkbox"><span>Passport (valid 6+ months past return)</span>
-    </label>
-    
-    <label class="packing-item" data-item="Travel insurance documents">
-      <input type="checkbox"><span>Travel insurance documents</span>
-    </label>
-    
-    <label class="packing-item" data-item="Printed itinerary (this doc)">
-      <input type="checkbox"><span>Printed itinerary (this doc)</span>
-    </label>
-    
-    <label class="packing-item" data-item="Credit cards + notify bank">
-      <input type="checkbox"><span>Credit cards + notify bank</span>
-    </label>
-    
-    <label class="packing-item" data-item="Phone chargers + adapters (EU Type F)">
-      <input type="checkbox"><span>Phone chargers + adapters (EU Type F)</span>
-    </label>
-    
-    <label class="packing-item" data-item="Portable battery pack">
-      <input type="checkbox"><span>Portable battery pack</span>
-    </label>
-    
-    <label class="packing-item" data-item="Basic first-aid kit">
-      <input type="checkbox"><span>Basic first-aid kit</span>
-    </label>
-    
-    <label class="packing-item" data-item="Sunscreen SPF 50+">
-      <input type="checkbox"><span>Sunscreen SPF 50+</span>
-    </label>
-    
-    <label class="packing-item" data-item="Comfortable walking shoes">
-      <input type="checkbox"><span>Comfortable walking shoes</span>
-    </label>
-    
-    <label class="packing-item" data-item="Light rain jacket">
-      <input type="checkbox"><span>Light rain jacket</span>
-    </label>
-    
-    <label class="packing-item" data-item="Reusable water bottles">
-      <input type="checkbox"><span>Reusable water bottles</span>
-    </label>
-    
-    <label class="packing-item" data-item="Snacks for travel day">
-      <input type="checkbox"><span>Snacks for travel day</span>
-    </label>
-    
-  </div>
-
   
-
-  
-  <div class="packing-section-title">Kids (School Age)</div>
-  <div class="packing-grid">
     
-    <label class="packing-item" data-item="Small backpack (theirs to carry)">
-      <input type="checkbox"><span>Small backpack (theirs to carry)</span>
-    </label>
+    <div class="packing-section-title">Dan</div>
+    <div class="packing-grid">
+      
+      <label class="packing-item" data-item="Piriformis cushion for car">
+        <input type="checkbox"><span>Piriformis cushion for car</span>
+      </label>
+      
+      <label class="packing-item" data-item="Medications">
+        <input type="checkbox"><span>Medications</span>
+      </label>
+      
+      <label class="packing-item" data-item="Stretch bands / foam roller">
+        <input type="checkbox"><span>Stretch bands / foam roller</span>
+      </label>
+      
+      <label class="packing-item" data-item="Comfortable walking shoes">
+        <input type="checkbox"><span>Comfortable walking shoes</span>
+      </label>
+      
+      <label class="packing-item" data-item="Sunglasses + hat">
+        <input type="checkbox"><span>Sunglasses + hat</span>
+      </label>
+      
+      <label class="packing-item" data-item="Phone charger">
+        <input type="checkbox"><span>Phone charger</span>
+      </label>
+      
+    </div>
     
-    <label class="packing-item" data-item="Activity book / coloring supplies">
-      <input type="checkbox"><span>Activity book / coloring supplies</span>
-    </label>
+    <div class="packing-section-title">Minako</div>
+    <div class="packing-grid">
+      
+      <label class="packing-item" data-item="Dramamine / motion sickness bands">
+        <input type="checkbox"><span>Dramamine / motion sickness bands</span>
+      </label>
+      
+      <label class="packing-item" data-item="Front-seat travel pillow">
+        <input type="checkbox"><span>Front-seat travel pillow</span>
+      </label>
+      
+      <label class="packing-item" data-item="Camera">
+        <input type="checkbox"><span>Camera</span>
+      </label>
+      
+      <label class="packing-item" data-item="Light layers (SB can be cool in the morning)">
+        <input type="checkbox"><span>Light layers (SB can be cool in the morning)</span>
+      </label>
+      
+    </div>
     
-    <label class="packing-item" data-item="Favorite small toy / comfort item">
-      <input type="checkbox"><span>Favorite small toy / comfort item</span>
-    </label>
+    <div class="packing-section-title">Kids</div>
+    <div class="packing-grid">
+      
+      <label class="packing-item" data-item="iPad + headphones for Koko (loaded with shows)">
+        <input type="checkbox"><span>iPad + headphones for Koko (loaded with shows)</span>
+      </label>
+      
+      <label class="packing-item" data-item="Nap blanket for Issa">
+        <input type="checkbox"><span>Nap blanket for Issa</span>
+      </label>
+      
+      <label class="packing-item" data-item="White noise app (phone)">
+        <input type="checkbox"><span>White noise app (phone)</span>
+      </label>
+      
+      <label class="packing-item" data-item="Swimsuits (hotel pool at Residence Inn)">
+        <input type="checkbox"><span>Swimsuits (hotel pool at Residence Inn)</span>
+      </label>
+      
+      <label class="packing-item" data-item="Extra outfit sets (2 per kid)">
+        <input type="checkbox"><span>Extra outfit sets (2 per kid)</span>
+      </label>
+      
+      <label class="packing-item" data-item="Favorite comfort items">
+        <input type="checkbox"><span>Favorite comfort items</span>
+      </label>
+      
+      <label class="packing-item" data-item="Snack bags (goldfish, fruit, granola bars)">
+        <input type="checkbox"><span>Snack bags (goldfish, fruit, granola bars)</span>
+      </label>
+      
+      <label class="packing-item" data-item="Coloring books + crayons">
+        <input type="checkbox"><span>Coloring books + crayons</span>
+      </label>
+      
+      <label class="packing-item" data-item="Sunscreen SPF 50+">
+        <input type="checkbox"><span>Sunscreen SPF 50+</span>
+      </label>
+      
+      <label class="packing-item" data-item="Sun hats">
+        <input type="checkbox"><span>Sun hats</span>
+      </label>
+      
+    </div>
     
-    <label class="packing-item" data-item="Earbuds for flights">
-      <input type="checkbox"><span>Earbuds for flights</span>
-    </label>
+    <div class="packing-section-title">General</div>
+    <div class="packing-grid">
+      
+      <label class="packing-item" data-item="First aid kit">
+        <input type="checkbox"><span>First aid kit</span>
+      </label>
+      
+      <label class="packing-item" data-item="Phone chargers + car charger">
+        <input type="checkbox"><span>Phone chargers + car charger</span>
+      </label>
+      
+      <label class="packing-item" data-item="Reusable water bottles">
+        <input type="checkbox"><span>Reusable water bottles</span>
+      </label>
+      
+      <label class="packing-item" data-item="Cash ($100 small bills for bakeries, parking, missions)">
+        <input type="checkbox"><span>Cash ($100 small bills for bakeries, parking, missions)</span>
+      </label>
+      
+      <label class="packing-item" data-item="This printed itinerary">
+        <input type="checkbox"><span>This printed itinerary</span>
+      </label>
+      
+      <label class="packing-item" data-item="Stroller (compact)">
+        <input type="checkbox"><span>Stroller (compact)</span>
+      </label>
+      
+      <label class="packing-item" data-item="Cooler bag for car snacks">
+        <input type="checkbox"><span>Cooler bag for car snacks</span>
+      </label>
+      
+      <label class="packing-item" data-item="Hand sanitizer + wipes">
+        <input type="checkbox"><span>Hand sanitizer + wipes</span>
+      </label>
+      
+      <label class="packing-item" data-item="Light rain jackets (just in case)">
+        <input type="checkbox"><span>Light rain jackets (just in case)</span>
+      </label>
+      
+      <label class="packing-item" data-item="Beach towels (for waterfront parks)">
+        <input type="checkbox"><span>Beach towels (for waterfront parks)</span>
+      </label>
+      
+    </div>
     
-    <label class="packing-item" data-item="Downloaded movies/shows offline">
-      <input type="checkbox"><span>Downloaded movies/shows offline</span>
-    </label>
-    
-    <label class="packing-item" data-item="Snack supply for flight + day trips">
-      <input type="checkbox"><span>Snack supply for flight + day trips</span>
-    </label>
-    
-  </div>
   
 </div>
 
@@ -3421,11 +3477,48 @@ Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brop
 <div class="emergency-card" data-view="both">
   <h3>Emergency Contacts &amp; Info</h3>
   <table class="emergency">
-    <tr><td>Emergency (Portugal)</td><td><a href="tel:112" class="call-link">📞 112</a></td></tr>
-    <tr><td>US Embassy Lisbon</td><td><a href="tel:+351217273300" class="call-link">📞 +351 21 727 3300</a> &middot; <a href="https://pt.usembassy.gov">pt.usembassy.gov</a></td></tr>
-    <tr><td>Poison Control (US)</td><td><a href="tel:18002221222" class="call-link">📞 1-800-222-1222</a></td></tr>
-    <tr><td>Travel insurance 24hr</td><td>___________________________</td></tr>
-    <tr><td>Home emergency contact</td><td>___________________________</td></tr>
+    
+      
+      <tr>
+        <td>Santa Ynez Valley Cottage Hospital <span style="font-size:11px;color:var(--muted)">(Hospital)</span></td>
+        <td><a href="tel:8056886431" class="call-link">&#x1F4DE; (805) 688-6431</a> &middot; 2050 Viborg Rd, Solvang, CA 93463</td>
+      </tr>
+      
+      <tr>
+        <td>Santa Barbara Cottage Hospital <span style="font-size:11px;color:var(--muted)">(Hospital / ER)</span></td>
+        <td><a href="tel:8056827111" class="call-link">&#x1F4DE; (805) 682-7111</a> &middot; 400 W Pueblo St, Santa Barbara, CA 93105</td>
+      </tr>
+      
+      <tr>
+        <td>Goleta Valley Cottage Hospital <span style="font-size:11px;color:var(--muted)">(Hospital)</span></td>
+        <td><a href="tel:8059673411" class="call-link">&#x1F4DE; (805) 967-3411</a> &middot; 351 S Patterson Ave, Goleta, CA 93111</td>
+      </tr>
+      
+      <tr>
+        <td>Solvang Pharmacy <span style="font-size:11px;color:var(--muted)">(Pharmacy)</span></td>
+        <td><a href="tel:8056882414" class="call-link">&#x1F4DE; (805) 688-2414</a> &middot; 1693 Mission Dr, Solvang, CA 93463</td>
+      </tr>
+      
+      <tr>
+        <td>CVS Pharmacy Santa Barbara <span style="font-size:11px;color:var(--muted)">(Pharmacy)</span></td>
+        <td><a href="tel:8059669696" class="call-link">&#x1F4DE; (805) 966-9696</a> &middot; 819 State St, Santa Barbara, CA 93101</td>
+      </tr>
+      
+      <tr>
+        <td>CVS Pharmacy Goleta <span style="font-size:11px;color:var(--muted)">(Pharmacy)</span></td>
+        <td><a href="tel:8059649163" class="call-link">&#x1F4DE; (805) 964-9163</a> &middot; 5801 Calle Real, Goleta, CA 93117</td>
+      </tr>
+      
+      <tr>
+        <td>Sansum Clinic Urgent Care <span style="font-size:11px;color:var(--muted)">(Urgent Care)</span></td>
+        <td><a href="tel:8055636011" class="call-link">&#x1F4DE; (805) 563-6011</a> &middot; 215 Pesetas Ln, Santa Barbara, CA 93110</td>
+      </tr>
+      
+      <tr>
+        <td>Poison Control <span style="font-size:11px;color:var(--muted)">(National)</span></td>
+        <td><a href="tel:18002221222" class="call-link">&#x1F4DE; 1-800-222-1222</a></td>
+      </tr>
+      
     
   </table>
 </div>
@@ -3435,49 +3528,29 @@ Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brop
 <div class="booking-card" data-view="planning">
   <table class="booking">
     <thead>
-      <tr><th>Item</th><th>Notes</th></tr>
+      <tr><th>Item</th><th>Status</th><th>Notes</th></tr>
     </thead>
     <tbody>
       
-      <tr>
-        <td>Flights (outbound + return)</td>
-        <td>Book 6-8 weeks out. Google Flights price alerts recommended.</td>
-      </tr>
-      
-      <tr>
-        <td>Accommodation - all nights</td>
-        <td>Confirm stroller/crib availability.</td>
-      </tr>
-      
-      <tr>
-        <td>Travel insurance</td>
-        <td>Cover trip cancellation + medical expenses.</td>
-      </tr>
-      
-      <tr>
-        <td>Airport transfers</td>
-        <td>Uber/taxi vs. pre-booked transfer.</td>
-      </tr>
-      
-      <tr>
-        <td>Key museum / attraction tickets</td>
-        <td>Pre-book online. Many venues sell out.</td>
-      </tr>
-      
-      <tr>
-        <td>Key restaurant reservations</td>
-        <td>Book 1-2 weeks ahead for popular spots.</td>
-      </tr>
-      
-      <tr>
-        <td>Notify credit card companies</td>
-        <td>3-5 days before departure.</td>
-      </tr>
-      
-      <tr>
-        <td>International phone plan</td>
-        <td>T-Mobile free international, or buy local SIM.</td>
-      </tr>
+        
+        <tr>
+          <td>The Hadsten Solvang — 2 nights (Mar 30–31)</td>
+          <td><span style="color:#2E7D32;font-weight:600">&#x2705; Booked</span></td>
+          <td>(805) 688-3210 | hilton.com | ~$155/night | Tapestry Collection by Hilton | CONFIRMED</td>
+        </tr>
+        
+        <tr>
+          <td>Residence Inn Goleta — 1 night (Apr 1)</td>
+          <td><span style="color:#E65100;font-weight:600">&#x23F3; Pending</span></td>
+          <td>(805) 770-5031 | marriott.com/sbago | ~$240/night | Pool, hot tub, putting green, complimentary breakfast, full kitchen suites | BOOK NOW: https://www.marriott.com/en-us/hotels/sbago-residence-inn-santa-barbara-goleta/overview/</td>
+        </tr>
+        
+        <tr>
+          <td>Confirm Hannah care coverage (Mar 30–Apr 2)</td>
+          <td><span style="color:#E65100;font-weight:600">&#x23F3; Pending</span></td>
+          <td>Mother’s caregiver — verify full 4-day coverage</td>
+        </tr>
+        
       
     </tbody>
   </table>
@@ -3492,20 +3565,17 @@ Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brop
 </div>
 
 <nav class="trip-bottom-bar no-print" data-view="trip" id="trip-bar">
-    <a href="tel:112" class="bar-item" title="Emergency call">
-        <span>🆘</span>
-        <span class="bar-label">SOS</span>
+    <a href="tel:8056886431" class="bar-item" title="Emergency call">
+        <span>&#x1F198;</span>
+        <span class="bar-label">(805) 688-6431</span>
     </a>
-    <a href="#phrases-section" class="bar-item" title="Quick phrases">
-        <span>💬</span>
-        <span class="bar-label">Phrases</span>
-    </a>
+    
     <button class="bar-item" onclick="navigateToNext()" title="Navigate to next stop">
-        <span>📍</span>
+        <span>&#x1F4CD;</span>
         <span class="bar-label">Navigate</span>
     </button>
     <button class="bar-item" onclick="toggleTripMode()" title="Show full itinerary">
-        <span>📋</span>
+        <span>&#x1F4CB;</span>
         <span class="bar-label">Full View</span>
     </button>
 </nav>
