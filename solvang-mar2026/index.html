@@ -1059,6 +1059,143 @@ table.booking tr:last-child td { border-bottom: none; }
 .glance-chip.sun { background: #fffde7; color: #f57f17; border-color: rgba(245,127,23,0.3); }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   ALTERNATIVES — Per-block options
+   ═══════════════════════════════════════════════════════════════════════════ */
+.block-alternatives {
+    border-top: 1px dashed var(--line);
+    padding: 0;
+    overflow: hidden;
+}
+
+.alt-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    border: none;
+    background: rgba(246,241,234,0.5);
+    padding: 8px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--sea);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+[data-theme="dark"] .alt-toggle { background: rgba(42,42,42,0.5); }
+.alt-toggle:hover { background: var(--sky); }
+.alt-toggle .alt-arrow { transition: transform 0.2s; font-size: 10px; }
+.alt-toggle[aria-expanded="true"] .alt-arrow { transform: rotate(180deg); }
+
+.alt-list {
+    display: none;
+    padding: 0 12px 12px;
+    background: rgba(246,241,234,0.3);
+}
+
+[data-theme="dark"] .alt-list { background: rgba(42,42,42,0.3); }
+
+.alt-list.open { display: block; }
+
+.alt-card {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    margin-top: 8px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    transition: box-shadow 0.15s;
+}
+
+.alt-card:hover { box-shadow: var(--shadow-sm); }
+
+.alt-card-body { flex: 1; min-width: 0; }
+
+.alt-card-name {
+    font-family: Georgia, serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 3px;
+}
+
+.alt-card-vibe {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.4;
+    margin-bottom: 6px;
+}
+
+.alt-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.alt-card-meta .alt-price {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(168,95,63,0.08);
+    padding: 2px 8px;
+    border-radius: 50px;
+}
+
+.alt-card-meta a {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 50px;
+    background: var(--sky);
+    color: var(--sea);
+    border: 1px solid rgba(95,127,143,0.25);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.alt-card-meta a:hover { background: var(--sea); color: #fff; }
+
+.alt-card-photo {
+    width: 72px;
+    min-width: 72px;
+    height: 72px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DAY PATH OPTIONS — Toggle between alternative day plans
+   ═══════════════════════════════════════════════════════════════════════════ */
+.day-path-bar {
+    display: flex;
+    gap: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+}
+
+.path-option {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    text-align: center;
+}
+
+.path-option:hover { color: var(--ink); background: rgba(246,241,234,0.5); }
+.path-option.active-path { color: var(--accent); border-bottom-color: var(--accent); background: var(--paper); }
+
+.day-path-content { display: none; }
+.day-path-content.active-path-content { display: block; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
    RESPONSIVE — Tablet (≤900px)
    ═══════════════════════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
@@ -1194,6 +1331,18 @@ table.booking tr:last-child td { border-bottom: none; }
     .packing-card { padding: 14px 16px; border-radius: 0; }
     .packing-section-title { font-size: 12px; }
     .packing-item { font-size: 13px; padding: 4px 0; }
+
+    /* ── Alternatives — stack vertically ──────────────────────────────────── */
+    .alt-card { flex-direction: column; gap: 8px; }
+    .alt-card-photo { width: 100%; height: 120px; min-width: auto; border-radius: 8px; }
+    .alt-toggle { padding: 8px 12px; font-size: 11px; }
+    .alt-list { padding: 0 8px 8px; }
+    .alt-card { padding: 10px; }
+    .alt-card-name { font-size: 13px; }
+    .alt-card-meta a { font-size: 10px; }
+
+    /* Day path bar */
+    .path-option { font-size: 11px; padding: 8px 8px; }
 
     /* ── Booking card ─────────────────────────────────────────────────────── */
     .booking-card { border-radius: 0; }
@@ -1392,6 +1541,276 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
     /* Add touch-action for better mobile gestures */
     body { touch-action: manipulation; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TRIP MODE HERO (compact)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.trip-hero .hero-gradient {
+    padding: 20px 20px 16px;
+    text-align: center;
+}
+.trip-hero .trip-countdown {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    padding: 8px 20px;
+    margin-bottom: 8px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50px;
+    display: inline-block;
+}
+.trip-hero .trip-hero-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BOTTOM DAY TABS (Trip Mode)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.bottom-day-tabs {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: stretch;
+}
+
+.bottom-day-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    padding: 4px 2px;
+    gap: 1px;
+    border-top: 3px solid transparent;
+    transition: all 0.15s;
+    min-width: 0;
+}
+
+.bottom-day-tab:hover,
+.bottom-day-tab:active {
+    color: #fff;
+    background: rgba(255,255,255,0.08);
+}
+
+.bottom-day-tab.active-tab {
+    color: #fff;
+    border-top-color: var(--accent);
+    background: rgba(255,255,255,0.05);
+}
+
+.bottom-tab-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+}
+
+.bottom-tab-city {
+    font-size: 9px;
+    font-weight: 500;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.bottom-info-tab {
+    flex: 0.6;
+    max-width: 52px;
+    border-left: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SOS FLOATING ACTION BUTTON
+   ═══════════════════════════════════════════════════════════════════════════ */
+.sos-fab {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 2002;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #dc2626;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(220,38,38,0.4);
+    animation: sos-pulse 2s ease-in-out infinite;
+}
+.sos-fab:hover {
+    text-decoration: none;
+    color: #fff;
+    transform: scale(1.05);
+}
+@keyframes sos-pulse {
+    0%, 100% { box-shadow: 0 4px 16px rgba(220,38,38,0.4); }
+    50% { box-shadow: 0 4px 24px rgba(220,38,38,0.6); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INFO PANEL OVERLAY
+   ═══════════════════════════════════════════════════════════════════════════ */
+.info-panel-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 3000;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+}
+.info-panel-overlay.open {
+    display: flex;
+}
+
+.info-panel {
+    background: var(--paper);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 480px;
+    max-height: 70vh;
+    overflow-y: auto;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.2);
+    animation: slide-up 0.25s ease-out;
+}
+
+@keyframes slide-up {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.info-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px 12px;
+    border-bottom: 1px solid var(--line);
+}
+.info-panel-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+}
+.info-close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.info-panel-body {
+    padding: 16px 24px 24px;
+}
+
+.info-action {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: background 0.15s;
+}
+.info-action:hover {
+    background: var(--line);
+    text-decoration: none;
+}
+
+.info-emergency {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+}
+.info-emergency h4 {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #dc2626;
+    margin-bottom: 10px;
+}
+.info-emergency-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+    color: var(--ink);
+    text-decoration: none;
+}
+.info-emergency-item:last-child { border-bottom: none; }
+.info-emergency-item:hover { color: #dc2626; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NOW INDICATOR — enhanced with auto-scroll pulse
+   ═══════════════════════════════════════════════════════════════════════════ */
+.now-indicator.visible {
+    display: block;
+    animation: now-pulse 2s ease-in-out 3;
+}
+@keyframes now-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DARK MODE — New components
+   ═══════════════════════════════════════════════════════════════════════════ */
+[data-theme="dark"] .info-panel {
+    background: var(--paper);
+}
+[data-theme="dark"] .info-action {
+    background: rgba(50,50,50,0.6);
+    border-color: var(--line);
+}
+[data-theme="dark"] .sos-fab {
+    background: #b91c1c;
+}
+[data-theme="dark"] .bottom-day-tab.active-tab {
+    border-top-color: var(--accent);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — Bottom bar + SOS on phone
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+    .sos-fab {
+        width: 44px;
+        height: 44px;
+        font-size: 11px;
+        top: 10px;
+        right: 10px;
+    }
+    .bottom-tab-num { font-size: 10px; }
+    .bottom-tab-city { font-size: 8px; }
+    .trip-hero .trip-countdown { font-size: 15px; padding: 6px 14px; }
+    .trip-hero .trip-hero-title { font-size: 13px; }
+    .trip-hero .hero-gradient { padding: 14px 14px 12px; }
+}
 </style>
 </head>
 <body>
@@ -1413,7 +1832,7 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
   <div class="hero-gradient">
     <h1>Solvang &amp; Santa Barbara Family Trip</h1>
     <p class="tagline">March 30 – April 2, 2026 &middot; From Irvine, CA</p>
-    <div class="countdown" id="countdown" data-start="Monday, March 30"></div>
+    <div class="countdown" id="countdown" data-start="Monday, March 30" data-end="Thursday, April 2" data-total-days="4"></div>
     <div class="traveler-chips">
       
       <span class="traveler-chip">
@@ -1440,6 +1859,14 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
       <span><strong>Budget</strong> $1,350&ndash;$1,750</span>
       <span><strong>Generated</strong> March 21, 2026</span>
     </div>
+  </div>
+</div>
+
+
+<div class="hero trip-hero" data-view="trip">
+  <div class="hero-gradient">
+    <div class="countdown trip-countdown" id="trip-countdown" data-start="Monday, March 30" data-end="Thursday, April 2" data-total-days="4"></div>
+    <h1 class="trip-hero-title">Solvang &amp; Santa Barbara Family Trip</h1>
   </div>
 </div>
 
@@ -1550,6 +1977,9 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
 
 
 
+
+
+
 <div class="day-section" id="day-1" data-city="Solvang" data-date="Monday, March 30" data-view="both">
 
   
@@ -1603,388 +2033,427 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
   </div>
 
   
-  <div class="time-blocks">
-    <div class="now-indicator" id="now-1" data-day-date="Monday, March 30"></div>
+  
+
+  
+  
     
     
-    
-    
-    
+<div class="time-blocks">
+  <div class="now-indicator" data-day-date="Monday, March 30"></div>
+  
+  
+  
+  
 
-    <div class="time-block block-transit" data-block-type="transit">
-      <div class="type-icon">🚶</div>
-      <div class="time-col">
-        <span class="time-start">9:30 AM</span>
-        <span class="time-end">11:00 AM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Transit</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=740+E+Ventura+Blvd,+Camarillo,+CA+93010" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Drive: Irvine → Ventura/Oxnard Stretch Stop 📍</a>
-          
-        </h4>
+  <div class="time-block block-transit" data-block-type="transit">
+    <div class="type-icon">🚶</div>
+    <div class="time-col">
+      <span class="time-start">9:30 AM</span>
+      <span class="time-end">11:00 AM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Transit</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=740+E+Ventura+Blvd,+Camarillo,+CA+93010" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Drive: Irvine → Ventura/Oxnard Stretch Stop 📍</a>
+        
+      </h4>
 
-        
+      
 
-        
-        <div class="block-narrative">Leave Irvine between 9:30–10:00 AM. Minako rides shotgun (carsick), kids in back with loaded iPads. The 101 is flat and scenic — no winding mountain passes.</div>
-        
+      
+      <div class="block-narrative">Leave Irvine between 9:30–10:00 AM. Minako rides shotgun (carsick), kids in back with loaded iPads. The 101 is flat and scenic — no winding mountain passes.</div>
+      
 
-        
-        <div class="block-note">Piriformis stretch stop at Ventura/Oxnard area (~90 min mark). 10–20 min break. Restrooms available at Camarillo Premium Outlets or any Ventura rest stop. Pack car snacks and water bottles.</div>
-        
+      
+      <div class="block-note">Piriformis stretch stop at Ventura/Oxnard area (~90 min mark). 10–20 min break. Restrooms available at Camarillo Premium Outlets or any Ventura rest stop. Pack car snacks and water bottles.</div>
+      
 
-        
+      
 
-        
+      
 
-        
+      
 
-        
+      
 
-        
-      </div>
       
     </div>
     
     
-    
-    
+  </div>
+  
+  
+  
+  
 
-    <div class="time-block block-rest" data-block-type="rest">
-      <div class="type-icon">💤</div>
-      <div class="time-col">
-        <span class="time-start">11:00 AM</span>
-        <span class="time-end">11:20 AM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Rest</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            Stretch Stop — Ventura/Oxnard Area
-          
-        </h4>
+  <div class="time-block block-rest" data-block-type="rest">
+    <div class="type-icon">💤</div>
+    <div class="time-col">
+      <span class="time-start">11:00 AM</span>
+      <span class="time-end">11:20 AM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Rest</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          Stretch Stop — Ventura/Oxnard Area
+        
+      </h4>
 
-        
+      
 
-        
-        <div class="block-narrative">Quick 20-minute stretch for Dan’s piriformis. Let kids run around briefly. Top off water bottles.</div>
-        
+      
+      <div class="block-narrative">Quick 20-minute stretch for Dan’s piriformis. Let kids run around briefly. Top off water bottles.</div>
+      
 
-        
-        <div class="block-note">Keep it short — Solvang is only 60 min away from here.</div>
-        
+      
+      <div class="block-note">Keep it short — Solvang is only 60 min away from here.</div>
+      
 
-        
+      
 
-        
+      
 
-        
+      
 
-        
+      
 
-        
-      </div>
       
     </div>
     
     
-    
-    
+  </div>
+  
+  
+  
+  
 
-    <div class="time-block block-transit" data-block-type="transit">
-      <div class="type-icon">🚶</div>
-      <div class="time-col">
-        <span class="time-start">11:20 AM</span>
-        <span class="time-end">1:00 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Transit</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            Drive: Ventura → Solvang
-          
-        </h4>
+  <div class="time-block block-transit" data-block-type="transit">
+    <div class="type-icon">🚶</div>
+    <div class="time-col">
+      <span class="time-start">11:20 AM</span>
+      <span class="time-end">1:00 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Transit</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          Drive: Ventura → Solvang
+        
+      </h4>
 
-        
+      
 
-        
-        <div class="block-narrative">Final ~60 minutes up the 101 through Santa Barbara County into the Santa Ynez Valley. Watch for the windmills.</div>
-        
+      
+      <div class="block-narrative">Final ~60 minutes up the 101 through Santa Barbara County into the Santa Ynez Valley. Watch for the windmills.</div>
+      
 
-        
-        <div class="block-note">Take US-101 North to Hwy 246 exit. Flat road, no winding passes. ETA: 1:00–1:30 PM.</div>
-        
+      
+      <div class="block-note">Take US-101 North to Hwy 246 exit. Flat road, no winding passes. ETA: 1:00–1:30 PM.</div>
+      
 
-        
+      
 
-        
+      
 
-        
+      
 
-        
+      
 
-        
-      </div>
       
     </div>
     
     
-    
-    
+  </div>
+  
+  
+  
+  
 
-    <div class="time-block block-explore" data-block-type="explore">
-      <div class="type-icon">🗺️</div>
-      <div class="time-col">
-        <span class="time-start">1:00 PM</span>
-        <span class="time-end">1:30 PM</span>
+  <div class="time-block block-explore" data-block-type="explore">
+    <div class="type-icon">🗺️</div>
+    <div class="time-col">
+      <span class="time-start">1:00 PM</span>
+      <span class="time-end">1:30 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Explore</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=1450+Mission+Dr,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Arrive Solvang — Lunch or Check In at The Hadsten 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Arrive in Solvang. Either grab a quick lunch first or head straight to The Hadsten to drop bags. The hotel is on Mission Drive — walking distance to everything.</div>
+      
+
+      
+      <div class="block-note">The Hadsten Solvang, Tapestry Collection by Hilton. 1450 Mission Dr, Solvang, CA 93463. Phone: (805) 688-3210. Website: hilton.com. 74 rooms. Amenities: The Boiler Room restaurant/bar, The Yard outdoor courtyard, firepit, garden, gym, free WiFi. BOOKED — CONFIRMED.</div>
+      
+
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 1450 Mission Dr, Solvang, CA 93463
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('1450 Mission Dr, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
       </div>
-      <div class="block-content">
-        <span class="block-type-badge">Explore</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=1450+Mission+Dr,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Arrive Solvang — Lunch or Check In at The Hadsten 📍</a>
-          
-        </h4>
+      
+      <a href="javascript:void(0)" onclick="openMaps('1450 Mission Dr, Solvang, CA 93463')" class="maps-badge" title="Open in Maps app">📍 View on Map</a>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('1450 Mission Dr, Solvang, CA 93463')" title="Open in native maps app">🧭 Navigate here</a>
+      
 
-        
-
-        
-        <div class="block-narrative">Arrive in Solvang. Either grab a quick lunch first or head straight to The Hadsten to drop bags. The hotel is on Mission Drive — walking distance to everything.</div>
-        
-
-        
-        <div class="block-note">The Hadsten Solvang, Tapestry Collection by Hilton. 1450 Mission Dr, Solvang, CA 93463. Phone: (805) 688-3210. Website: hilton.com. 74 rooms. Amenities: The Boiler Room restaurant/bar, The Yard outdoor courtyard, firepit, garden, gym, free WiFi. BOOKED — CONFIRMED.</div>
-        
-
-        
-
-        
-
-        
-
-        
-        <div class="block-address">
-          📍 1450 Mission Dr, Solvang, CA 93463
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('1450 Mission Dr, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
-        </div>
-        
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=1450+Mission+Dr,+Solvang,+CA+93463" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=1450%20Mission%20Dr%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
-      </div>
       
     </div>
     
     
-    
-    
+  </div>
+  
+  
+  
+  
 
-    <div class="time-block block-explore" data-block-type="explore">
-      <div class="type-icon">🗺️</div>
-      <div class="time-col">
-        <span class="time-start">2:30 PM</span>
-        <span class="time-end">4:30 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Explore</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=1529+Mission+Dr,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Easy Village Walk — Central Solvang 📍</a>
-          
-        </h4>
+  <div class="time-block block-explore" data-block-type="explore">
+    <div class="type-icon">🗺️</div>
+    <div class="time-col">
+      <span class="time-start">2:30 PM</span>
+      <span class="time-end">4:30 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Explore</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=1529+Mission+Dr,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Easy Village Walk — Central Solvang 📍</a>
+        
+      </h4>
 
-        
+      
 
-        
-        <div class="block-narrative">Wander Copenhagen Drive and Mission Drive at a relaxed pace. Pop into Danish bakeries, browse shops, let the kids soak in the windmills and half-timber facades. No schedule pressure.</div>
-        
+      
+      <div class="block-narrative">Wander Copenhagen Drive and Mission Drive at a relaxed pace. Pop into Danish bakeries, browse shops, let the kids soak in the windmills and half-timber facades. No schedule pressure.</div>
+      
 
-        
-        <div class="block-note">Olsen’s Danish Village Bakery: 1529 Mission Dr — (805) 688-6314. Open 7 AM–6 PM (M–Th), 7 AM–7 PM (F–Su). Mortensen’s: 1588 Mission Dr — (805) 688-8373. Open 9 AM–5 PM. Rain backup: Shorter stroll + warm pastries + hot chocolate.</div>
-        
+      
+      <div class="block-note">Olsen’s Danish Village Bakery: 1529 Mission Dr — (805) 688-6314. Open 7 AM–6 PM (M–Th), 7 AM–7 PM (F–Su). Mortensen’s: 1588 Mission Dr — (805) 688-8373. Open 9 AM–5 PM. Rain backup: Shorter stroll + warm pastries + hot chocolate.</div>
+      
 
-        
-        <div class="insider-tip">Olsen’s aebleskiver (Danish pancake balls) are the must-try. Ask for them fresh — they come out in batches.</div>
-        
+      
+      <div class="insider-tip">Olsen’s aebleskiver (Danish pancake balls) are the must-try. Ask for them fresh — they come out in batches.</div>
+      
 
-        
+      
 
-        
+      
 
-        
-        <div class="block-address">
-          📍 1529 Mission Dr, Solvang, CA 93463
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('1529 Mission Dr, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
-        </div>
-        
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=1529+Mission+Dr,+Solvang,+CA+93463" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=1529%20Mission%20Dr%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
+      
+      <div class="block-address">
+        📍 1529 Mission Dr, Solvang, CA 93463
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('1529 Mission Dr, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
       </div>
       
-      <div class="block-photo">
-          <img src="img/tivoli-square.jpg" alt="Tivoli Square in Solvang — Danish half-timber facades and windmills" loading="lazy">
-          <span class="photo-credit">Photo: Wikimedia Commons</span>
-      </div>
+      <a href="javascript:void(0)" onclick="openMaps('1529 Mission Dr, Solvang, CA 93463')" class="maps-badge" title="Open in Maps app">📍 View on Map</a>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('1529 Mission Dr, Solvang, CA 93463')" title="Open in native maps app">🧭 Navigate here</a>
+      
+
       
     </div>
     
-    
-    
-    
-
-    <div class="time-block block-activity" data-block-type="activity">
-      <div class="type-icon">🏛️</div>
-      <div class="time-col">
-        <span class="time-start">4:30 PM</span>
-        <span class="time-end">5:30 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Activity</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=633+Chalk+Hill+Rd,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Hans Christian Andersen Park or Hotel Downtime 📍</a>
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">If kids have energy: the park has a fantastic playground, skate park, and open fields. Named for Denmark’s most famous storyteller. If energy is low after the drive: head back to The Hadsten and relax in The Yard courtyard.</div>
-        
-
-        
-        <div class="block-note">633 Chalk Hill Rd, Solvang. Free. Open dawn to dusk. Phone: (805) 688-7529. KOKO ALERT: Playground can get busy after school hours. Rain backup: Skip park, hotel downtime instead.</div>
-        
-
-        
-
-        
-
-        
-
-        
-        <div class="block-address">
-          📍 633 Chalk Hill Rd, Solvang, CA 93463
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('633 Chalk Hill Rd, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
-        </div>
-        
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=633+Chalk+Hill+Rd,+Solvang,+CA+93463" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=633%20Chalk%20Hill%20Rd%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
-      </div>
-      
-      <div class="block-photo">
-          <img src="img/hans-christian-andersen.jpg" alt="Hans Christian Andersen bust in Solvang, California" loading="lazy">
-          <span class="photo-credit">Photo: Wikimedia Commons</span>
-      </div>
-      
+    <div class="block-photo">
+        <img src="img/tivoli-square.jpg" alt="Tivoli Square in Solvang — Danish half-timber facades and windmills" loading="lazy">
+        <span class="photo-credit">Photo: Wikimedia Commons</span>
     </div>
     
     
-    
-    
+  </div>
+  
+  
+  
+  
 
-    <div class="time-block block-meal" data-block-type="meal">
-      <div class="type-icon">🍽️</div>
-      <div class="time-col">
-        <span class="time-start">6:00 PM</span>
-        <span class="time-end">7:00 PM</span>
+  <div class="time-block block-activity" data-block-type="activity">
+    <div class="type-icon">🏛️</div>
+    <div class="time-col">
+      <span class="time-start">4:30 PM</span>
+      <span class="time-end">5:30 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Activity</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=633+Chalk+Hill+Rd,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Hans Christian Andersen Park or Hotel Downtime 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">If kids have energy: the park has a fantastic playground, skate park, and open fields. Named for Denmark’s most famous storyteller. If energy is low after the drive: head back to The Hadsten and relax in The Yard courtyard.</div>
+      
+
+      
+      <div class="block-note">633 Chalk Hill Rd, Solvang. Free. Open dawn to dusk. Phone: (805) 688-7529. KOKO ALERT: Playground can get busy after school hours. Rain backup: Skip park, hotel downtime instead.</div>
+      
+
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 633 Chalk Hill Rd, Solvang, CA 93463
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('633 Chalk Hill Rd, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
       </div>
-      <div class="block-content">
-        <span class="block-type-badge">Meal</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=1693+Mission+Dr,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Dinner: CHOMP or Craft House at Corque 📍</a>
-          
-        </h4>
+      
+      <a href="javascript:void(0)" onclick="openMaps('633 Chalk Hill Rd, Solvang, CA 93463')" class="maps-badge" title="Open in Maps app">📍 View on Map</a>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('633 Chalk Hill Rd, Solvang, CA 93463')" title="Open in native maps app">🧭 Navigate here</a>
+      
 
-        
+      
+    </div>
+    
+    <div class="block-photo">
+        <img src="img/hans-christian-andersen.jpg" alt="Hans Christian Andersen bust in Solvang, California" loading="lazy">
+        <span class="photo-credit">Photo: Wikimedia Commons</span>
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
 
+  <div class="time-block block-meal" data-block-type="meal">
+    <div class="type-icon">🍽️</div>
+    <div class="time-col">
+      <span class="time-start">6:00 PM</span>
+      <span class="time-end">7:00 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Meal</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
         
-        <div class="block-narrative">Two options. CHOMP is the easiest kid win — burgers, fries, shakes, and a relaxed vibe. Craft House at Corque is nicer, still family-friendly, with craft American plates inside the Corque Hotel. Kitchen closes 9 PM weekdays.</div>
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=1693+Mission+Dr,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Dinner: CHOMP or Craft House at Corque 📍</a>
         
+      </h4>
 
-        
-        <div class="block-note">CHOMP Burgers, Fries &amp; Shakes: 1693 Mission Dr, Solvang. Phone: (805) 688-7733. Open 11:30 AM–8:00 PM daily. Website: chompofsolvang.com. Kid-friendly, outdoor seating. Menu: burgers, tri-tip, fish &amp; chips, shakes. 
+      
+
+      
+      <div class="block-narrative">Two options. CHOMP is the easiest kid win — burgers, fries, shakes, and a relaxed vibe. Craft House at Corque is nicer, still family-friendly, with craft American plates inside the Corque Hotel. Kitchen closes 9 PM weekdays.</div>
+      
+
+      
+      <div class="block-note">CHOMP Burgers, Fries &amp; Shakes: 1693 Mission Dr, Solvang. Phone: (805) 688-7733. Open 11:30 AM–8:00 PM daily. Website: chompofsolvang.com. Kid-friendly, outdoor seating. Menu: burgers, tri-tip, fish &amp; chips, shakes. 
 Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:30 PM–9:30 PM (dinner). Website: crafthousecorque.com. Inside Corque Hotel. New American, craft cocktails.</div>
-        
+      
 
-        
+      
 
-        
+      
 
-        
+      
 
-        
-        <div class="block-address">
-          📍 1693 Mission Dr, Solvang, CA 93463
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('1693 Mission Dr, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
-        </div>
-        
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=1693+Mission+Dr,+Solvang,+CA+93463" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=1693%20Mission%20Dr%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
+      
+      <div class="block-address">
+        📍 1693 Mission Dr, Solvang, CA 93463
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('1693 Mission Dr, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
       </div>
+      
+      <a href="javascript:void(0)" onclick="openMaps('1693 Mission Dr, Solvang, CA 93463')" class="maps-badge" title="Open in Maps app">📍 View on Map</a>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('1693 Mission Dr, Solvang, CA 93463')" title="Open in native maps app">🧭 Navigate here</a>
+      
+
       
     </div>
     
     
-    
-    
-
-    <div class="time-block block-rest" data-block-type="rest">
-      <div class="type-icon">💤</div>
-      <div class="time-col">
-        <span class="time-start">7:30 PM</span>
-        <span class="time-end">8:00 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Rest</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
+    <div class="block-alternatives">
+      <button class="alt-toggle" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded')==='true'?'false':'true'); this.nextElementSibling.classList.toggle('open')" aria-expanded="false">
+        <span class="alt-arrow">&#x25BC;</span>
+        <span>1 more option</span>
+      </button>
+      <div class="alt-list">
+        
+        <div class="alt-card">
           
-            Dessert Walk or Hotel
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">Stroll back through the village for a dessert pastry, or head straight to The Hadsten. First night — keep it easy.</div>
-        
-
-        
-        <div class="block-note">Baths, stories, lights out by 8:00 PM.</div>
-        
-
-        
-
-        
-
-        
-
-        
-
+          <div class="alt-card-body">
+            <div class="alt-card-name">Craft House at Corque</div>
+            <div class="alt-card-vibe">Upscale-casual New American inside the Corque Hotel — craft cocktails, seasonal plates, heated patio</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">$$–$$$</span>
+              <a href="https://www.yelp.com/biz/craft-house-at-corque-solvang" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=420+Alisal+Rd,+Solvang,+CA+93463" target="_blank">📍 Map</a>
+              <a href="tel:8056932258">📞 Call</a>
+            </div>
+          </div>
+        </div>
         
       </div>
-      
     </div>
     
   </div>
+  
+  
+  
+  
+
+  <div class="time-block block-rest" data-block-type="rest">
+    <div class="type-icon">💤</div>
+    <div class="time-col">
+      <span class="time-start">7:30 PM</span>
+      <span class="time-end">8:00 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Rest</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          Dessert Walk or Hotel
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Stroll back through the village for a dessert pastry, or head straight to The Hadsten. First night — keep it easy.</div>
+      
+
+      
+      <div class="block-note">Baths, stories, lights out by 8:00 PM.</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+</div>
+
+  
 
   
   
@@ -2069,348 +2538,400 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
   </div>
 
   
-  <div class="time-blocks">
-    <div class="now-indicator" id="now-2" data-day-date="Tuesday, March 31"></div>
-    
-    
-    
-    
-    
+  
 
-    <div class="time-block block-meal" data-block-type="meal">
-      <div class="type-icon">🍽️</div>
-      <div class="time-col">
-        <span class="time-start">8:00 AM</span>
-        <span class="time-end">9:00 AM</span>
+  
+  
+    
+    
+<div class="time-blocks">
+  <div class="now-indicator" data-day-date="Tuesday, March 31"></div>
+  
+  
+  
+  
+
+  <div class="time-block block-meal" data-block-type="meal">
+    <div class="type-icon">🍽️</div>
+    <div class="time-col">
+      <span class="time-start">8:00 AM</span>
+      <span class="time-end">9:00 AM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Meal</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=1531+Mission+Dr,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Breakfast: Paula’s Pancake House or Hotel 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Solvang’s original pancake house. Expect a line on weekends but Tuesday should be smooth. Danish pancakes, waffles, and the famous aebleskiver.</div>
+      
+
+      
+      <div class="block-note">Paula’s Pancake House: 1531 Mission Dr, Solvang. Phone: (805) 688-2867. Open 7:00 AM–3:00 PM daily. Website: paulaspancakehouse.com. Alternative: The Boiler Room at The Hadsten (breakfast 7–11 AM).</div>
+      
+
+      
+      <div class="insider-tip">The Danish sausage pancake combo is the local favorite. Get there by 8 AM to avoid the wait.</div>
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 1531 Mission Dr, Solvang, CA 93463
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('1531 Mission Dr, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
       </div>
-      <div class="block-content">
-        <span class="block-type-badge">Meal</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
+      
+      <a href="javascript:void(0)" onclick="openMaps('1531 Mission Dr, Solvang, CA 93463')" class="maps-badge" title="Open in Maps app">📍 View on Map</a>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('1531 Mission Dr, Solvang, CA 93463')" title="Open in native maps app">🧭 Navigate here</a>
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-faith" data-block-type="faith">
+    <div class="type-icon">⛪</div>
+    <div class="time-col">
+      <span class="time-start">9:30 AM</span>
+      <span class="time-end">11:00 AM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Faith</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=1760+Mission+Dr,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Old Mission Santa Inés 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Founded in 1804 — the 19th of California’s 21 missions. Self-guided narrated tours wind through the chapel, gardens, and museum. The grounds are beautiful and shaded — the boys can explore the courtyard and fountain while Dan and Minako take in the history.</div>
+      
+
+      
+      <div class="block-note">1760 Mission Dr, Solvang, CA 93464. Phone: (805) 688-4815. Website: missionsantaines.org. Self-guided tours: 9:00 AM–4:30 PM daily. Admission: ~$8/adult, kids 5 and under FREE. Daily Mass at 8:00 AM. Docent-led tours with 2-week advance notice. Rain backup: This IS the rain backup — partially covered. Great anchor activity for a rainy day.</div>
+      
+
+      
+      <div class="insider-tip">The mission gardens are the hidden gem — quieter than the chapel and great for photos.</div>
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 1760 Mission Dr, Solvang, CA 93464
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('1760 Mission Dr, Solvang, CA 93464');this.textContent='✓ Copied'" title="Copy address">📋</button>
+      </div>
+      
+      <a href="javascript:void(0)" onclick="openMaps('1760 Mission Dr, Solvang, CA 93464')" class="maps-badge" title="Open in Maps app">📍 View on Map</a>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('1760 Mission Dr, Solvang, CA 93464')" title="Open in native maps app">🧭 Navigate here</a>
+      
+
+      
+    </div>
+    
+    <div class="block-photo">
+        <img src="img/mission-santa-ines.jpg" alt="Old Mission Santa Inés — founded 1804, Solvang" loading="lazy">
+        <span class="photo-credit">Photo: Wikimedia Commons</span>
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-explore" data-block-type="explore">
+    <div class="type-icon">🗺️</div>
+    <div class="time-col">
+      <span class="time-start">11:15 AM</span>
+      <span class="time-end">12:30 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Explore</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=Copenhagen+Dr,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Village Browsing + Pastry &amp; Coffee 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Browse the shops along Copenhagen Drive and Mission Drive. Pick up souvenirs, grab a pastry and coffee. Let the kids choose one small souvenir each.</div>
+      
+
+      
+      <div class="block-note">Good stops: The Book Loft (two-story bookshop), Jule Hus Christmas shop, Rasmussen’s toy store. Olsen’s and Mortensen’s bakeries are along this route.</div>
+      
+
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 Copenhagen Dr, Solvang, CA 93463
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('Copenhagen Dr, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
+      </div>
+      
+      <a href="javascript:void(0)" onclick="openMaps('Copenhagen Dr, Solvang, CA 93463')" class="maps-badge" title="Open in Maps app">📍 View on Map</a>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('Copenhagen Dr, Solvang, CA 93463')" title="Open in native maps app">🧭 Navigate here</a>
+      
+
+      
+    </div>
+    
+    <div class="block-photo">
+        <img src="img/solvang-windmill.jpg" alt="Solvang windmill and Danish village architecture" loading="lazy">
+        <span class="photo-credit">Photo: Wikimedia Commons</span>
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-meal" data-block-type="meal">
+    <div class="type-icon">🍽️</div>
+    <div class="time-col">
+      <span class="time-start">12:30 PM</span>
+      <span class="time-end">1:30 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Meal</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          Lunch: Casual in Town
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Keep it easy. Grab sandwiches, pizza, or keep grazing on bakery items. Eat on the benches near Solvang Park.</div>
+      
+
+      
+      <div class="block-note">Options: CHOMP (if skipped Monday), Peasants DELI (473 Atterdag Rd — sandwiches + retro arcade), or any village cafe. Keep it light before Issa’s nap window.</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-nap" data-block-type="nap">
+    <div class="type-icon">💤</div>
+    <div class="time-col">
+      <span class="time-start">2:00 PM</span>
+      <span class="time-end">4:00 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Nap</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=633+Chalk+Hill+Rd,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Hans Christian Andersen Park or Hotel Pool/Rest 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Issa’s nap window. Two options: (A) If Issa naps at the hotel, Dan and Koko go to HCA Park (playground, open fields). (B) If everyone goes to the park, Issa can nap in the stroller while Koko plays. Or skip the park and use the hotel pool.</div>
+      
+
+      
+      <div class="block-note">HCA Park: 633 Chalk Hill Rd, Solvang. Free. Open dawn to dusk. Hotel pool option if weather is warm enough. Bring Issa’s nap blanket and white noise app.</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-meal" data-block-type="meal">
+    <div class="type-icon">🍽️</div>
+    <div class="time-col">
+      <span class="time-start">5:30 PM</span>
+      <span class="time-end">6:30 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Meal</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=420+Alisal+Rd,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Early Dinner 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">If Craft House at Corque was skipped Monday, tonight’s the night. Otherwise, try a Buellton dinner — Industrial Eats or Ellen’s Danish Pancake House for a change of scenery.</div>
+      
+
+      
+      <div class="block-note">Craft House at Corque: 420 Alisal Rd. (805) 693-2258. Dinner 3:30–9:30 PM. crafthousecorque.com. Alternative Buellton options (5 min drive): Industrial Eats — 181 Industrial Way, Buellton. Pack bags tonight — check-out tomorrow morning.</div>
+      
+
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 420 Alisal Rd, Solvang, CA 93463
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('420 Alisal Rd, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
+      </div>
+      
+      <a href="javascript:void(0)" onclick="openMaps('420 Alisal Rd, Solvang, CA 93463')" class="maps-badge" title="Open in Maps app">📍 View on Map</a>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('420 Alisal Rd, Solvang, CA 93463')" title="Open in native maps app">🧭 Navigate here</a>
+      
+
+      
+    </div>
+    
+    
+    <div class="block-alternatives">
+      <button class="alt-toggle" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded')==='true'?'false':'true'); this.nextElementSibling.classList.toggle('open')" aria-expanded="false">
+        <span class="alt-arrow">&#x25BC;</span>
+        <span>2 more options</span>
+      </button>
+      <div class="alt-list">
+        
+        <div class="alt-card">
           
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=1531+Mission+Dr,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Breakfast: Paula’s Pancake House or Hotel 📍</a>
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">Solvang’s original pancake house. Expect a line on weekends but Tuesday should be smooth. Danish pancakes, waffles, and the famous aebleskiver.</div>
-        
-
-        
-        <div class="block-note">Paula’s Pancake House: 1531 Mission Dr, Solvang. Phone: (805) 688-2867. Open 7:00 AM–3:00 PM daily. Website: paulaspancakehouse.com. Alternative: The Boiler Room at The Hadsten (breakfast 7–11 AM).</div>
-        
-
-        
-        <div class="insider-tip">The Danish sausage pancake combo is the local favorite. Get there by 8 AM to avoid the wait.</div>
-        
-
-        
-
-        
-
-        
-        <div class="block-address">
-          📍 1531 Mission Dr, Solvang, CA 93463
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('1531 Mission Dr, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
+          <div class="alt-card-body">
+            <div class="alt-card-name">CHOMP Burgers, Fries &amp; Shakes</div>
+            <div class="alt-card-vibe">Kid-friendly burgers, tri-tip, fish &amp; chips, and shakes — casual outdoor seating on Mission Dr</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">$$</span>
+              <a href="https://www.yelp.com/biz/chomp-burgers-fries-and-shakes-solvang" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=1693+Mission+Dr,+Solvang,+CA+93463" target="_blank">📍 Map</a>
+              <a href="tel:8056887733">📞 Call</a>
+            </div>
+          </div>
         </div>
         
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=1531+Mission+Dr,+Solvang,+CA+93463" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=1531%20Mission%20Dr%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
-      </div>
-      
-    </div>
-    
-    
-    
-    
-
-    <div class="time-block block-faith" data-block-type="faith">
-      <div class="type-icon">⛪</div>
-      <div class="time-col">
-        <span class="time-start">9:30 AM</span>
-        <span class="time-end">11:00 AM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Faith</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
+        <div class="alt-card">
           
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=1760+Mission+Dr,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Old Mission Santa Inés 📍</a>
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">Founded in 1804 — the 19th of California’s 21 missions. Self-guided narrated tours wind through the chapel, gardens, and museum. The grounds are beautiful and shaded — the boys can explore the courtyard and fountain while Dan and Minako take in the history.</div>
-        
-
-        
-        <div class="block-note">1760 Mission Dr, Solvang, CA 93464. Phone: (805) 688-4815. Website: missionsantaines.org. Self-guided tours: 9:00 AM–4:30 PM daily. Admission: ~$8/adult, kids 5 and under FREE. Daily Mass at 8:00 AM. Docent-led tours with 2-week advance notice. Rain backup: This IS the rain backup — partially covered. Great anchor activity for a rainy day.</div>
-        
-
-        
-        <div class="insider-tip">The mission gardens are the hidden gem — quieter than the chapel and great for photos.</div>
-        
-
-        
-
-        
-
-        
-        <div class="block-address">
-          📍 1760 Mission Dr, Solvang, CA 93464
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('1760 Mission Dr, Solvang, CA 93464');this.textContent='✓ Copied'" title="Copy address">📋</button>
+          <div class="alt-card-body">
+            <div class="alt-card-name">Industrial Eats</div>
+            <div class="alt-card-vibe">Wood-fired pizzas, craft butcher shop, local wines on tap — 5 min drive in Buellton</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">$$</span>
+              <a href="https://www.yelp.com/biz/industrial-eats-buellton" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=181+Industrial+Way,+Buellton,+CA+93427" target="_blank">📍 Map</a>
+              <a href="tel:8056888807">📞 Call</a>
+            </div>
+          </div>
         </div>
         
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=1760+Mission+Dr,+Solvang,+CA+93463" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=1760%20Mission%20Dr%2C%20Solvang%2C%20CA%2093464&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
       </div>
-      
-      <div class="block-photo">
-          <img src="img/mission-santa-ines.jpg" alt="Old Mission Santa Inés — founded 1804, Solvang" loading="lazy">
-          <span class="photo-credit">Photo: Wikimedia Commons</span>
-      </div>
-      
-    </div>
-    
-    
-    
-    
-
-    <div class="time-block block-explore" data-block-type="explore">
-      <div class="type-icon">🗺️</div>
-      <div class="time-col">
-        <span class="time-start">11:15 AM</span>
-        <span class="time-end">12:30 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Explore</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=Copenhagen+Dr,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Village Browsing + Pastry &amp; Coffee 📍</a>
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">Browse the shops along Copenhagen Drive and Mission Drive. Pick up souvenirs, grab a pastry and coffee. Let the kids choose one small souvenir each.</div>
-        
-
-        
-        <div class="block-note">Good stops: The Book Loft (two-story bookshop), Jule Hus Christmas shop, Rasmussen’s toy store. Olsen’s and Mortensen’s bakeries are along this route.</div>
-        
-
-        
-
-        
-
-        
-
-        
-        <div class="block-address">
-          📍 Copenhagen Dr, Solvang, CA 93463
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('Copenhagen Dr, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
-        </div>
-        
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=Copenhagen+Dr,+Solvang,+CA+93463" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=Copenhagen%20Dr%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
-      </div>
-      
-      <div class="block-photo">
-          <img src="img/solvang-windmill.jpg" alt="Solvang windmill and Danish village architecture" loading="lazy">
-          <span class="photo-credit">Photo: Wikimedia Commons</span>
-      </div>
-      
-    </div>
-    
-    
-    
-    
-
-    <div class="time-block block-meal" data-block-type="meal">
-      <div class="type-icon">🍽️</div>
-      <div class="time-col">
-        <span class="time-start">12:30 PM</span>
-        <span class="time-end">1:30 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Meal</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            Lunch: Casual in Town
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">Keep it easy. Grab sandwiches, pizza, or keep grazing on bakery items. Eat on the benches near Solvang Park.</div>
-        
-
-        
-        <div class="block-note">Options: CHOMP (if skipped Monday), Peasants DELI (473 Atterdag Rd — sandwiches + retro arcade), or any village cafe. Keep it light before Issa’s nap window.</div>
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-      </div>
-      
-    </div>
-    
-    
-    
-    
-
-    <div class="time-block block-nap" data-block-type="nap">
-      <div class="type-icon">💤</div>
-      <div class="time-col">
-        <span class="time-start">2:00 PM</span>
-        <span class="time-end">4:00 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Nap</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=633+Chalk+Hill+Rd,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Hans Christian Andersen Park or Hotel Pool/Rest 📍</a>
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">Issa’s nap window. Two options: (A) If Issa naps at the hotel, Dan and Koko go to HCA Park (playground, open fields). (B) If everyone goes to the park, Issa can nap in the stroller while Koko plays. Or skip the park and use the hotel pool.</div>
-        
-
-        
-        <div class="block-note">HCA Park: 633 Chalk Hill Rd, Solvang. Free. Open dawn to dusk. Hotel pool option if weather is warm enough. Bring Issa’s nap blanket and white noise app.</div>
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-      </div>
-      
-    </div>
-    
-    
-    
-    
-
-    <div class="time-block block-meal" data-block-type="meal">
-      <div class="type-icon">🍽️</div>
-      <div class="time-col">
-        <span class="time-start">5:30 PM</span>
-        <span class="time-end">6:30 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Meal</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=420+Alisal+Rd,+Solvang,+CA+93463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Early Dinner 📍</a>
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">If Craft House at Corque was skipped Monday, tonight’s the night. Otherwise, try a Buellton dinner — Industrial Eats or Ellen’s Danish Pancake House for a change of scenery.</div>
-        
-
-        
-        <div class="block-note">Craft House at Corque: 420 Alisal Rd. (805) 693-2258. Dinner 3:30–9:30 PM. crafthousecorque.com. Alternative Buellton options (5 min drive): Industrial Eats — 181 Industrial Way, Buellton. Pack bags tonight — check-out tomorrow morning.</div>
-        
-
-        
-
-        
-
-        
-
-        
-        <div class="block-address">
-          📍 420 Alisal Rd, Solvang, CA 93463
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('420 Alisal Rd, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
-        </div>
-        
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=420+Alisal+Rd,+Solvang,+CA+93463" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=420%20Alisal%20Rd%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
-      </div>
-      
-    </div>
-    
-    
-    
-    
-
-    <div class="time-block block-rest" data-block-type="rest">
-      <div class="type-icon">💤</div>
-      <div class="time-col">
-        <span class="time-start">7:00 PM</span>
-        <span class="time-end">7:30 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Rest</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            Relaxed Walk + Hotel
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">Evening stroll through the village. Solvang is beautiful at dusk with the lights on the windmills. Back to the hotel for baths and stories. Last night in Solvang.</div>
-        
-
-        
-        <div class="block-note">Pack bags tonight — check-out tomorrow morning.</div>
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-      </div>
-      
     </div>
     
   </div>
+  
+  
+  
+  
+
+  <div class="time-block block-rest" data-block-type="rest">
+    <div class="type-icon">💤</div>
+    <div class="time-col">
+      <span class="time-start">7:00 PM</span>
+      <span class="time-end">7:30 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Rest</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          Relaxed Walk + Hotel
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Evening stroll through the village. Solvang is beautiful at dusk with the lights on the windmills. Back to the hotel for baths and stories. Last night in Solvang.</div>
+      
+
+      
+      <div class="block-note">Pack bags tonight — check-out tomorrow morning.</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+</div>
+
+  
 
   
   
@@ -2495,416 +3016,493 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
   </div>
 
   
-  <div class="time-blocks">
-    <div class="now-indicator" id="now-3" data-day-date="Wednesday, April 1"></div>
-    
-    
-    
-    
-    
+  
 
-    <div class="time-block block-meal" data-block-type="meal">
-      <div class="type-icon">🍽️</div>
-      <div class="time-col">
-        <span class="time-start">8:30 AM</span>
-        <span class="time-end">9:30 AM</span>
+  
+  
+    
+    
+<div class="time-blocks">
+  <div class="now-indicator" data-day-date="Wednesday, April 1"></div>
+  
+  
+  
+  
+
+  <div class="time-block block-meal" data-block-type="meal">
+    <div class="type-icon">🍽️</div>
+    <div class="time-col">
+      <span class="time-start">8:30 AM</span>
+      <span class="time-end">9:30 AM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Meal</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&query=1450%20Mission%20Dr%2C%20Solvang%2C%20CA%2093463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Breakfast + Final Solvang Stroll 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Last morning in Solvang. Grab breakfast at The Hadsten’s Boiler Room or one last pastry run. Quick stroll through the village, then check out and load the car.</div>
+      
+
+      
+      <div class="block-note">Check out of The Hadsten by 9:30 AM. Olsen’s opens at 7 AM if you want one more aebleskiver.</div>
+      
+
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 1450 Mission Dr, Solvang, CA 93463
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('1450 Mission Dr, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
       </div>
-      <div class="block-content">
-        <span class="block-type-badge">Meal</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            <a href="https://www.google.com/maps/search/?api=1&query=1450%20Mission%20Dr%2C%20Solvang%2C%20CA%2093463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Breakfast + Final Solvang Stroll 📍</a>
-          
-        </h4>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('1450 Mission Dr, Solvang, CA 93463')" title="Open in native maps app">🧭 Navigate here</a>
+      
 
-        
-
-        
-        <div class="block-narrative">Last morning in Solvang. Grab breakfast at The Hadsten’s Boiler Room or one last pastry run. Quick stroll through the village, then check out and load the car.</div>
-        
-
-        
-        <div class="block-note">Check out of The Hadsten by 9:30 AM. Olsen’s opens at 7 AM if you want one more aebleskiver.</div>
-        
-
-        
-
-        
-
-        
-
-        
-        <div class="block-address">
-          📍 1450 Mission Dr, Solvang, CA 93463
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('1450 Mission Dr, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
-        </div>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=1450%20Mission%20Dr%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
-      </div>
       
     </div>
     
     
-    
-    
+  </div>
+  
+  
+  
+  
 
-    <div class="time-block block-transit" data-block-type="transit">
-      <div class="type-icon">🚶</div>
-      <div class="time-col">
-        <span class="time-start">10:30 AM</span>
-        <span class="time-end">11:15 AM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Transit</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            Drive: Solvang → Santa Barbara (34 mi / 43 min)
-          
-        </h4>
+  <div class="time-block block-transit" data-block-type="transit">
+    <div class="type-icon">🚶</div>
+    <div class="time-col">
+      <span class="time-start">10:30 AM</span>
+      <span class="time-end">11:15 AM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Transit</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          Drive: Solvang → Santa Barbara (34 mi / 43 min)
+        
+      </h4>
 
-        
+      
 
-        
-        <div class="block-narrative">A quick 43-minute drive down US-101 South. Flat and scenic — no winding passes. No piriformis stop needed (under 45 min).</div>
-        
+      
+      <div class="block-narrative">A quick 43-minute drive down US-101 South. Flat and scenic — no winding passes. No piriformis stop needed (under 45 min).</div>
+      
 
-        
-        <div class="block-note">Take US-101 South. Do NOT take Hwy 154 (curvy, carsick risk for Minako). Arrive at harbor area by 11:15 AM.</div>
-        
+      
+      <div class="block-note">Take US-101 South. Do NOT take Hwy 154 (curvy, carsick risk for Minako). Arrive at harbor area by 11:15 AM.</div>
+      
 
-        
+      
 
-        
+      
 
-        
+      
 
-        
+      
 
-        
-      </div>
       
     </div>
     
     
-    
-    
+  </div>
+  
+  
+  
+  
 
-    <div class="time-block block-meal" data-block-type="meal">
-      <div class="type-icon">🍽️</div>
-      <div class="time-col">
-        <span class="time-start">11:30 AM</span>
-        <span class="time-end">12:30 PM</span>
+  <div class="time-block block-meal" data-block-type="meal">
+    <div class="type-icon">🍽️</div>
+    <div class="time-col">
+      <span class="time-start">11:30 AM</span>
+      <span class="time-end">12:30 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Meal</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=117+Harbor+Way,+Santa+Barbara,+CA+93109" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Lunch: On The Alley 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Casual harbor-side dining. Sister venue to Brophy Bros. Fresh fish tacos, burgers, and salads with outdoor seating right on the water. Perfect for kids.</div>
+      
+
+      
+      <div class="block-note">On The Alley: 117 Harbor Way, Santa Barbara. Phone: (805) 962-6315. Open 7:30 AM–7:30 PM daily. Website: onthealley.com. Outdoor seating with harbor views. Casual — no reservations needed.</div>
+      
+
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 117 Harbor Way, Santa Barbara, CA 93109
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('117 Harbor Way, Santa Barbara, CA 93109');this.textContent='✓ Copied'" title="Copy address">📋</button>
       </div>
-      <div class="block-content">
-        <span class="block-type-badge">Meal</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=117+Harbor+Way,+Santa+Barbara,+CA+93109" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Lunch: On The Alley 📍</a>
-          
-        </h4>
+      
+      <a href="javascript:void(0)" onclick="openMaps('117 Harbor Way, Santa Barbara, CA 93109')" class="maps-badge" title="Open in Maps app">📍 View on Map</a>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('117 Harbor Way, Santa Barbara, CA 93109')" title="Open in native maps app">🧭 Navigate here</a>
+      
 
-        
-
-        
-        <div class="block-narrative">Casual harbor-side dining. Sister venue to Brophy Bros. Fresh fish tacos, burgers, and salads with outdoor seating right on the water. Perfect for kids.</div>
-        
-
-        
-        <div class="block-note">On The Alley: 117 Harbor Way, Santa Barbara. Phone: (805) 962-6315. Open 7:30 AM–7:30 PM daily. Website: onthealley.com. Outdoor seating with harbor views. Casual — no reservations needed.</div>
-        
-
-        
-
-        
-
-        
-
-        
-        <div class="block-address">
-          📍 117 Harbor Way, Santa Barbara, CA 93109
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('117 Harbor Way, Santa Barbara, CA 93109');this.textContent='✓ Copied'" title="Copy address">📋</button>
-        </div>
-        
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=117+Harbor+Way,+Santa+Barbara,+CA+93109" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=117%20Harbor%20Way%2C%20Santa%20Barbara%2C%20CA%2093109&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
-      </div>
       
     </div>
     
     
-    
-    
-
-    <div class="time-block block-activity" data-block-type="activity">
-      <div class="type-icon">🏛️</div>
-      <div class="time-col">
-        <span class="time-start">1:00 PM</span>
-        <span class="time-end">2:30 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Activity</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
+    <div class="block-alternatives">
+      <button class="alt-toggle" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded')==='true'?'false':'true'); this.nextElementSibling.classList.toggle('open')" aria-expanded="false">
+        <span class="alt-arrow">&#x25BC;</span>
+        <span>2 more options</span>
+      </button>
+      <div class="alt-list">
+        
+        <div class="alt-card">
           
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=217+Stearns+Wharf,+Santa+Barbara,+CA+93101" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Stearns Wharf 📍</a>
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">California’s oldest working wharf, built in 1872. Walk the full length, watch pelicans, browse the shops, and enjoy the harbor views. Free to walk — just pay for parking.</div>
-        
-
-        
-        <div class="block-note">Stearns Wharf: foot of State St, Santa Barbara. Parking: first 90 min FREE, then $3.50/hr, $20/day max. 141 spaces on the wharf. Lot hours: 8 AM–10 PM. Contact: (805) 564-5534. Stroller-friendly. Great photo ops.</div>
-        
-
-        
-        <div class="insider-tip">Walk all the way to the end of the wharf for the best Channel Islands views and fewer crowds.</div>
-        
-
-        
-
-        
-
-        
-        <div class="block-address">
-          📍 Stearns Wharf, Santa Barbara, CA 93101
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('Stearns Wharf, Santa Barbara, CA 93101');this.textContent='✓ Copied'" title="Copy address">📋</button>
+          <div class="alt-card-body">
+            <div class="alt-card-name">Brophy Bros</div>
+            <div class="alt-card-vibe">Classic harbor seafood on the dock — fresh oysters, clam chowder, fish &amp; chips. Since 1986.</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">$$–$$$</span>
+              <a href="https://www.yelp.com/biz/brophy-bros-santa-barbara-santa-barbara" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=119+Harbor+Way,+Santa+Barbara,+CA+93109" target="_blank">📍 Map</a>
+              <a href="tel:8059664418">📞 Call</a>
+            </div>
+          </div>
         </div>
         
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=217+Stearns+Wharf,+Santa+Barbara,+CA+93101" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=Stearns%20Wharf%2C%20Santa%20Barbara%2C%20CA%2093101&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
-      </div>
-      
-      <div class="block-photo">
-          <img src="img/stearns-wharf.jpg" alt="Stearns Wharf, Santa Barbara — California’s oldest working wharf" loading="lazy">
-          <span class="photo-credit">Photo: Don Ramey Logan / Wikimedia Commons</span>
-      </div>
-      
-    </div>
-    
-    
-    
-    
-
-    <div class="time-block block-activity" data-block-type="activity">
-      <div class="type-icon">🏛️</div>
-      <div class="time-col">
-        <span class="time-start">2:30 PM</span>
-        <span class="time-end">4:00 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Activity</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
+        <div class="alt-card">
           
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=211+Stearns+Wharf,+Santa+Barbara,+CA+93101" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Sea Center (Santa Barbara Museum of Natural History) 📍</a>
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">Touch tanks, shark encounters, and marine exhibits right on Stearns Wharf. The shark touch pool is incredible for Koko. Seahorses exhibit currently featured (as of March 2026). Issa can nap in the stroller while Koko explores.</div>
-        
-
-        
-        <div class="block-note">Sea Center: 211 Stearns Wharf, Santa Barbara. Phone: (805) 962-2526. Website: sbnature.org/seacenter. Open daily 10 AM–5 PM. Admission: $17/adult, $15/senior &amp; teen (13–17), $13/child (2–12). Family of 4: ~$60. Stroller-friendly. KOKO ALERT: Touch tanks can get crowded and noisy. Let her approach at her own pace.</div>
-        
-
-        
-
-        
-
-        
-
-        
-        <div class="block-address">
-          📍 211 Stearns Wharf, Santa Barbara, CA 93101
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('211 Stearns Wharf, Santa Barbara, CA 93101');this.textContent='✓ Copied'" title="Copy address">📋</button>
+          <div class="alt-card-body">
+            <div class="alt-card-name">The Harbor Restaurant</div>
+            <div class="alt-card-vibe">Waterfront steaks &amp; seafood on Stearns Wharf — ocean views from every table, full bar</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">$$$</span>
+              <a href="https://www.yelp.com/biz/the-harbor-restaurant-santa-barbara-2" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=210+Stearns+Wharf,+Santa+Barbara,+CA+93101" target="_blank">📍 Map</a>
+              <a href="tel:8059633311">📞 Call</a>
+            </div>
+          </div>
         </div>
         
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=211+Stearns+Wharf,+Santa+Barbara,+CA+93101" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=211%20Stearns%20Wharf%2C%20Santa%20Barbara%2C%20CA%2093101&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
       </div>
-      
-      <div class="block-photo">
-          <img src="img/sea-center.jpg" alt="Sea Center on Stearns Wharf — Santa Barbara Museum of Natural History" loading="lazy">
-          <span class="photo-credit">Photo: Wikimedia Commons</span>
-      </div>
-      
-    </div>
-    
-    
-    
-    
-
-    <div class="time-block block-activity" data-block-type="activity">
-      <div class="type-icon">🏛️</div>
-      <div class="time-col">
-        <span class="time-start">4:15 PM</span>
-        <span class="time-end">5:15 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Activity</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=236+E+Cabrillo+Blvd,+Santa+Barbara,+CA+93101" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Chase Palm Park or Shoreline Park 📍</a>
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">Two excellent park options. Chase Palm Park has the famous Shipwreck Playground (pirate ship theme, ages 2–12), a lagoon, and a carousel. Shoreline Park has ocean views, Channel Islands vistas, and a playground designed for 2–5 year olds. Either one lets the boys burn energy before dinner.</div>
-        
-
-        
-        <div class="block-note">Chase Palm Park: 236 E Cabrillo Blvd, Santa Barbara. Shipwreck Playground, lagoon, carousel. Free. Shoreline Park: 1237 Shoreline Dr, Santa Barbara. Ocean views, playground, whale-watching area. Free. Both have restrooms and parking.</div>
-        
-
-        
-
-        
-
-        
-
-        
-        <div class="block-address">
-          📍 236 E Cabrillo Blvd, Santa Barbara, CA 93103
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('236 E Cabrillo Blvd, Santa Barbara, CA 93103');this.textContent='✓ Copied'" title="Copy address">📋</button>
-        </div>
-        
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=236+E+Cabrillo+Blvd,+Santa+Barbara,+CA+93101" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=236%20E%20Cabrillo%20Blvd%2C%20Santa%20Barbara%2C%20CA%2093103&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
-      </div>
-      
-      <div class="block-photo">
-          <img src="img/shoreline-park.jpg" alt="Shoreline Park, Santa Barbara — ocean views and Channel Islands vistas" loading="lazy">
-          <span class="photo-credit">Photo: Wikimedia Commons</span>
-      </div>
-      
-    </div>
-    
-    
-    
-    
-
-    <div class="time-block block-meal" data-block-type="meal">
-      <div class="type-icon">🍽️</div>
-      <div class="time-col">
-        <span class="time-start">6:00 PM</span>
-        <span class="time-end">7:15 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Meal</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=1118+E+Cabrillo+Blvd,+Santa+Barbara,+CA+93103" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Dinner: Reunion Kitchen or Brophy Bros 📍</a>
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">Two strong options. Reunion Kitchen has ocean views from a heated patio at the Cabrillo Pavilion — family-friendly with a great cocktail menu. Brophy Bros is classic harbor seafood right on the dock — fresh oysters, clam chowder, fish &amp; chips.</div>
-        
-
-        
-        <div class="block-note">Reunion Kitchen + Drink: 1118 E Cabrillo Blvd, Santa Barbara. Phone: (805) 364-3366. Website: reunionkitchen.net. Hours: Wed 11 AM–8:30 PM. Happy hour 2:30–6 PM. Heated patio, ocean views, steps from the sand. 
-Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brophybros.com. Hours: 11 AM–10 PM daily. On the dock. Since 1986. Classic clam chowder + fresh seafood.</div>
-        
-
-        
-
-        
-
-        
-
-        
-        <div class="block-address">
-          📍 1118 E Cabrillo Blvd, Santa Barbara, CA 93103
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('1118 E Cabrillo Blvd, Santa Barbara, CA 93103');this.textContent='✓ Copied'" title="Copy address">📋</button>
-        </div>
-        
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=1118+E+Cabrillo+Blvd,+Santa+Barbara,+CA+93103" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=1118%20E%20Cabrillo%20Blvd%2C%20Santa%20Barbara%2C%20CA%2093103&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
-      </div>
-      
-    </div>
-    
-    
-    
-    
-
-    <div class="time-block block-rest" data-block-type="rest">
-      <div class="type-icon">💤</div>
-      <div class="time-col">
-        <span class="time-start">7:30 PM</span>
-        <span class="time-end">8:00 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Rest</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            <a href="https://www.google.com/maps/search/?api=1&query=6350%20Hollister%20Ave%2C%20Goleta%2C%20CA%2093117" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Sunset Waterfront Walk + Goleta Hotel 📍</a>
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">If timing works, catch sunset from the waterfront before driving 15 min to the Goleta hotel. Baths, stories, out.</div>
-        
-
-        
-        <div class="block-note">Drive to Residence Inn Goleta: ~15 min from harbor. 6350 Hollister Ave, Goleta, CA 93117.</div>
-        
-
-        
-
-        
-
-        
-
-        
-        <div class="block-address">
-          📍 6350 Hollister Ave, Goleta, CA 93117
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('6350 Hollister Ave, Goleta, CA 93117');this.textContent='✓ Copied'" title="Copy address">📋</button>
-        </div>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=6350%20Hollister%20Ave%2C%20Goleta%2C%20CA%2093117&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
-      </div>
-      
     </div>
     
   </div>
+  
+  
+  
+  
+
+  <div class="time-block block-activity" data-block-type="activity">
+    <div class="type-icon">🏛️</div>
+    <div class="time-col">
+      <span class="time-start">1:00 PM</span>
+      <span class="time-end">2:30 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Activity</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=217+Stearns+Wharf,+Santa+Barbara,+CA+93101" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Stearns Wharf 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">California’s oldest working wharf, built in 1872. Walk the full length, watch pelicans, browse the shops, and enjoy the harbor views. Free to walk — just pay for parking.</div>
+      
+
+      
+      <div class="block-note">Stearns Wharf: foot of State St, Santa Barbara. Parking: first 90 min FREE, then $3.50/hr, $20/day max. 141 spaces on the wharf. Lot hours: 8 AM–10 PM. Contact: (805) 564-5534. Stroller-friendly. Great photo ops.</div>
+      
+
+      
+      <div class="insider-tip">Walk all the way to the end of the wharf for the best Channel Islands views and fewer crowds.</div>
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 Stearns Wharf, Santa Barbara, CA 93101
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('Stearns Wharf, Santa Barbara, CA 93101');this.textContent='✓ Copied'" title="Copy address">📋</button>
+      </div>
+      
+      <a href="javascript:void(0)" onclick="openMaps('Stearns Wharf, Santa Barbara, CA 93101')" class="maps-badge" title="Open in Maps app">📍 View on Map</a>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('Stearns Wharf, Santa Barbara, CA 93101')" title="Open in native maps app">🧭 Navigate here</a>
+      
+
+      
+    </div>
+    
+    <div class="block-photo">
+        <img src="img/stearns-wharf.jpg" alt="Stearns Wharf, Santa Barbara — California’s oldest working wharf" loading="lazy">
+        <span class="photo-credit">Photo: Don Ramey Logan / Wikimedia Commons</span>
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-activity" data-block-type="activity">
+    <div class="type-icon">🏛️</div>
+    <div class="time-col">
+      <span class="time-start">2:30 PM</span>
+      <span class="time-end">4:00 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Activity</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=211+Stearns+Wharf,+Santa+Barbara,+CA+93101" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Sea Center (Santa Barbara Museum of Natural History) 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Touch tanks, shark encounters, and marine exhibits right on Stearns Wharf. The shark touch pool is incredible for Koko. Seahorses exhibit currently featured (as of March 2026). Issa can nap in the stroller while Koko explores.</div>
+      
+
+      
+      <div class="block-note">Sea Center: 211 Stearns Wharf, Santa Barbara. Phone: (805) 962-2526. Website: sbnature.org/seacenter. Open daily 10 AM–5 PM. Admission: $17/adult, $15/senior &amp; teen (13–17), $13/child (2–12). Family of 4: ~$60. Stroller-friendly. KOKO ALERT: Touch tanks can get crowded and noisy. Let her approach at her own pace.</div>
+      
+
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 211 Stearns Wharf, Santa Barbara, CA 93101
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('211 Stearns Wharf, Santa Barbara, CA 93101');this.textContent='✓ Copied'" title="Copy address">📋</button>
+      </div>
+      
+      <a href="javascript:void(0)" onclick="openMaps('211 Stearns Wharf, Santa Barbara, CA 93101')" class="maps-badge" title="Open in Maps app">📍 View on Map</a>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('211 Stearns Wharf, Santa Barbara, CA 93101')" title="Open in native maps app">🧭 Navigate here</a>
+      
+
+      
+    </div>
+    
+    <div class="block-photo">
+        <img src="img/sea-center.jpg" alt="Sea Center on Stearns Wharf — Santa Barbara Museum of Natural History" loading="lazy">
+        <span class="photo-credit">Photo: Wikimedia Commons</span>
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-activity" data-block-type="activity">
+    <div class="type-icon">🏛️</div>
+    <div class="time-col">
+      <span class="time-start">4:15 PM</span>
+      <span class="time-end">5:15 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Activity</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=236+E+Cabrillo+Blvd,+Santa+Barbara,+CA+93101" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Chase Palm Park or Shoreline Park 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Two excellent park options. Chase Palm Park has the famous Shipwreck Playground (pirate ship theme, ages 2–12), a lagoon, and a carousel. Shoreline Park has ocean views, Channel Islands vistas, and a playground designed for 2–5 year olds. Either one lets the boys burn energy before dinner.</div>
+      
+
+      
+      <div class="block-note">Chase Palm Park: 236 E Cabrillo Blvd, Santa Barbara. Shipwreck Playground, lagoon, carousel. Free. Shoreline Park: 1237 Shoreline Dr, Santa Barbara. Ocean views, playground, whale-watching area. Free. Both have restrooms and parking.</div>
+      
+
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 236 E Cabrillo Blvd, Santa Barbara, CA 93103
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('236 E Cabrillo Blvd, Santa Barbara, CA 93103');this.textContent='✓ Copied'" title="Copy address">📋</button>
+      </div>
+      
+      <a href="javascript:void(0)" onclick="openMaps('236 E Cabrillo Blvd, Santa Barbara, CA 93103')" class="maps-badge" title="Open in Maps app">📍 View on Map</a>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('236 E Cabrillo Blvd, Santa Barbara, CA 93103')" title="Open in native maps app">🧭 Navigate here</a>
+      
+
+      
+    </div>
+    
+    <div class="block-photo">
+        <img src="img/shoreline-park.jpg" alt="Shoreline Park, Santa Barbara — ocean views and Channel Islands vistas" loading="lazy">
+        <span class="photo-credit">Photo: Wikimedia Commons</span>
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-meal" data-block-type="meal">
+    <div class="type-icon">🍽️</div>
+    <div class="time-col">
+      <span class="time-start">6:00 PM</span>
+      <span class="time-end">7:15 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Meal</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=1118+E+Cabrillo+Blvd,+Santa+Barbara,+CA+93103" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Dinner: Reunion Kitchen or Brophy Bros 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Two strong options. Reunion Kitchen has ocean views from a heated patio at the Cabrillo Pavilion — family-friendly with a great cocktail menu. Brophy Bros is classic harbor seafood right on the dock — fresh oysters, clam chowder, fish &amp; chips.</div>
+      
+
+      
+      <div class="block-note">Reunion Kitchen + Drink: 1118 E Cabrillo Blvd, Santa Barbara. Phone: (805) 364-3366. Website: reunionkitchen.net. Hours: Wed 11 AM–8:30 PM. Happy hour 2:30–6 PM. Heated patio, ocean views, steps from the sand. 
+Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brophybros.com. Hours: 11 AM–10 PM daily. On the dock. Since 1986. Classic clam chowder + fresh seafood.</div>
+      
+
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 1118 E Cabrillo Blvd, Santa Barbara, CA 93103
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('1118 E Cabrillo Blvd, Santa Barbara, CA 93103');this.textContent='✓ Copied'" title="Copy address">📋</button>
+      </div>
+      
+      <a href="javascript:void(0)" onclick="openMaps('1118 E Cabrillo Blvd, Santa Barbara, CA 93103')" class="maps-badge" title="Open in Maps app">📍 View on Map</a>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('1118 E Cabrillo Blvd, Santa Barbara, CA 93103')" title="Open in native maps app">🧭 Navigate here</a>
+      
+
+      
+    </div>
+    
+    
+    <div class="block-alternatives">
+      <button class="alt-toggle" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded')==='true'?'false':'true'); this.nextElementSibling.classList.toggle('open')" aria-expanded="false">
+        <span class="alt-arrow">&#x25BC;</span>
+        <span>1 more option</span>
+      </button>
+      <div class="alt-list">
+        
+        <div class="alt-card">
+          
+          <div class="alt-card-body">
+            <div class="alt-card-name">Brophy Bros</div>
+            <div class="alt-card-vibe">Classic harbor seafood on the dock — fresh oysters, clam chowder, fish &amp; chips. Since 1986.</div>
+            <div class="alt-card-meta">
+              <span class="alt-price">$$–$$$</span>
+              <a href="https://www.yelp.com/biz/brophy-bros-santa-barbara-santa-barbara" target="_blank">Yelp</a>
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=119+Harbor+Way,+Santa+Barbara,+CA+93109" target="_blank">📍 Map</a>
+              <a href="tel:8059664418">📞 Call</a>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-rest" data-block-type="rest">
+    <div class="type-icon">💤</div>
+    <div class="time-col">
+      <span class="time-start">7:30 PM</span>
+      <span class="time-end">8:00 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Rest</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&query=6350%20Hollister%20Ave%2C%20Goleta%2C%20CA%2093117" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Sunset Waterfront Walk + Goleta Hotel 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">If timing works, catch sunset from the waterfront before driving 15 min to the Goleta hotel. Baths, stories, out.</div>
+      
+
+      
+      <div class="block-note">Drive to Residence Inn Goleta: ~15 min from harbor. 6350 Hollister Ave, Goleta, CA 93117.</div>
+      
+
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 6350 Hollister Ave, Goleta, CA 93117
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('6350 Hollister Ave, Goleta, CA 93117');this.textContent='✓ Copied'" title="Copy address">📋</button>
+      </div>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('6350 Hollister Ave, Goleta, CA 93117')" title="Open in native maps app">🧭 Navigate here</a>
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+</div>
+
+  
 
   
   
@@ -2987,276 +3585,578 @@ Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brop
   </div>
 
   
-  <div class="time-blocks">
-    <div class="now-indicator" id="now-4" data-day-date="Thursday, April 2"></div>
+  
+  <div class="day-path-bar">
     
+    <button class="path-option active-path"
+            onclick="switchPath(this, 'zoo')"
+            data-path-id="zoo">Zoo Morning (~$148)</button>
     
-    
-    
-    
-
-    <div class="time-block block-meal" data-block-type="meal">
-      <div class="type-icon">🍽️</div>
-      <div class="time-col">
-        <span class="time-start">8:00 AM</span>
-        <span class="time-end">9:00 AM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Meal</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            <a href="https://www.google.com/maps/search/?api=1&query=6350%20Hollister%20Ave%2C%20Goleta%2C%20CA%2093117" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Hotel Breakfast 📍</a>
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">Residence Inn includes complimentary breakfast buffet. Fuel up — no need to rush.</div>
-        
-
-        
-        <div class="block-note">Complimentary breakfast at Residence Inn. Check out after breakfast. Load car.</div>
-        
-
-        
-
-        
-
-        
-
-        
-        <div class="block-address">
-          📍 6350 Hollister Ave, Goleta, CA 93117
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('6350 Hollister Ave, Goleta, CA 93117');this.textContent='✓ Copied'" title="Copy address">📋</button>
-        </div>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=6350%20Hollister%20Ave%2C%20Goleta%2C%20CA%2093117&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
-      </div>
-      
-    </div>
-    
-    
-    
-    
-
-    <div class="time-block block-explore" data-block-type="explore">
-      <div class="type-icon">🗺️</div>
-      <div class="time-col">
-        <span class="time-start">9:15 AM</span>
-        <span class="time-end">10:15 AM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Explore</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=2201+Laguna+St,+Santa+Barbara,+CA+93105" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">One Final Stop (choose one) 📍</a>
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">Three options based on energy and what was missed: 
-(A) Old Mission Santa Barbara — if skipped Wednesday. Self-guided tour with Korean audio option. $17/adult, $12/youth, free under 5. 2201 Laguna St. (805) 682-4713. 
-(B) Stearns Wharf quick walk — $3.50/hr parking, $20/day max. 90 min free. Quick stroll if you want one more waterfront moment. 
-(C) Shoreline Park — let the boys run before the drive. 1237 Shoreline Dr. Free. Ocean views, playground.</div>
-        
-
-        
-        <div class="block-note">Old Mission SB: 2201 Laguna St. Mon–Sat 9:30 AM–5 PM, Sun 12:30–5 PM. Last ticket 4 PM. Audio in Korean! (805) 682-4713. santabarbaramission.org. CRITICAL: Leave SB by 10:30–11:00 AM. Thursday traffic is above average — PM peak is worse than AM.</div>
-        
-
-        
-
-        
-
-        
-
-        
-        <div class="block-address">
-          📍 2201 Laguna St, Santa Barbara, CA 93105
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('2201 Laguna St, Santa Barbara, CA 93105');this.textContent='✓ Copied'" title="Copy address">📋</button>
-        </div>
-        
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=2201+Laguna+St,+Santa+Barbara,+CA+93105" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
-        
-        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=2201%20Laguna%20St%2C%20Santa%20Barbara%2C%20CA%2093105&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
-        
-
-        
-      </div>
-      
-    </div>
-    
-    
-    
-    
-
-    <div class="time-block block-transit" data-block-type="transit">
-      <div class="type-icon">🚶</div>
-      <div class="time-col">
-        <span class="time-start">10:30 AM</span>
-        <span class="time-end">12:00 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Transit</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=1583+Spinnaker+Dr,+Ventura,+CA+93001" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Drive: Santa Barbara → Stretch Stop 📍</a>
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">Head south on US-101. ~90 minutes to Ventura area. Stop for a stretch if Dan’s piriformis needs it.</div>
-        
-
-        
-        <div class="block-note">Piriformis stop: Ventura, ~45 min in. San Buenaventura State Beach parking lot or Ventura Harbor Village (quick restroom + stretch). If traffic looks bad on the 405, consider 101 → 118 → 5 route.</div>
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-      </div>
-      
-    </div>
-    
-    
-    
-    
-
-    <div class="time-block block-rest" data-block-type="rest">
-      <div class="type-icon">💤</div>
-      <div class="time-col">
-        <span class="time-start">12:00 PM</span>
-        <span class="time-end">12:15 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Rest</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            Stretch Stop if Needed
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">Quick 15-min stop. Issa will probably nap in the car by now.</div>
-        
-
-        
-        <div class="block-note">Keep it quick — home stretch.</div>
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-      </div>
-      
-    </div>
-    
-    
-    
-    
-
-    <div class="time-block block-transit" data-block-type="transit">
-      <div class="type-icon">🚶</div>
-      <div class="time-col">
-        <span class="time-start">12:15 PM</span>
-        <span class="time-end">1:30 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Transit</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            Drive: Stretch Stop → Irvine
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">Final hour home. Arrive between 1:30–3:00 PM depending on departure time and traffic. Well before rush hour.</div>
-        
-
-        
-        <div class="block-note">Issa naps in the car — this replaces his nap window. Arrive home with plenty of time for normal bedtime routine.</div>
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-      </div>
-      
-    </div>
-    
-    
-    
-    
-
-    <div class="time-block block-rest" data-block-type="rest">
-      <div class="type-icon">💤</div>
-      <div class="time-col">
-        <span class="time-start">1:30 PM</span>
-        <span class="time-end">3:00 PM</span>
-      </div>
-      <div class="block-content">
-        <span class="block-type-badge">Rest</span>
-        <h4 class="block-name" style="font-family: Georgia, serif;">
-          
-            Home Sweet Home
-          
-        </h4>
-
-        
-
-        
-        <div class="block-narrative">Arrive in Irvine. Unload, unpack, settle back in. Sandy shoes in the garage, sugar-dusted memories in the heart.</div>
-        
-
-        
-        <div class="block-note">Early return means normal bedtime routine. Trip complete. Rain backup: Skip sightseeing entirely, breakfast, head home. &#34;The mature choice.&#34;</div>
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-      </div>
-      
-    </div>
+    <button class="path-option "
+            onclick="switchPath(this, 'beach')"
+            data-path-id="beach">Beach Morning (free)</button>
     
   </div>
+  
+
+  
+  
+    
+    <div class="day-path-content active-path-content" data-path="zoo">
+      
+<div class="time-blocks">
+  <div class="now-indicator" data-day-date="Thursday, April 2"></div>
+  
+  
+  
+  
+
+  <div class="time-block block-meal" data-block-type="meal">
+    <div class="type-icon">🍽️</div>
+    <div class="time-col">
+      <span class="time-start">8:00 AM</span>
+      <span class="time-end">9:00 AM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Meal</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&query=6350%20Hollister%20Ave%2C%20Goleta%2C%20CA%2093117" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Hotel Breakfast 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Residence Inn includes complimentary breakfast buffet. Fuel up — no need to rush.</div>
+      
+
+      
+      <div class="block-note">Complimentary breakfast at Residence Inn. Check out after breakfast. Load car.</div>
+      
+
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 6350 Hollister Ave, Goleta, CA 93117
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('6350 Hollister Ave, Goleta, CA 93117');this.textContent='✓ Copied'" title="Copy address">📋</button>
+      </div>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('6350 Hollister Ave, Goleta, CA 93117')" title="Open in native maps app">🧭 Navigate here</a>
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-activity" data-block-type="activity">
+    <div class="type-icon">🏛️</div>
+    <div class="time-col">
+      <span class="time-start">9:15 AM</span>
+      <span class="time-end">11:00 AM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Activity</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=500+Ninos+Dr,+Santa+Barbara,+CA+93103" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Santa Barbara Zoo 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Compact, beautiful zoo perched on a bluff above the ocean. Perfect size for young kids — giraffes, condors, penguins, gorillas, and a train ride through the grounds. The views of the Channel Islands from the giraffe overlook are stunning.</div>
+      
+
+      
+      <div class="block-note">500 Niños Dr, Santa Barbara, CA 93103. Phone: (805) 962-5339. Open daily 9:30 AM–5:00 PM. Admission: $39.95/adult, $29.95/child (2–12), under 2 free. Save $2/ticket online. Parking: $11/vehicle. Family of 4: ~$148 (incl parking). Train ride extra. Allow 90 min for a good visit.</div>
+      
+
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 500 Niños Dr, Santa Barbara, CA 93103
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('500 Niños Dr, Santa Barbara, CA 93103');this.textContent='✓ Copied'" title="Copy address">📋</button>
+      </div>
+      
+      <a href="javascript:void(0)" onclick="openMaps('500 Niños Dr, Santa Barbara, CA 93103')" class="maps-badge" title="Open in Maps app">📍 View on Map</a>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('500 Niños Dr, Santa Barbara, CA 93103')" title="Open in native maps app">🧭 Navigate here</a>
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-transit" data-block-type="transit">
+    <div class="type-icon">🚶</div>
+    <div class="time-col">
+      <span class="time-start">11:15 AM</span>
+      <span class="time-end">12:45 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Transit</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=1583+Spinnaker+Dr,+Ventura,+CA+93001" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Drive: Santa Barbara → Stretch Stop 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Head south on US-101. ~90 minutes to Ventura area. Stop for a stretch if Dan’s piriformis needs it.</div>
+      
+
+      
+      <div class="block-note">Piriformis stop: Ventura, ~45 min in. Ventura Harbor Village (quick restroom + stretch). If traffic looks bad on the 405, consider 101 → 118 → 5 route.</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-rest" data-block-type="rest">
+    <div class="type-icon">💤</div>
+    <div class="time-col">
+      <span class="time-start">12:45 PM</span>
+      <span class="time-end">1:00 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Rest</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          Stretch Stop if Needed
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Quick 15-min stop. Issa will probably nap in the car by now.</div>
+      
+
+      
+      <div class="block-note">Keep it quick — home stretch.</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-transit" data-block-type="transit">
+    <div class="type-icon">🚶</div>
+    <div class="time-col">
+      <span class="time-start">1:00 PM</span>
+      <span class="time-end">2:00 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Transit</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          Drive: Stretch Stop → Irvine
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Final hour home. Arrive between 2:00–3:00 PM depending on traffic. Well before rush hour.</div>
+      
+
+      
+      <div class="block-note">Issa naps in the car — this replaces his nap window. Arrive home with plenty of time for normal bedtime routine.</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-rest" data-block-type="rest">
+    <div class="type-icon">💤</div>
+    <div class="time-col">
+      <span class="time-start">2:00 PM</span>
+      <span class="time-end">3:00 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Rest</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          Home Sweet Home
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Arrive in Irvine. Unload, unpack, settle back in. Sandy shoes in the garage, sugar-dusted memories in the heart.</div>
+      
+
+      
+      <div class="block-note">Early return means normal bedtime routine. Trip complete.</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+</div>
+
+    </div>
+    
+    <div class="day-path-content " data-path="beach">
+      
+<div class="time-blocks">
+  <div class="now-indicator" data-day-date="Thursday, April 2"></div>
+  
+  
+  
+  
+
+  <div class="time-block block-meal" data-block-type="meal">
+    <div class="type-icon">🍽️</div>
+    <div class="time-col">
+      <span class="time-start">8:00 AM</span>
+      <span class="time-end">9:00 AM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Meal</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&query=6350%20Hollister%20Ave%2C%20Goleta%2C%20CA%2093117" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Hotel Breakfast 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Residence Inn includes complimentary breakfast buffet. Fuel up — no need to rush.</div>
+      
+
+      
+      <div class="block-note">Complimentary breakfast at Residence Inn. Check out after breakfast. Load car.</div>
+      
+
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 6350 Hollister Ave, Goleta, CA 93117
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('6350 Hollister Ave, Goleta, CA 93117');this.textContent='✓ Copied'" title="Copy address">📋</button>
+      </div>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('6350 Hollister Ave, Goleta, CA 93117')" title="Open in native maps app">🧭 Navigate here</a>
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-activity" data-block-type="activity">
+    <div class="type-icon">🏛️</div>
+    <div class="time-col">
+      <span class="time-start">9:15 AM</span>
+      <span class="time-end">10:15 AM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Activity</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=1400+Cabrillo+Blvd,+Santa+Barbara,+CA+93103" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">East Beach — One Last Beach Morning 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Santa Barbara’s widest and most popular beach. Let the boys run, dig in the sand, and splash in the waves. Volleyball courts, a playground, and a long flat stretch perfect for a final family stroll. Free and easy.</div>
+      
+
+      
+      <div class="block-note">1400 Cabrillo Blvd, Santa Barbara, CA 93103. Free. Parking along Cabrillo Blvd or in Cabrillo lots. Restrooms at Cabrillo Pavilion Bathhouse. Bring towels and a change of clothes for the drive.</div>
+      
+
+      
+
+      
+
+      
+
+      
+      <div class="block-address">
+        📍 1400 Cabrillo Blvd, Santa Barbara, CA 93103
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('1400 Cabrillo Blvd, Santa Barbara, CA 93103');this.textContent='✓ Copied'" title="Copy address">📋</button>
+      </div>
+      
+      <a href="javascript:void(0)" onclick="openMaps('1400 Cabrillo Blvd, Santa Barbara, CA 93103')" class="maps-badge" title="Open in Maps app">📍 View on Map</a>
+      
+      <a class="navigate-btn" href="javascript:void(0)" onclick="openMaps('1400 Cabrillo Blvd, Santa Barbara, CA 93103')" title="Open in native maps app">🧭 Navigate here</a>
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-transit" data-block-type="transit">
+    <div class="type-icon">🚶</div>
+    <div class="time-col">
+      <span class="time-start">10:30 AM</span>
+      <span class="time-end">12:00 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Transit</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=1583+Spinnaker+Dr,+Ventura,+CA+93001" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Drive: Santa Barbara → Stretch Stop 📍</a>
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Head south on US-101. ~90 minutes to Ventura area. Stop for a stretch if Dan’s piriformis needs it.</div>
+      
+
+      
+      <div class="block-note">Piriformis stop: Ventura, ~45 min in. Ventura Harbor Village (quick restroom + stretch). If traffic looks bad on the 405, consider 101 → 118 → 5 route.</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-rest" data-block-type="rest">
+    <div class="type-icon">💤</div>
+    <div class="time-col">
+      <span class="time-start">12:00 PM</span>
+      <span class="time-end">12:15 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Rest</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          Stretch Stop if Needed
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Quick 15-min stop. Issa will probably nap in the car by now.</div>
+      
+
+      
+      <div class="block-note">Keep it quick — home stretch.</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-transit" data-block-type="transit">
+    <div class="type-icon">🚶</div>
+    <div class="time-col">
+      <span class="time-start">12:15 PM</span>
+      <span class="time-end">1:30 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Transit</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          Drive: Stretch Stop → Irvine
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Final hour home. Arrive between 1:30–3:00 PM depending on departure time and traffic. Well before rush hour.</div>
+      
+
+      
+      <div class="block-note">Issa naps in the car — this replaces his nap window. Arrive home with plenty of time for normal bedtime routine.</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  
+
+  <div class="time-block block-rest" data-block-type="rest">
+    <div class="type-icon">💤</div>
+    <div class="time-col">
+      <span class="time-start">1:30 PM</span>
+      <span class="time-end">3:00 PM</span>
+    </div>
+    <div class="block-content">
+      <span class="block-type-badge">Rest</span>
+      <h4 class="block-name" style="font-family: Georgia, serif;">
+        
+          Home Sweet Home
+        
+      </h4>
+
+      
+
+      
+      <div class="block-narrative">Arrive in Irvine. Unload, unpack, settle back in. Sandy shoes in the garage, sugar-dusted memories in the heart.</div>
+      
+
+      
+      <div class="block-note">Early return means normal bedtime routine. Trip complete. Rain backup: Skip sightseeing entirely, breakfast, head home. &#34;The mature choice.&#34;</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+    </div>
+    
+    
+  </div>
+  
+</div>
+
+    </div>
+    
+  
 
   
   
@@ -3581,38 +4481,188 @@ Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brop
 
 </div>
 
+
 <nav class="trip-bottom-bar no-print" data-view="trip" id="trip-bar">
-    <a href="tel:911" class="bar-item" title="Emergency call">
-        <span>&#x1F198;</span>
-        <span class="bar-label">911</span>
-    </a>
-    
-    <button class="bar-item" onclick="navigateToNext()" title="Navigate to next stop">
-        <span>&#x1F4CD;</span>
-        <span class="bar-label">Navigate</span>
-    </button>
-    <button class="bar-item" onclick="toggleTripMode()" title="Show full itinerary">
-        <span>&#x1F4CB;</span>
-        <span class="bar-label">Full View</span>
-    </button>
+    <div class="bottom-day-tabs" id="bottom-day-tabs">
+        
+        <button class="bottom-day-tab" data-day="1" onclick="scrollToDay(1)" title="The Road North — Irvine to Solvang">
+            <span class="bottom-tab-num">Day 1</span>
+            <span class="bottom-tab-city">Sol</span>
+        </button>
+        
+        <button class="bottom-day-tab" data-day="2" onclick="scrollToDay(2)" title="The Slow Day — Full Solvang">
+            <span class="bottom-tab-num">Day 2</span>
+            <span class="bottom-tab-city">Sol</span>
+        </button>
+        
+        <button class="bottom-day-tab" data-day="3" onclick="scrollToDay(3)" title="The American Riviera — Solvang to Santa Barbara">
+            <span class="bottom-tab-num">Day 3</span>
+            <span class="bottom-tab-city">San</span>
+        </button>
+        
+        <button class="bottom-day-tab" data-day="4" onclick="scrollToDay(4)" title="The Exhale — Short Morning + Drive Home">
+            <span class="bottom-tab-num">Day 4</span>
+            <span class="bottom-tab-city">San</span>
+        </button>
+        
+        <button class="bottom-day-tab bottom-info-tab" onclick="toggleInfoPanel()" title="Emergency info & settings">
+            <span style="font-size:18px">&#x2139;&#xFE0F;</span>
+        </button>
+    </div>
 </nav>
+
+
+<a class="sos-fab no-print" data-view="trip" id="sos-fab"
+   href="tel:911"
+   title="Emergency call">
+    <span>SOS</span>
+</a>
+
+
+<div class="info-panel-overlay" id="info-panel" data-view="trip">
+    <div class="info-panel">
+        <div class="info-panel-header">
+            <h3>Trip Info</h3>
+            <button onclick="toggleInfoPanel()" class="info-close">&times;</button>
+        </div>
+        <div class="info-panel-body">
+            <button class="info-action" onclick="navigateToNext(); toggleInfoPanel();">
+                <span>&#x1F4CD;</span> Navigate to Next Stop
+            </button>
+            
+            <button class="info-action" onclick="toggleTripMode()">
+                <span>&#x1F4CB;</span> Switch to Full View
+            </button>
+            <div class="info-emergency">
+                <h4>Emergency Contacts</h4>
+                
+                    
+                    <a href="tel:911" class="info-emergency-item">
+                        <span>&#x1F4DE;</span> Emergency Services: 911
+                    </a>
+                    
+                    <a href="tel:8056886431" class="info-emergency-item">
+                        <span>&#x1F4DE;</span> Santa Ynez Valley Cottage Hospital: (805) 688-6431
+                    </a>
+                    
+                    <a href="tel:8056827111" class="info-emergency-item">
+                        <span>&#x1F4DE;</span> Santa Barbara Cottage Hospital: (805) 682-7111
+                    </a>
+                    
+                    <a href="tel:8059673411" class="info-emergency-item">
+                        <span>&#x1F4DE;</span> Goleta Valley Cottage Hospital: (805) 967-3411
+                    </a>
+                    
+                    <a href="tel:8056882414" class="info-emergency-item">
+                        <span>&#x1F4DE;</span> Solvang Pharmacy: (805) 688-2414
+                    </a>
+                    
+                    <a href="tel:8059669696" class="info-emergency-item">
+                        <span>&#x1F4DE;</span> CVS Pharmacy Santa Barbara: (805) 966-9696
+                    </a>
+                    
+                    <a href="tel:8059649163" class="info-emergency-item">
+                        <span>&#x1F4DE;</span> CVS Pharmacy Goleta: (805) 964-9163
+                    </a>
+                    
+                    <a href="tel:8055636011" class="info-emergency-item">
+                        <span>&#x1F4DE;</span> Sansum Clinic Urgent Care: (805) 563-6011
+                    </a>
+                    
+                    <a href="tel:18002221222" class="info-emergency-item">
+                        <span>&#x1F4DE;</span> Poison Control: 1-800-222-1222
+                    </a>
+                    
+                
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════════════
-   1. Trip Countdown Timer
+   UTILITY: Parse human-readable date strings ("Monday, March 30") to Date
    ═══════════════════════════════════════════════════════════════════════════ */
-(function() {
-    var el = document.getElementById('countdown');
-    if (!el) return;
-    var start = el.getAttribute('data-start');
-    if (!start) { el.style.display = 'none'; return; }
-    var tripDate = new Date(start + 'T00:00:00');
-    var now = new Date();
-    var diff = Math.ceil((tripDate - now) / (1000 * 60 * 60 * 24));
-    if (diff > 0) el.textContent = diff + ' days until takeoff!';
-    else if (diff === 0) el.textContent = 'Today is the day!';
-    else el.textContent = 'Trip started ' + Math.abs(diff) + ' days ago';
-})();
+function parseTripDate(str) {
+    if (!str) return null;
+    // Handle ISO dates (YYYY-MM-DD)
+    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return new Date(str + 'T00:00:00');
+    // Handle "Day, Month DD" or "Month DD" or "Day, Month DD, YYYY"
+    var cleaned = str.replace(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s*/i, '');
+    var months = {january:0,february:1,march:2,april:3,may:4,june:5,july:6,august:7,september:8,october:9,november:10,december:11};
+    var parts = cleaned.match(/^(\w+)\s+(\d+)(?:,?\s*(\d{4}))?$/);
+    if (parts) {
+        var month = months[parts[1].toLowerCase()];
+        var day = parseInt(parts[2]);
+        var year = parts[3] ? parseInt(parts[3]) : new Date().getFullYear();
+        if (month !== undefined) return new Date(year, month, day);
+    }
+    // Fallback
+    var d = new Date(str);
+    return isNaN(d.getTime()) ? null : d;
+}
+
+function getTodayStr() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function dateToStr(d) {
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   1. Live Countdown — Before / During / After trip
+   ═══════════════════════════════════════════════════════════════════════════ */
+function updateCountdown() {
+    var elements = document.querySelectorAll('#countdown, #trip-countdown');
+    elements.forEach(function(el) {
+        var startStr = el.getAttribute('data-start');
+        var endStr = el.getAttribute('data-end');
+        var totalDays = parseInt(el.getAttribute('data-total-days')) || 1;
+        if (!startStr) { el.style.display = 'none'; return; }
+        var startDate = parseTripDate(startStr);
+        var endDate = parseTripDate(endStr);
+        if (!startDate) { el.style.display = 'none'; return; }
+        if (!endDate) endDate = new Date(startDate.getTime() + (totalDays - 1) * 86400000);
+
+        var now = new Date();
+        var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        var startDay = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+        var endDay = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+        var msPerDay = 86400000;
+        var daysUntilStart = Math.ceil((startDay - today) / msPerDay);
+        var dayOfTrip = Math.floor((today - startDay) / msPerDay) + 1;
+        var daysAfterEnd = Math.floor((today - endDay) / msPerDay);
+
+        // Build day titles lookup for "Enjoy Solvang!" style messages
+        var daySections = document.querySelectorAll('.day-section');
+        var dayTitles = {};
+        daySections.forEach(function(s, i) {
+            dayTitles[i + 1] = (s.getAttribute('data-city') || '').trim();
+        });
+
+        if (daysUntilStart > 0) {
+            el.textContent = daysUntilStart + ' day' + (daysUntilStart !== 1 ? 's' : '') + ' until your trip!';
+        } else if (daysAfterEnd > 0) {
+            // After trip
+            var opts = { month: 'long', day: 'numeric' };
+            var sStr = startDate.toLocaleDateString('en-US', opts);
+            var eStr = endDate.toLocaleDateString('en-US', opts);
+            var yr = endDate.getFullYear();
+            el.textContent = 'Trip complete \u2014 ' + sStr + ' to ' + eStr + ', ' + yr;
+        } else {
+            // During trip
+            var city = dayTitles[dayOfTrip] || '';
+            var msg = 'Day ' + dayOfTrip + ' of ' + totalDays;
+            if (city) msg += ' \u2014 Enjoy ' + city + '!';
+            el.textContent = msg;
+        }
+        el.style.display = '';
+    });
+}
+updateCountdown();
 
 /* ═══════════════════════════════════════════════════════════════════════════
    2. Active Nav Pill via IntersectionObserver
@@ -3725,6 +4775,18 @@ function filterByType(type) {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   3b. Day Path Switcher (Level 2 alternatives)
+   ═══════════════════════════════════════════════════════════════════════════ */
+function switchPath(btn, pathId) {
+    var daySection = btn.closest('.day-section');
+    daySection.querySelectorAll('.path-option').forEach(function(p) { p.classList.remove('active-path'); });
+    daySection.querySelectorAll('.day-path-content').forEach(function(c) { c.classList.remove('active-path-content'); });
+    btn.classList.add('active-path');
+    var target = daySection.querySelector('[data-path="' + pathId + '"]');
+    if (target) target.classList.add('active-path-content');
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    4. Packing Checklist localStorage
    ═══════════════════════════════════════════════════════════════════════════ */
 (function() {
@@ -3779,41 +4841,77 @@ function toggleDarkMode() {
 })();
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   7. PWA Offline Support (inline service worker)
+   7. PWA Offline Support (external service worker)
    ═══════════════════════════════════════════════════════════════════════════ */
 if ('serviceWorker' in navigator) {
-    try {
-        var sw = "self.addEventListener('install',function(e){e.waitUntil(caches.open('trip-v1').then(function(c){return c.add(location.href)}))});self.addEventListener('fetch',function(e){e.respondWith(caches.match(e.request).then(function(r){return r||fetch(e.request)}))});";
-        var blob = new Blob([sw], {type: 'application/javascript'});
-        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(function(){});
-    } catch(e) {}
+    navigator.serviceWorker.register('./sw.js').catch(function() {
+        // SW not available (e.g., file:// protocol or sw.js missing) — silent fail
+    });
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   TRIP MODE ENGINE
+   TRIP MODE ENGINE (enhanced)
    ═══════════════════════════════════════════════════════════════════════════ */
 
-// Trip date range (set from Jinja2)
-var TRIP_START = 'Monday, March 30';
-var TRIP_END = 'Thursday, April 2';
+// Trip date range (parsed from human-readable Jinja2 dates)
+var TRIP_START_RAW = 'Monday, March 30';
+var TRIP_END_RAW = 'Thursday, April 2';
+var TRIP_START_DATE = parseTripDate(TRIP_START_RAW);
+var TRIP_END_DATE = parseTripDate(TRIP_END_RAW);
+
+// Build a map: day index -> date string for matching
+var DAY_DATE_MAP = {};
+(function() {
+    document.querySelectorAll('.day-section').forEach(function(s) {
+        var idx = s.id.replace('day-', '');
+        var raw = s.getAttribute('data-date') || '';
+        var parsed = parseTripDate(raw);
+        if (parsed) DAY_DATE_MAP[idx] = dateToStr(parsed);
+    });
+})();
+
+function getTripDayIndex(todayISO) {
+    for (var idx in DAY_DATE_MAP) {
+        if (DAY_DATE_MAP[idx] === todayISO) return parseInt(idx);
+    }
+    return -1;
+}
+
+function isDuringTrip() {
+    if (!TRIP_START_DATE || !TRIP_END_DATE) return false;
+    var today = new Date();
+    var todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    var startOnly = new Date(TRIP_START_DATE.getFullYear(), TRIP_START_DATE.getMonth(), TRIP_START_DATE.getDate());
+    var endOnly = new Date(TRIP_END_DATE.getFullYear(), TRIP_END_DATE.getMonth(), TRIP_END_DATE.getDate());
+    return todayOnly >= startOnly && todayOnly <= endOnly;
+}
 
 // Auto-detect Trip Mode
 (function() {
-    var today = new Date();
-    var todayStr = today.toISOString().split('T')[0];
     var isMobile = window.innerWidth <= 768;
-    var isDuringTrip = TRIP_START && TRIP_END && todayStr >= TRIP_START && todayStr <= TRIP_END;
+    var duringTrip = isDuringTrip();
 
     // Auto-enable trip mode on mobile during trip dates
-    if (isMobile && isDuringTrip) {
+    if (isMobile && duringTrip) {
         document.body.classList.add('trip-mode');
-        showTodayOnly(todayStr);
+        var todayISO = getTodayStr();
+        var dayIdx = getTripDayIndex(todayISO);
+        if (dayIdx > 0) showDayOnly(dayIdx);
+        updateBottomTabs(dayIdx);
     }
 
     // Restore saved preference
     try {
         var saved = localStorage.getItem('trip-mode-' + document.title);
-        if (saved === 'true') document.body.classList.add('trip-mode');
+        if (saved === 'true') {
+            document.body.classList.add('trip-mode');
+            var todayISO = getTodayStr();
+            var dayIdx = getTripDayIndex(todayISO);
+            if (dayIdx > 0) {
+                showDayOnly(dayIdx);
+                updateBottomTabs(dayIdx);
+            }
+        }
     } catch(e) {}
 })();
 
@@ -3822,68 +4920,127 @@ function toggleTripMode() {
     try { localStorage.setItem('trip-mode-' + document.title, active); } catch(e) {}
     var icon = document.getElementById('trip-toggle-icon');
     var label = document.getElementById('trip-toggle-label');
-    if (icon) icon.textContent = active ? '📋' : '🗺️';
+    if (icon) icon.textContent = active ? '\uD83D\uDCCB' : '\uD83D\uDDFA\uFE0F';
     if (label) label.textContent = active ? 'Full View' : 'Trip Mode';
+
+    // Close info panel if open
+    var panel = document.getElementById('info-panel');
+    if (panel) panel.classList.remove('open');
+
     if (active) {
-        var todayStr = new Date().toISOString().split('T')[0];
-        showTodayOnly(todayStr);
+        var todayISO = getTodayStr();
+        var dayIdx = getTripDayIndex(todayISO);
+        if (dayIdx > 0) {
+            showDayOnly(dayIdx);
+            updateBottomTabs(dayIdx);
+        } else {
+            // Show day 1 if not during trip
+            showDayOnly(1);
+            updateBottomTabs(1);
+        }
     } else {
         showAllDays();
     }
 }
 
-function showTodayOnly(dateStr) {
-    var found = false;
+function showDayOnly(dayIndex) {
     document.querySelectorAll('.day-section').forEach(function(s) {
-        var dayDate = s.getAttribute('data-date');
-        if (dayDate === dateStr) {
-            s.style.display = '';
-            found = true;
-        } else {
-            s.style.display = 'none';
-        }
+        s.style.display = s.id === 'day-' + dayIndex ? '' : 'none';
     });
-    if (!found) {
-        document.querySelectorAll('.day-section').forEach(function(s) {
-            s.style.display = '';
-        });
+}
+
+function scrollToDay(dayIndex) {
+    showDayOnly(dayIndex);
+    updateBottomTabs(dayIndex);
+    var section = document.getElementById('day-' + dayIndex);
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 }
 
-// Now indicator — position based on current time
+function updateBottomTabs(activeDayIndex) {
+    document.querySelectorAll('.bottom-day-tab').forEach(function(tab) {
+        var tabDay = parseInt(tab.getAttribute('data-day'));
+        tab.classList.toggle('active-tab', tabDay === activeDayIndex);
+    });
+}
+
+// Info panel toggle
+function toggleInfoPanel() {
+    var panel = document.getElementById('info-panel');
+    if (panel) panel.classList.toggle('open');
+}
+
+// Close info panel on overlay click
+(function() {
+    var panel = document.getElementById('info-panel');
+    if (panel) {
+        panel.addEventListener('click', function(e) {
+            if (e.target === panel) panel.classList.remove('open');
+        });
+    }
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NOW INDICATOR — Position based on current time + auto-scroll
+   ═══════════════════════════════════════════════════════════════════════════ */
+function parseBlockTime(timeStr) {
+    if (!timeStr) return null;
+    var match = timeStr.trim().match(/(\d+):(\d+)\s*(AM|PM)/i);
+    if (!match) return null;
+    var h = parseInt(match[1]);
+    var m = parseInt(match[2]);
+    if (match[3].toUpperCase() === 'PM' && h !== 12) h += 12;
+    if (match[3].toUpperCase() === 'AM' && h === 12) h = 0;
+    return h + m / 60;
+}
+
+var hasAutoScrolled = false;
+
 function updateNowIndicator() {
     var now = new Date();
-    var todayStr = now.toISOString().split('T')[0];
+    var todayISO = getTodayStr();
     var currentHour = now.getHours() + now.getMinutes() / 60;
+    var todayDayIdx = getTripDayIndex(todayISO);
 
     document.querySelectorAll('.now-indicator').forEach(function(el) {
-        var dayDate = el.getAttribute('data-day-date');
-        if (dayDate === todayStr && currentHour >= 7 && currentHour <= 23) {
+        var dayDateRaw = el.getAttribute('data-day-date');
+        var dayDate = parseTripDate(dayDateRaw);
+        var dayDateISO = dayDate ? dateToStr(dayDate) : '';
+
+        if (dayDateISO === todayISO && currentHour >= 6 && currentHour <= 24) {
+            el.classList.add('visible');
             el.style.display = 'block';
             var blocks = el.parentElement.querySelectorAll('.time-block');
             var inserted = false;
-            blocks.forEach(function(block) {
-                var timeStr = block.querySelector('.time-start');
-                if (timeStr && !inserted) {
-                    var match = timeStr.textContent.match(/(\d+):(\d+)\s*(AM|PM)/i);
-                    if (match) {
-                        var h = parseInt(match[1]);
-                        var m = parseInt(match[2]);
-                        if (match[3].toUpperCase() === 'PM' && h !== 12) h += 12;
-                        if (match[3].toUpperCase() === 'AM' && h === 12) h = 0;
-                        var blockHour = h + m / 60;
-                        if (currentHour < blockHour) {
-                            block.parentElement.insertBefore(el, block);
-                            inserted = true;
-                        }
-                    }
+            var insertBeforeBlock = null;
+
+            for (var i = 0; i < blocks.length; i++) {
+                var timeEl = blocks[i].querySelector('.time-start');
+                var blockHour = parseBlockTime(timeEl ? timeEl.textContent : '');
+                if (blockHour !== null && currentHour < blockHour) {
+                    insertBeforeBlock = blocks[i];
+                    inserted = true;
+                    break;
                 }
-            });
-            if (!inserted && blocks.length) {
+            }
+
+            if (inserted && insertBeforeBlock) {
+                insertBeforeBlock.parentElement.insertBefore(el, insertBeforeBlock);
+            } else if (blocks.length) {
                 blocks[blocks.length - 1].parentElement.appendChild(el);
+            }
+
+            // Auto-scroll to NOW indicator on first load
+            if (!hasAutoScrolled && document.body.classList.contains('trip-mode')) {
+                hasAutoScrolled = true;
+                setTimeout(function() {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
             }
         } else {
             el.style.display = 'none';
+            el.classList.remove('visible');
         }
     });
 
@@ -3891,64 +5048,87 @@ function updateNowIndicator() {
     document.querySelectorAll('.time-block').forEach(function(block) {
         block.classList.remove('current-block');
     });
-    var allBlocks = document.querySelectorAll('[data-date="' + todayStr + '"] .time-block');
-    for (var i = allBlocks.length - 1; i >= 0; i--) {
-        var timeEl = allBlocks[i].querySelector('.time-start');
-        if (timeEl) {
-            var match = timeEl.textContent.match(/(\d+):(\d+)\s*(AM|PM)/i);
-            if (match) {
-                var h = parseInt(match[1]);
-                var m = parseInt(match[2]);
-                if (match[3].toUpperCase() === 'PM' && h !== 12) h += 12;
-                if (match[3].toUpperCase() === 'AM' && h === 12) h = 0;
-                if (currentHour >= h + m / 60) {
-                    allBlocks[i].classList.add('current-block');
-                    break;
-                }
+
+    // Find today's day section
+    var todaySection = null;
+    document.querySelectorAll('.day-section').forEach(function(s) {
+        var raw = s.getAttribute('data-date') || '';
+        var parsed = parseTripDate(raw);
+        if (parsed && dateToStr(parsed) === todayISO) todaySection = s;
+    });
+
+    if (todaySection) {
+        var allBlocks = todaySection.querySelectorAll('.time-block');
+        for (var i = allBlocks.length - 1; i >= 0; i--) {
+            var timeEl = allBlocks[i].querySelector('.time-start');
+            var blockHour = parseBlockTime(timeEl ? timeEl.textContent : '');
+            if (blockHour !== null && currentHour >= blockHour) {
+                allBlocks[i].classList.add('current-block');
+                break;
             }
         }
     }
 }
 
-// Navigate to the next upcoming stop
+/* ═══════════════════════════════════════════════════════════════════════════
+   NATIVE MAPS APP INTENT — Platform-aware
+   ═══════════════════════════════════════════════════════════════════════════ */
+function openMaps(address) {
+    var encoded = encodeURIComponent(address);
+    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+        window.open('maps://maps.apple.com/?daddr=' + encoded, '_blank');
+    } else if (/Android/i.test(navigator.userAgent)) {
+        window.open('geo:0,0?q=' + encoded, '_blank');
+    } else {
+        window.open('https://www.google.com/maps/search/?api=1&query=' + encoded, '_blank');
+    }
+}
+
+// Navigate to the next upcoming stop (enhanced with native maps)
 function navigateToNext() {
     var now = new Date();
-    var todayStr = now.toISOString().split('T')[0];
+    var todayISO = getTodayStr();
     var currentHour = now.getHours() + now.getMinutes() / 60;
-    var allBlocks = document.querySelectorAll('[data-date="' + todayStr + '"] .time-block');
 
-    for (var i = 0; i < allBlocks.length; i++) {
-        var navBtn = allBlocks[i].querySelector('.navigate-btn');
-        if (navBtn) {
-            var timeEl = allBlocks[i].querySelector('.time-start');
-            if (timeEl) {
-                var match = timeEl.textContent.match(/(\d+):(\d+)\s*(AM|PM)/i);
-                if (match) {
-                    var h = parseInt(match[1]);
-                    var m = parseInt(match[2]);
-                    if (match[3].toUpperCase() === 'PM' && h !== 12) h += 12;
-                    if (match[3].toUpperCase() === 'AM' && h === 12) h = 0;
-                    if (currentHour <= h + m / 60 + 1) {
-                        window.open(navBtn.href, '_blank');
-                        return;
+    // Find today's section
+    var todaySection = null;
+    document.querySelectorAll('.day-section').forEach(function(s) {
+        var raw = s.getAttribute('data-date') || '';
+        var parsed = parseTripDate(raw);
+        if (parsed && dateToStr(parsed) === todayISO) todaySection = s;
+    });
+
+    if (todaySection) {
+        var allBlocks = todaySection.querySelectorAll('.time-block');
+        for (var i = 0; i < allBlocks.length; i++) {
+            var navBtn = allBlocks[i].querySelector('.navigate-btn');
+            if (navBtn) {
+                var timeEl = allBlocks[i].querySelector('.time-start');
+                var blockHour = parseBlockTime(timeEl ? timeEl.textContent : '');
+                if (blockHour !== null && currentHour <= blockHour + 1) {
+                    // Extract address from onclick
+                    var onclick = navBtn.getAttribute('onclick') || '';
+                    var addrMatch = onclick.match(/openMaps\('([^']+)'\)/);
+                    if (addrMatch) {
+                        openMaps(addrMatch[1]);
+                    } else {
+                        navBtn.click();
                     }
+                    return;
                 }
             }
         }
     }
+    // Fallback: first visible navigate button
     var firstNav = document.querySelector('.time-block:not([style*="display: none"]) .navigate-btn');
-    if (firstNav) window.open(firstNav.href, '_blank');
-    else alert('No navigation target found for today');
-}
-
-// Platform-aware navigation helper
-function navigateTo(address) {
-    var encoded = encodeURIComponent(address);
-    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    var url = isIOS
-        ? 'http://maps.apple.com/?daddr=' + encoded + '&dirflg=w'
-        : 'https://www.google.com/maps/dir/?api=1&destination=' + encoded + '&travelmode=walking';
-    window.open(url, '_blank');
+    if (firstNav) {
+        var onclick = firstNav.getAttribute('onclick') || '';
+        var addrMatch = onclick.match(/openMaps\('([^']+)'\)/);
+        if (addrMatch) openMaps(addrMatch[1]);
+        else firstNav.click();
+    } else {
+        alert('No navigation target found for today');
+    }
 }
 
 // Screen Wake Lock (keeps screen on during navigation)
@@ -3962,9 +5142,18 @@ async function toggleWakeLock() {
     }
 }
 
+// Auto-request wake lock in trip mode
+(function() {
+    if (document.body.classList.contains('trip-mode') && 'wakeLock' in navigator) {
+        try { navigator.wakeLock.request('screen').then(function(wl) { wakeLock = wl; }); } catch(e) {}
+    }
+})();
+
 // Update now indicator every 60 seconds
 updateNowIndicator();
 setInterval(updateNowIndicator, 60000);
+// Update countdown every hour (for "X days until" changes)
+setInterval(updateCountdown, 3600000);
 </script>
 </body>
 </html>
