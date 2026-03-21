@@ -554,6 +554,28 @@ body::before {
     background: var(--line);
 }
 
+/* Block-level photo (from photo_url in context) */
+.block-photo {
+    padding: 0;
+    overflow: hidden;
+    border-top: 1px solid var(--line);
+}
+.block-photo img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    display: block;
+}
+.photo-credit {
+    display: block;
+    font-size: 8pt;
+    color: var(--muted);
+    padding: 4px 12px;
+    text-align: right;
+    background: rgba(246,241,234,0.4);
+}
+[data-theme="dark"] .photo-credit { background: rgba(50,50,50,0.4); }
+
 .maps-badge {
     display: inline-block;
     font-size: 12px;
@@ -1182,6 +1204,10 @@ table.booking tr:last-child td { border-bottom: none; }
     /* ── Photo placeholder — hide on mobile ───────────────────────────────── */
     .photo-placeholder { display: none; }
 
+    /* ── Block photos — slightly shorter on mobile ──────────────────────── */
+    .block-photo img { max-height: 150px; }
+    .photo-credit { font-size: 7pt; padding: 3px 8px; }
+
     /* ── Footer ───────────────────────────────────────────────────────────── */
     .footer { font-size: 10px; padding: 14px 12px 8px; }
 }
@@ -1607,6 +1633,7 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
 
         
       </div>
+      
     </div>
     
     
@@ -1647,6 +1674,7 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
 
         
       </div>
+      
     </div>
     
     
@@ -1687,6 +1715,7 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
 
         
       </div>
+      
     </div>
     
     
@@ -1736,6 +1765,7 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
 
         
       </div>
+      
     </div>
     
     
@@ -1787,6 +1817,12 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
 
         
       </div>
+      
+      <div class="block-photo">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Tivoli_Square_Solvang.jpg/640px-Tivoli_Square_Solvang.jpg" alt="Tivoli Square in Solvang — Danish half-timber facades and windmills" loading="lazy">
+          <span class="photo-credit">Photo: Wikimedia Commons</span>
+      </div>
+      
     </div>
     
     
@@ -1836,6 +1872,12 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
 
         
       </div>
+      
+      <div class="block-photo">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Hans_Christian_Anderson_Solvang.jpg/640px-Hans_Christian_Anderson_Solvang.jpg" alt="Hans Christian Andersen bust in Solvang, California" loading="lazy">
+          <span class="photo-credit">Photo: Wikimedia Commons</span>
+      </div>
+      
     </div>
     
     
@@ -1886,6 +1928,7 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
         
       </div>
+      
     </div>
     
     
@@ -1926,6 +1969,7 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
         
       </div>
+      
     </div>
     
   </div>
@@ -2066,6 +2110,7 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
         
       </div>
+      
     </div>
     
     
@@ -2117,6 +2162,12 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
         
       </div>
+      
+      <div class="block-photo">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Mission_StInes_%28cropped%29.jpg/640px-Mission_StInes_%28cropped%29.jpg" alt="Old Mission Santa Inés — founded 1804, Solvang" loading="lazy">
+          <span class="photo-credit">Photo: Wikimedia Commons</span>
+      </div>
+      
     </div>
     
     
@@ -2166,6 +2217,12 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
         
       </div>
+      
+      <div class="block-photo">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Solvang_California_Windmill.jpg/640px-Solvang_California_Windmill.jpg" alt="Solvang windmill and Danish village architecture" loading="lazy">
+          <span class="photo-credit">Photo: Wikimedia Commons</span>
+      </div>
+      
     </div>
     
     
@@ -2206,6 +2263,7 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
         
       </div>
+      
     </div>
     
     
@@ -2246,6 +2304,7 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
         
       </div>
+      
     </div>
     
     
@@ -2295,6 +2354,7 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
         
       </div>
+      
     </div>
     
     
@@ -2335,6 +2395,7 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
         
       </div>
+      
     </div>
     
   </div>
@@ -2471,6 +2532,7 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
         
       </div>
+      
     </div>
     
     
@@ -2511,6 +2573,7 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
         
       </div>
+      
     </div>
     
     
@@ -2560,6 +2623,7 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
         
       </div>
+      
     </div>
     
     
@@ -2611,6 +2675,12 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
         
       </div>
+      
+      <div class="block-photo">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Stearns_Wharf_by_Don_Ramey_Logan.jpg/640px-Stearns_Wharf_by_Don_Ramey_Logan.jpg" alt="Stearns Wharf, Santa Barbara — California’s oldest working wharf" loading="lazy">
+          <span class="photo-credit">Photo: Don Ramey Logan / Wikimedia Commons</span>
+      </div>
+      
     </div>
     
     
@@ -2660,6 +2730,12 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
         
       </div>
+      
+      <div class="block-photo">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Ty_Warner_Sea_Center_-_exterior_closeup.JPG/640px-Ty_Warner_Sea_Center_-_exterior_closeup.JPG" alt="Sea Center on Stearns Wharf — Santa Barbara Museum of Natural History" loading="lazy">
+          <span class="photo-credit">Photo: Wikimedia Commons</span>
+      </div>
+      
     </div>
     
     
@@ -2709,6 +2785,12 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
         
       </div>
+      
+      <div class="block-photo">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/SB_ShorelineParkWest_20150916.jpg/640px-SB_ShorelineParkWest_20150916.jpg" alt="Shoreline Park, Santa Barbara — ocean views and Channel Islands vistas" loading="lazy">
+          <span class="photo-credit">Photo: Wikimedia Commons</span>
+      </div>
+      
     </div>
     
     
@@ -2759,6 +2841,7 @@ Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brop
 
         
       </div>
+      
     </div>
     
     
@@ -2806,6 +2889,7 @@ Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brop
 
         
       </div>
+      
     </div>
     
   </div>
@@ -2940,6 +3024,7 @@ Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brop
 
         
       </div>
+      
     </div>
     
     
@@ -2992,6 +3077,7 @@ Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brop
 
         
       </div>
+      
     </div>
     
     
@@ -3032,6 +3118,7 @@ Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brop
 
         
       </div>
+      
     </div>
     
     
@@ -3072,6 +3159,7 @@ Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brop
 
         
       </div>
+      
     </div>
     
     
@@ -3112,6 +3200,7 @@ Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brop
 
         
       </div>
+      
     </div>
     
     
@@ -3152,6 +3241,7 @@ Brophy Bros: 119 Harbor Way, Santa Barbara. Phone: (805) 966-4418. Website: brop
 
         
       </div>
+      
     </div>
     
   </div>
