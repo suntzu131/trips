@@ -1070,20 +1070,22 @@ table.booking tr:last-child td { border-bottom: none; }
 .alt-toggle {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     width: 100%;
     border: none;
-    background: rgba(246,241,234,0.5);
-    padding: 8px 16px;
-    font-size: 11px;
-    font-weight: 600;
+    background: var(--sky);
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 700;
     color: var(--sea);
     cursor: pointer;
     transition: background 0.15s;
+    border-top: 1px dashed var(--line);
 }
+.alt-toggle::before { content: '🔄'; font-size: 14px; }
 
-[data-theme="dark"] .alt-toggle { background: rgba(42,42,42,0.5); }
-.alt-toggle:hover { background: var(--sky); }
+[data-theme="dark"] .alt-toggle { background: rgba(95,127,143,0.15); }
+.alt-toggle:hover { background: rgba(95,127,143,0.25); }
 .alt-toggle .alt-arrow { transition: transform 0.2s; font-size: 10px; }
 .alt-toggle[aria-expanded="true"] .alt-arrow { transform: rotate(180deg); }
 
@@ -1511,8 +1513,10 @@ body:not(.trip-mode) [data-view="trip"] { display: none !important; }
 body.trip-mode { padding-bottom: 68px; }
 body.trip-mode .day-nav { display: none; } /* hide top day nav in trip mode — bottom bar handles it */
 
-/* Mode bar — hidden on desktop, shown on mobile via 480px media query */
-.mode-bar { display: none; }
+/* Mode bar — hidden on desktop, shown on mobile via 480px media query
+   IMPORTANT: Use !important to prevent cascade order issues with mobile override */
+.mode-bar { display: none !important; }
+@media (max-width: 480px) { .mode-bar { display: flex !important; } }
 
 /* Trip Mode toggle button */
 .trip-toggle {
@@ -1907,13 +1911,13 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
   <div class="day-nav-inner">
     <span class="nav-label">Days</span>
     
-    <a class="nav-pill nav-day" href="#day-1" data-day="1" title="The Road North — Irvine to Solvang">Day 1</a>
+    <button class="nav-pill nav-day" data-day="1" onclick="selectDay(1)" title="The Road North — Irvine to Solvang">Day 1</button>
     
-    <a class="nav-pill nav-day" href="#day-2" data-day="2" title="The Slow Day — Full Solvang">Day 2</a>
+    <button class="nav-pill nav-day" data-day="2" onclick="selectDay(2)" title="The Slow Day — Full Solvang">Day 2</button>
     
-    <a class="nav-pill nav-day" href="#day-3" data-day="3" title="The American Riviera — Solvang to Santa Barbara">Day 3</a>
+    <button class="nav-pill nav-day" data-day="3" onclick="selectDay(3)" title="The American Riviera — Solvang to Santa Barbara">Day 3</button>
     
-    <a class="nav-pill nav-day" href="#day-4" data-day="4" title="The Exhale — Short Morning + Drive Home">Day 4</a>
+    <button class="nav-pill nav-day" data-day="4" onclick="selectDay(4)" title="The Exhale — Short Morning + Drive Home">Day 4</button>
     
     <button class="nav-show-all" onclick="showAllDays()">All</button>
   </div>
@@ -5014,6 +5018,9 @@ function showAllDays() {
     document.querySelectorAll('.nav-filter').forEach(function(f) {
         f.classList.remove('active-filter');
     });
+    document.querySelectorAll('.nav-day').forEach(function(p) {
+        p.classList.remove('active');
+    });
 }
 
 function filterByCity(city) {
@@ -5257,13 +5264,21 @@ function showDayOnly(dayIndex) {
     });
 }
 
-function scrollToDay(dayIndex) {
+/* selectDay — called from top day nav. Shows only that day and highlights the pill */
+function selectDay(dayIndex) {
     showDayOnly(dayIndex);
     updateBottomTabs(dayIndex);
+    /* Highlight active nav pill */
+    document.querySelectorAll('.nav-day').forEach(function(p) {
+        p.classList.toggle('active', parseInt(p.getAttribute('data-day')) === dayIndex);
+    });
+    /* Scroll to top of the day */
     var section = document.getElementById('day-' + dayIndex);
-    if (section) {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function scrollToDay(dayIndex) {
+    selectDay(dayIndex);
 }
 
 function updateBottomTabs(activeDayIndex) {
