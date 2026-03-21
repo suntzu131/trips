@@ -1,0 +1,3782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solvang &amp; Santa Barbara Family Trip</title>
+<link rel="manifest" href="data:application/json,{}">
+<meta name="theme-color" content="#a85f3f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+/* ─── Google Fonts ────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ─── CSS Variables — Johnny's Design DNA ─────────────────────────────────── */
+:root {
+    --bg: #f6f1ea;
+    --paper: #fffdf9;
+    --ink: #1f2937;
+    --muted: #5b6573;
+    --line: #ddd3c7;
+    --accent: #a85f3f;
+    --accent-2: #d8b58a;
+    --sea: #5f7f8f;
+    --sky: #cfdde6;
+    --radius: 14px;
+    /* Layered shadows (Josh Comeau technique) */
+    --shadow-color: 30deg 10% 50%;
+    --shadow-sm: 0 1px 2px hsl(var(--shadow-color) / 0.06);
+    --shadow-md:
+        0 1px 1px hsl(var(--shadow-color) / 0.06),
+        0 2px 2px hsl(var(--shadow-color) / 0.06),
+        0 4px 4px hsl(var(--shadow-color) / 0.06),
+        0 8px 8px hsl(var(--shadow-color) / 0.06);
+    --shadow-lg:
+        0 2px 2px hsl(var(--shadow-color) / 0.05),
+        0 4px 4px hsl(var(--shadow-color) / 0.05),
+        0 8px 8px hsl(var(--shadow-color) / 0.05),
+        0 16px 16px hsl(var(--shadow-color) / 0.05),
+        0 32px 32px hsl(var(--shadow-color) / 0.05);
+    --shadow: var(--shadow-md);
+}
+
+[data-theme="dark"] {
+    --bg: #1a1a1a;
+    --paper: #2a2a2a;
+    --ink: #e5e5e5;
+    --muted: #a0a0a0;
+    --line: #3a3a3a;
+    --accent: #d4845a;
+    --accent-2: #e8c99a;
+    --sea: #7fa0b0;
+    --sky: #2a3a44;
+    --shadow-color: 0deg 0% 10%;
+    --shadow: var(--shadow-md);
+}
+
+/* ─── Reset ───────────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.6;
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--sea); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ─── Scroll progress bar (pure CSS) ──────────────────────────────────────── */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--accent);
+    z-index: 9999;
+    transform-origin: left;
+    animation: scroll-progress linear;
+    animation-timeline: scroll(root);
+}
+@keyframes scroll-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+}
+
+/* ─── Page wrapper ────────────────────────────────────────────────────────── */
+.page {
+    max-width: min(1180px, calc(100% - 28px));
+    margin: 0 auto;
+    padding: 24px 16px 64px;
+}
+
+/* ─── Toolbar ─────────────────────────────────────────────────────────────── */
+.toolbar {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 1000;
+    display: flex;
+    gap: 8px;
+}
+.toolbar button {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s;
+}
+.toolbar button:hover { transform: scale(1.1); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HERO CARD
+   ═══════════════════════════════════════════════════════════════════════════ */
+.hero {
+    background: var(--paper);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 28px;
+    transition: box-shadow 200ms ease, transform 200ms ease;
+}
+
+.hero-gradient {
+    background: linear-gradient(135deg, #2c1810 0%, var(--accent) 50%, #c47a55 100%);
+    padding: 40px 36px 32px;
+    position: relative;
+}
+
+.hero-gradient::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-2), transparent);
+}
+
+.hero h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+    line-height: 1.15;
+}
+
+.hero .tagline {
+    font-size: 15px;
+    color: rgba(255,255,255,0.78);
+    margin-bottom: 14px;
+    font-weight: 400;
+}
+
+.hero .countdown {
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.15);
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 50px;
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.traveler-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.traveler-chip {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.32);
+    color: #fff;
+    padding: 5px 14px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+}
+
+.traveler-chip .chip-age {
+    opacity: 0.75;
+    font-weight: 400;
+    margin-left: 4px;
+}
+
+.hero-body {
+    padding: 20px 36px 24px;
+    background: var(--paper);
+}
+
+.hero-meta {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+}
+.hero-meta strong { color: var(--ink); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STICKY DAY NAVIGATION
+   ═══════════════════════════════════════════════════════════════════════════ */
+.day-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(246,241,234,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 12px 0;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+}
+
+[data-theme="dark"] .day-nav {
+    background: rgba(26,26,26,0.85);
+}
+
+.day-nav-inner {
+    max-width: min(1180px, calc(100% - 28px));
+    margin: 0 auto;
+    padding: 0 16px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.nav-pill {
+    background: var(--paper);
+    color: var(--sea);
+    border: 1px solid var(--line);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    text-decoration: none;
+}
+.nav-pill:hover { background: var(--sea); color: #fff; border-color: var(--sea); text-decoration: none; }
+.nav-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.nav-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    padding: 6px 4px 6px 0;
+    white-space: nowrap;
+}
+.nav-sep {
+    color: var(--line);
+    font-size: 14px;
+    padding: 0 2px;
+}
+.filter-row {
+    padding-top: 4px;
+}
+.filter-row .nav-pill {
+    font-size: 12px;
+    padding: 4px 12px;
+}
+.nav-filter.active-filter {
+    background: var(--sea);
+    color: #fff;
+    border-color: var(--sea);
+}
+.day-section.dim {
+    opacity: 0.15;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+.time-block.dim {
+    opacity: 0.12;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+.nav-show-all {
+    background: transparent;
+    color: var(--muted);
+    border: 1px dashed var(--line);
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+}
+.nav-show-all:hover { color: var(--ink); border-color: var(--ink); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STORY ARC
+   ═══════════════════════════════════════════════════════════════════════════ */
+.story-arc {
+    background: var(--paper);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 36px;
+    margin-bottom: 28px;
+    border-left: 4px solid var(--accent);
+}
+
+.story-arc-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 12px;
+}
+
+.story-arc h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+.story-arc p {
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.story-chapters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 18px;
+}
+
+.story-chapter {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 16px 20px;
+    border: 1px solid var(--line);
+}
+.story-chapter h4 { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 5px; }
+.story-chapter p { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DAY SECTIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+.day-section {
+    background: var(--paper);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 32px;
+    scroll-margin-top: 80px;
+}
+
+.day-header {
+    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+    padding: 22px 28px 18px;
+}
+
+.day-number {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--accent-2);
+    margin-bottom: 4px;
+}
+
+.day-header h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+    font-family: Georgia, "Times New Roman", serif;
+    line-height: 1.2;
+}
+
+.day-header-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+}
+
+.day-header-meta .meta-pill {
+    background: rgba(255,255,255,0.1);
+    padding: 3px 10px;
+    border-radius: 50px;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+/* ── Day-at-a-glance bar ────────────────────────────────────────────────── */
+.glance-bar {
+    padding: 14px 28px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.glance-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid;
+}
+
+.glance-chip.weather { background: var(--sky); color: var(--sea); border-color: rgba(95,127,143,0.3); }
+.glance-chip.intensity-1 { background: #e8f5e0; color: #2e7d32; border-color: rgba(46,125,50,0.3); }
+.glance-chip.intensity-2 { background: #e8f0f8; color: #2563a8; border-color: rgba(37,99,168,0.3); }
+.glance-chip.intensity-3 { background: #fff3e0; color: #8a4f00; border-color: rgba(138,79,0,0.3); }
+.glance-chip.intensity-4 { background: #fce4ec; color: #b71c1c; border-color: rgba(183,28,28,0.3); }
+.glance-chip.intensity-5 { background: #f3e5f5; color: #6a1b9a; border-color: rgba(106,27,154,0.3); }
+.glance-chip.stops { background: #fff3e0; color: #8a4f00; border-color: rgba(138,79,0,0.3); }
+.glance-chip.nap { background: #e8f5e0; color: #2e7d32; border-color: rgba(90,158,63,0.3); }
+.glance-chip.type-faith { background: #ede7f6; color: #4527a0; border-color: rgba(107,63,160,0.3); }
+
+.intensity-dots {
+    display: inline-flex;
+    gap: 3px;
+    margin-left: 4px;
+}
+.intensity-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.3;
+}
+.intensity-dot.filled { opacity: 1; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TIME BLOCKS — Card-based with icons
+   ═══════════════════════════════════════════════════════════════════════════ */
+.time-blocks {
+    padding: 16px 20px;
+}
+
+.time-block {
+    display: flex;
+    gap: 0;
+    margin-bottom: 10px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    transition: box-shadow 200ms ease, transform 200ms ease;
+}
+.time-block:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+/* Type icon column */
+.type-icon {
+    width: 48px;
+    min-width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+/* Time column */
+.time-col {
+    width: 68px;
+    min-width: 68px;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: rgba(246,241,234,0.6);
+    border-right: 1px solid var(--line);
+}
+[data-theme="dark"] .time-col { background: rgba(50,50,50,0.6); }
+
+.time-start { font-size: 14px; font-weight: 700; color: var(--ink); }
+.time-end { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* Block content */
+.block-content {
+    flex: 1;
+    padding: 12px 16px;
+    min-width: 0;
+}
+
+.block-type-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 2px 10px;
+    border-radius: 50px;
+    margin-bottom: 4px;
+}
+
+.block-name {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+    line-height: 1.25;
+}
+.block-name a { color: var(--ink); border-bottom: 1px solid var(--accent-2); }
+.block-name a:hover { color: var(--accent); border-bottom-color: var(--accent); text-decoration: none; }
+
+.stop-link {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 2px solid var(--accent-2);
+    transition: border-color 0.15s, color 0.15s;
+}
+.stop-link:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    text-decoration: none;
+}
+
+.stop-image {
+    margin: 12px 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+.stop-image img {
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    display: block;
+    background: var(--line);
+}
+
+.maps-badge {
+    display: inline-block;
+    font-size: 12px;
+    padding: 3px 10px;
+    background: rgba(95,127,143,0.08);
+    border: 1px solid rgba(95,127,143,0.18);
+    border-radius: 999px;
+    color: var(--sea);
+    margin-top: 6px;
+    text-decoration: none;
+}
+.maps-badge:hover {
+    background: rgba(95,127,143,0.15);
+    text-decoration: none;
+}
+
+.block-narrative {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+    margin-bottom: 6px;
+    font-style: italic;
+}
+
+.block-note {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.45;
+    margin-top: 4px;
+}
+
+.block-address {
+    font-size: 13px;
+    color: var(--sea);
+    margin-top: 4px;
+}
+.block-address a { color: var(--sea); border-bottom: 1px solid rgba(95,127,143,0.3); }
+
+/* Insider tip callout */
+.insider-tip {
+    background: linear-gradient(135deg, rgba(168,95,63,0.08), rgba(216,181,138,0.12));
+    border: 1px solid rgba(168,95,63,0.25);
+    border-radius: 10px;
+    padding: 8px 14px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--accent);
+    line-height: 1.5;
+}
+.insider-tip::before {
+    content: "Insider tip: ";
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+}
+
+/* Walking time between stops */
+.walking-time {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ── Block type color variants (muted fills + left accent) ───────────────── */
+.block-activity .type-icon { background: rgba(30,136,229,0.08); color: #1e88e5; }
+.block-activity .block-type-badge { background: rgba(30,136,229,0.1); color: #1e88e5; }
+.block-activity { background: rgba(30,136,229,0.06); border-left: 3px solid #1e88e5; }
+
+.block-food .type-icon, .block-meal .type-icon { background: rgba(239,108,0,0.08); color: #ef6c00; }
+.block-food .block-type-badge, .block-meal .block-type-badge { background: rgba(239,108,0,0.1); color: #ef6c00; }
+.block-food, .block-meal { background: rgba(239,108,0,0.06); border-left: 3px solid #ef6c00; }
+
+.block-faith .type-icon { background: rgba(142,36,170,0.08); color: #8e24aa; }
+.block-faith .block-type-badge { background: rgba(142,36,170,0.1); color: #8e24aa; }
+.block-faith { background: rgba(142,36,170,0.06); border-left: 3px solid #8e24aa; }
+
+.block-nap .type-icon { background: rgba(67,160,71,0.1); color: #43a047; }
+.block-nap .block-type-badge { background: rgba(67,160,71,0.1); color: #43a047; }
+.block-nap { background: rgba(67,160,71,0.06); border-left: 3px solid #43a047; }
+[data-theme="dark"] .block-nap { background: rgba(67,160,71,0.08); }
+
+.block-transit .type-icon { background: rgba(97,97,97,0.08); color: #616161; }
+.block-transit .block-type-badge { background: rgba(97,97,97,0.1); color: #616161; }
+.block-transit { background: rgba(97,97,97,0.06); border-left: 3px solid #616161; border-style: solid; }
+.block-transit .block-name { font-size: 14px; font-style: italic; color: var(--muted); font-family: inherit; }
+
+.block-explore .type-icon { background: rgba(0,137,123,0.08); color: #00897b; }
+.block-explore .block-type-badge { background: rgba(0,137,123,0.1); color: #00897b; }
+.block-explore { background: rgba(0,137,123,0.06); border-left: 3px solid #00897b; }
+
+.block-rest .type-icon { background: rgba(67,160,71,0.08); color: #43a047; }
+.block-rest .block-type-badge { background: rgba(67,160,71,0.1); color: #43a047; }
+.block-rest { background: rgba(67,160,71,0.06); border-left: 3px solid #43a047; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   EMERGENCY INFO (per-destination, collapsible)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.emergency-inline {
+    margin: 0 20px 16px;
+}
+.emergency-inline details {
+    background: #fff5f5;
+    border: 1px solid #fca5a5;
+    border-left: 4px solid #dc2626;
+    border-radius: 12px;
+    overflow: hidden;
+}
+[data-theme="dark"] .emergency-inline details {
+    background: #3a2020;
+    border-color: #8b3030;
+}
+.emergency-inline summary {
+    padding: 12px 18px;
+    font-weight: 700;
+    font-size: 13px;
+    color: #dc2626;
+    cursor: pointer;
+    list-style: none;
+}
+.emergency-inline summary::before { content: "🚨 "; }
+.emergency-inline summary::-webkit-details-marker { display: none; }
+.emergency-inline .emergency-body {
+    padding: 0 18px 14px;
+    font-size: 13px;
+    color: var(--ink);
+}
+.emergency-inline .emergency-body table { width: 100%; border-collapse: collapse; }
+.emergency-inline .emergency-body td { padding: 4px 8px 4px 0; vertical-align: top; }
+.emergency-inline .emergency-body td:first-child { font-weight: 600; color: #b91c1c; white-space: nowrap; width: 180px; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FAITH NOTES
+   ═══════════════════════════════════════════════════════════════════════════ */
+.faith-notes-card {
+    margin: 0 20px 16px;
+    background: #ede7f6;
+    border: 1px solid rgba(107,63,160,0.25);
+    border-left: 4px solid #4527A0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 13px;
+}
+[data-theme="dark"] .faith-notes-card { background: #2a2040; border-color: #5a3fa0; }
+.faith-notes-card h4 { color: #4527A0; font-size: 13px; margin-bottom: 8px; }
+.faith-notes-card p { color: var(--muted); margin: 4px 0; line-height: 1.5; }
+.faith-notes-card strong { color: var(--ink); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BUDGET SECTION
+   ═══════════════════════════════════════════════════════════════════════════ */
+.budget-card {
+    background: var(--paper);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 28px;
+}
+.budget-header {
+    background: var(--bg);
+    padding: 18px 28px;
+    border-bottom: 1px solid var(--line);
+}
+.budget-header h3 { font-size: 16px; font-weight: 700; color: var(--ink); }
+.budget-header .budget-range { font-size: 14px; color: var(--muted); margin-top: 3px; }
+
+table.budget { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.budget td { padding: 11px 28px; border-bottom: 1px solid var(--line); color: var(--ink); }
+table.budget td:last-child { text-align: right; color: var(--muted); }
+table.budget tr:last-child td { border-bottom: none; }
+table.budget tr.total-row td { font-weight: 700; color: var(--ink); background: var(--bg); border-top: 2px solid var(--line); }
+table.budget tr.total-row td:last-child { color: var(--accent); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PACKING CHECKLIST (interactive)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--line);
+    margin: 32px 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 18px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+.packing-card {
+    background: var(--paper);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px 28px;
+    margin-bottom: 28px;
+}
+
+.packing-section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin: 16px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+}
+.packing-section-title:first-of-type { margin-top: 4px; }
+
+.packing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 28px;
+    margin-bottom: 6px;
+}
+
+.packing-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(221,211,199,0.4);
+    font-size: 14px;
+    color: var(--ink);
+    cursor: pointer;
+    user-select: none;
+}
+.packing-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+}
+.packing-item.checked span { text-decoration: line-through; color: var(--muted); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   EMERGENCY CONTACTS MASTER
+   ═══════════════════════════════════════════════════════════════════════════ */
+.emergency-card {
+    background: #fff5f5;
+    border: 1px solid #fca5a5;
+    border-left: 4px solid #dc2626;
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 28px;
+}
+[data-theme="dark"] .emergency-card { background: #3a2020; border-color: #8b3030; }
+.emergency-card h3 { color: #dc2626; font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+table.emergency { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.emergency td { padding: 5px 12px 5px 0; vertical-align: top; color: var(--ink); }
+table.emergency td:first-child { font-weight: 600; color: #b91c1c; white-space: nowrap; width: 220px; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BOOKING LINKS
+   ═══════════════════════════════════════════════════════════════════════════ */
+.booking-card {
+    background: var(--paper);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 28px;
+}
+table.booking { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.booking th { background: var(--bg); color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; padding: 10px 18px; text-align: left; border-bottom: 1px solid var(--line); }
+table.booking td { padding: 10px 18px; border-bottom: 1px solid var(--line); color: var(--ink); vertical-align: top; }
+table.booking tr:last-child td { border-bottom: none; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════════════════════════ */
+.footer {
+    text-align: center;
+    padding: 20px 0 8px;
+    font-size: 12px;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    margin-top: 16px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTION CARD (city profiles, cultural context, phrases)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.section-card {
+    background: var(--paper);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 36px;
+    margin-bottom: 28px;
+    transition: box-shadow 200ms ease, transform 200ms ease;
+}
+.section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 12px;
+}
+.section-card h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+/* ── City profiles ── */
+.city-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+}
+.city-card {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--line);
+    transition: box-shadow 200ms ease, transform 200ms ease;
+}
+.city-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.city-card h3 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+}
+.city-personality {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+.city-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.city-chip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 50px;
+    background: rgba(168,95,63,0.08);
+    color: var(--accent);
+    border: 1px solid rgba(168,95,63,0.2);
+}
+
+/* ── Cultural context ── */
+.cultural-context p {
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 16px;
+}
+.culture-connections {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+}
+.culture-card {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 16px 18px;
+    border: 1px solid var(--line);
+}
+.culture-name {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 4px;
+}
+.culture-card strong {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 16px;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 6px;
+}
+.culture-card p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+    margin: 0;
+}
+
+/* ── Phrases ── */
+.phrase-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+.phrase-card {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+}
+.phrase-text {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 2px;
+}
+.phrase-pronunciation {
+    font-size: 12px;
+    color: var(--accent);
+    font-style: italic;
+    margin-bottom: 2px;
+}
+.phrase-meaning {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* ── Story callout (blockquote in time blocks) ── */
+.story-callout {
+    margin: 12px 0;
+    padding: 14px 20px;
+    border-left: 3px solid var(--accent);
+    background: rgba(168,95,63,0.04);
+    border-radius: 0 12px 12px 0;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* ── Photo tip (collapsible per stop) ── */
+.photo-tip-details {
+    margin-top: 8px;
+}
+.photo-tip-details summary {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--sea);
+    cursor: pointer;
+    list-style: none;
+    padding: 4px 0;
+}
+.photo-tip-details summary::-webkit-details-marker { display: none; }
+.photo-tip-details p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+    padding: 6px 0 2px 20px;
+    margin: 0;
+}
+
+/* ── Copy address button ── */
+.copy-btn {
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 6px;
+    transition: background 0.15s;
+}
+.copy-btn:hover { background: rgba(95,127,143,0.08); }
+
+/* ── Glance chip: spend ── */
+.glance-chip.spend { background: #fff3e0; color: #8a4f00; border-color: rgba(138,79,0,0.3); }
+.glance-chip.sun { background: #fffde7; color: #f57f17; border-color: rgba(245,127,23,0.3); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+    .packing-grid { grid-template-columns: 1fr !important; }
+    .hero-meta { flex-direction: column; gap: 8px; }
+    .story-chapters { grid-template-columns: 1fr; }
+    .city-grid { grid-template-columns: 1fr; }
+    .phrase-grid { grid-template-columns: 1fr; }
+    .hero-gradient { padding: 28px 20px 24px; }
+    .hero-body { padding: 16px 20px 20px; }
+    .section-card { padding: 20px; }
+    .day-header { padding: 18px 20px 14px; }
+    .glance-bar { padding: 12px 20px; }
+    .time-blocks { padding: 12px 12px; }
+    .type-icon { width: 36px; min-width: 36px; font-size: 16px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRINT
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media print {
+    body { background: white; }
+    .day-nav, .toolbar { display: none !important; }
+    .page { padding: 0; max-width: 100%; }
+    .day-section { break-before: page; box-shadow: none; border: 1px solid #ddd; }
+    .time-block { break-inside: avoid; }
+    .hero { box-shadow: none; border: 1px solid #ddd; }
+    .budget-card, .packing-card, .booking-card, .emergency-card { box-shadow: none; }
+    .no-print { display: none !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TRIP MODE SYSTEM
+   ═══════════════════════════════════════════════════════════════════════════ */
+body.trip-mode [data-view="planning"] { display: none !important; }
+body:not(.trip-mode) [data-view="trip"] { display: none !important; }
+
+/* Now indicator — red line showing current time */
+.now-indicator {
+    position: relative;
+    height: 3px;
+    background: #e74c3c;
+    margin: 8px 0;
+    border-radius: 2px;
+    z-index: 10;
+    display: none;
+}
+.now-indicator::before {
+    content: 'NOW';
+    position: absolute;
+    left: 0;
+    top: -10px;
+    font-size: 10px;
+    font-weight: 800;
+    color: #e74c3c;
+    letter-spacing: 0.1em;
+}
+
+/* Current time block highlight */
+.time-block.current-block {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px rgba(168,95,63,0.08);
+}
+
+/* Navigate button per stop */
+.navigate-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--sea);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    min-height: 44px;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+.navigate-btn:hover { background: #4a6a7a; text-decoration: none; color: #fff; }
+
+/* Fixed bottom bar (Trip Mode only) */
+.trip-bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 60px;
+    background: rgba(26,26,30,0.97);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    z-index: 2000;
+    padding: 0 8px;
+}
+.trip-bottom-bar a, .trip-bottom-bar button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 56px;
+    min-height: 48px;
+    font-size: 20px;
+    color: #fff;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    gap: 2px;
+}
+.trip-bottom-bar .bar-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+/* In trip mode, add bottom padding for the bar */
+body.trip-mode { padding-bottom: 68px; }
+body.trip-mode .day-nav { display: none; } /* hide top day nav in trip mode — bottom bar handles it */
+
+/* Trip Mode toggle button */
+.trip-toggle {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 2001;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 50px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.trip-toggle:hover { transform: scale(1.05); }
+body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* Click-to-call styling */
+.call-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    background: rgba(231,76,60,0.08);
+    border: 1px solid rgba(231,76,60,0.2);
+    border-radius: 50px;
+    color: #c0392b;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    min-height: 44px;
+}
+.call-link:hover { background: rgba(231,76,60,0.15); text-decoration: none; }
+
+/* Battery saving */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Ensure 48px minimum tap targets on mobile */
+@media (max-width: 900px) {
+    .nav-pill, .navigate-btn, .call-link, .maps-badge, .copy-btn {
+        min-height: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    /* Add touch-action for better mobile gestures */
+    body { touch-action: manipulation; }
+}
+</style>
+</head>
+<body>
+<button class="trip-toggle no-print" onclick="toggleTripMode()" id="trip-toggle" title="Switch between Planning and Trip mode">
+    <span id="trip-toggle-icon">🗺️</span>
+    <span id="trip-toggle-label">Trip Mode</span>
+</button>
+<div class="page">
+
+
+<div class="toolbar no-print">
+  <button onclick="toggleDarkMode()" title="Toggle dark mode" id="dark-btn">🌙</button>
+  <button onclick="sharePage()" title="Share">📤</button>
+  <button onclick="window.print()" title="Print">🖨️</button>
+</div>
+
+
+<div class="hero" data-view="planning">
+  <div class="hero-gradient">
+    <h1>Solvang &amp; Santa Barbara Family Trip</h1>
+    <p class="tagline">March 30 – April 2, 2026 &middot; From Irvine, CA</p>
+    <div class="countdown" id="countdown" data-start="Monday, March 30"></div>
+    <div class="traveler-chips">
+      
+      <span class="traveler-chip">
+        Dan<span class="chip-age">&middot; 40yr</span>
+      </span>
+      
+      <span class="traveler-chip">
+        Minako<span class="chip-age">&middot; 38yr</span>
+      </span>
+      
+      <span class="traveler-chip">
+        Koko<span class="chip-age">&middot; 6yr</span>
+      </span>
+      
+      <span class="traveler-chip">
+        Issa<span class="chip-age">&middot; 4yr</span>
+      </span>
+      
+    </div>
+  </div>
+  <div class="hero-body">
+    <div class="hero-meta">
+      <span><strong>Duration</strong> 4 days</span>
+      <span><strong>Budget</strong> $1,200&ndash;$1,600</span>
+      <span><strong>Generated</strong> March 21, 2026</span>
+    </div>
+  </div>
+</div>
+
+
+<div class="day-nav no-print">
+  <div class="day-nav-inner">
+    <span class="nav-label">Days</span>
+    
+    <a class="nav-pill nav-day" href="#day-1" data-day="1" title="Travel Day + Danish Village Discovery">Day 1</a>
+    
+    <a class="nav-pill nav-day" href="#day-2" data-day="2" title="Viking Discovery Day">Day 2</a>
+    
+    <a class="nav-pill nav-day" href="#day-3" data-day="3" title="The American Riviera">Day 3</a>
+    
+    <a class="nav-pill nav-day" href="#day-4" data-day="4" title="The Exhale — Last Adventure + Drive Home">Day 4</a>
+    
+    <button class="nav-show-all" onclick="showAllDays()">All</button>
+  </div>
+  <div class="day-nav-inner filter-row">
+    <span class="nav-label">Filter</span>
+    
+    
+    <button class="nav-pill nav-filter" data-filter-city="Solvang" onclick="filterByCity('Solvang')">Solvang</button>
+    
+    <button class="nav-pill nav-filter" data-filter-city="Santa Barbara" onclick="filterByCity('Santa Barbara')">Santa Barbara</button>
+    
+    <span class="nav-sep">|</span>
+    <button class="nav-pill nav-filter" data-filter-type="faith" onclick="filterByType('faith')">⛪ Faith</button>
+    <button class="nav-pill nav-filter" data-filter-type="food" onclick="filterByType('food')">🍽️ Food</button>
+    <button class="nav-pill nav-filter" data-filter-type="activity" onclick="filterByType('activity')">🏛️ Activities</button>
+  </div>
+</div>
+
+
+
+<div class="story-arc" data-view="planning">
+  <div class="story-arc-label">Trip Narrative</div>
+  
+    <h2>From the Danish Village to the American Riviera</h2>
+    <p>This is a story about slowing down. Four days trading freeway rhythms for bakery lines and beach breezes. The family moves north from Irvine into the rolling Santa Ynez hills, spends two days in a storybook Danish village where the biggest decision is which pastry to try next, then drifts south to Santa Barbara for hands-on science, ocean air, and a Mission that has stood since 1786. The return drive is the exhale — back home with sandy shoes and sugar-dusted memories.</p>
+    
+    <div class="story-chapters">
+      
+      <div class="story-chapter">
+        <h4>Chapter 1 — The Road North</h4>
+        <p>Monday. Leave Irvine after breakfast, stop at Camarillo for a stretch, and arrive in Solvang by late morning. First impressions: windmills, half-timber facades, the smell of fresh-baked aebleskiver.</p>
+      </div>
+      
+      <div class="story-chapter">
+        <h4>Chapter 2 — Viking Discovery Day</h4>
+        <p>Tuesday. Ostriches, surrey bikes, a museum scavenger hunt, and a farm-to-table dinner. The kids earn their appetites.</p>
+      </div>
+      
+      <div class="story-chapter">
+        <h4>Chapter 3 — The American Riviera</h4>
+        <p>Wednesday. A short drive delivers a new world — touch tanks at MOXI, pelicans on Stearns Wharf, and the golden light of Mission Santa Barbara.</p>
+      </div>
+      
+      <div class="story-chapter">
+        <h4>Chapter 4 — The Exhale</h4>
+        <p>Thursday. One last morning adventure — the zoo or the beach — then the gentle drive home, arriving in time for bedtime routines.</p>
+      </div>
+      
+    </div>
+    
+  
+</div>
+
+
+
+
+<div class="section-card" data-view="planning">
+    <div class="section-label">Destinations</div>
+    <div class="city-grid">
+    
+    <div class="city-card">
+        <h3>Solvang</h3>
+        <p class="city-personality">A pocket-sized Danish village in the Santa Ynez Valley. Founded in 1911 by Danish-Americans, it feels like a theme park that forgot to charge admission. Bakeries, windmills, and half-timber storefronts line Copenhagen Drive.</p>
+        <div class="city-meta">
+            <span class="city-chip">Whimsical &amp; Walkable</span>
+            <span class="city-chip">Families with young kids</span>
+        </div>
+    </div>
+    
+    <div class="city-card">
+        <h3>Santa Barbara</h3>
+        <p class="city-personality">Red-tile roofs, palm-lined streets, and a working waterfront. The &#39;American Riviera&#39; delivers museums, playgrounds, and a historic mission within a compact, stroller-friendly downtown.</p>
+        <div class="city-meta">
+            <span class="city-chip">Coastal &amp; Cultural</span>
+            <span class="city-chip">Hands-on science + beach time</span>
+        </div>
+    </div>
+    
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="day-section" id="day-1" data-city="Solvang" data-date="Monday, March 30" data-view="both">
+
+  
+  <div class="day-header">
+    <div class="day-number">Day 1</div>
+    <h2>Travel Day + Danish Village Discovery</h2>
+    <div class="day-header-meta">
+      <span>Monday, March 30</span>
+      <span class="meta-pill">Solvang</span>
+      
+      <span class="meta-pill">
+        🌤
+        64°F / 49°F
+      </span>
+      
+    </div>
+  </div>
+
+  
+  <div class="glance-bar">
+    
+    <span class="glance-chip weather">
+      🌤
+      Partly cloudy
+      
+    </span>
+    
+
+    
+    
+    <span class="glance-chip intensity-2">
+      Light
+      <span class="intensity-dots">
+        <span class="intensity-dot filled"></span><span class="intensity-dot filled"></span><span class="intensity-dot "></span><span class="intensity-dot "></span><span class="intensity-dot "></span>
+      </span>
+    </span>
+    
+
+    
+    
+
+    
+    <span class="glance-chip nap">💤 Nap 1:00 PM&ndash;2:30 PM</span>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+  <div class="time-blocks">
+    <div class="now-indicator" id="now-1" data-day-date="Monday, March 30"></div>
+    
+    
+    
+    
+    
+
+    <div class="time-block block-transit" data-block-type="transit">
+      <div class="type-icon">🚶</div>
+      <div class="time-col">
+        <span class="time-start">8:00 AM</span>
+        <span class="time-end">10:30 AM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Transit</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/place/Camarillo+Premium+Outlets/" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Drive: Irvine → Solvang (via US-101) 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">2.5 hours up the coast. Minako rides shotgun (carsick), kids in back with loaded iPads. The 101 is flat and scenic — no winding mountain passes.</div>
+        
+
+        
+        <div class="block-note">Piriformis stop at Camarillo Premium Outlets (~90 min mark). 10–15 min stretch break. Restrooms near the food court. Pack car snacks and water bottles.</div>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-explore" data-block-type="explore">
+      <div class="type-icon">🗺️</div>
+      <div class="time-col">
+        <span class="time-start">10:45 AM</span>
+        <span class="time-end">11:30 AM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Explore</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/place/King+Frederik+Inn/" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Check In: King Frederik Inn 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Drop bags at the inn in the heart of the Danish village. Walking distance to everything.</div>
+        
+
+        
+        <div class="block-note">1617 Copenhagen Dr, Solvang, CA 93463. Phone: (805) 688-5515. Request ground floor if available (easier with kids + luggage). Confirm stroller storage.</div>
+        
+
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 1617 Copenhagen Dr, Solvang, CA 93463
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('1617 Copenhagen Dr, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a href="https://www.google.com/maps/place/King+Frederik+Inn/" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=1617%20Copenhagen%20Dr%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-explore" data-block-type="explore">
+      <div class="type-icon">🗺️</div>
+      <div class="time-col">
+        <span class="time-start">11:30 AM</span>
+        <span class="time-end">12:30 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Explore</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/place/Olsen&#39;s+Danish+Village+Bakery/" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Village Walk + Danish Bakeries 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Wander Copenhagen Drive and Mission Drive. Pop into Olsen’s Danish Village Bakery for aebleskiver and Mortensen’s for butter cookies. Let the kids pick one treat each.</div>
+        
+
+        
+        <div class="block-note">Olsen’s: 1529 Mission Dr — (805) 688-6314. Open 7 AM–6 PM (M–Th), 7 AM–7 PM (F–Su). Mortensen’s: 1588 Mission Dr — (805) 688-8373. Open 9 AM–5 PM (M–Th, Su), 9 AM–6 PM (F–Sa). Rain backup: Browse the Book Loft (a two-story bookshop across the street).</div>
+        
+
+        
+        <div class="insider-tip">Olsen’s aebleskiver (Danish pancake balls) are the must-try. Ask for them fresh — they come out in batches.</div>
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 1529 Mission Dr, Solvang, CA 93463
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('1529 Mission Dr, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a href="https://www.google.com/maps/place/Olsen&#39;s+Danish+Village+Bakery/" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=1529%20Mission%20Dr%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-meal" data-block-type="meal">
+      <div class="type-icon">🍽️</div>
+      <div class="time-col">
+        <span class="time-start">12:30 PM</span>
+        <span class="time-end">1:00 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Meal</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            Lunch: Village Cafe or Bakery Picnic
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Grab sandwiches or keep grazing on bakery items. Eat on the benches near Solvang Park to keep it easy.</div>
+        
+
+        
+        <div class="block-note">Keep it light — Issa&#39;s nap window starts at 1 PM.</div>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-nap" data-block-type="nap">
+      <div class="type-icon">💤</div>
+      <div class="time-col">
+        <span class="time-start">1:00 PM</span>
+        <span class="time-end">2:30 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Nap</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            Issa&#39;s Nap — Return to Hotel
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Back to King Frederik Inn for nap time. Dan and Koko can explore the hotel grounds or read together.</div>
+        
+
+        
+        <div class="block-note">Bring Issa’s nap blanket and white noise app.</div>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-activity" data-block-type="activity">
+      <div class="type-icon">🏛️</div>
+      <div class="time-col">
+        <span class="time-start">3:00 PM</span>
+        <span class="time-end">4:30 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Activity</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/place/Hans+Christian+Andersen+Park/" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Hans Christian Andersen Park 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">A sprawling park with a fantastic playground, skate park, and open fields. Named for Denmark’s most famous storyteller. The kids can run off energy while Dan stretches.</div>
+        
+
+        
+        <div class="block-note">633 Chalk Hill Rd, Solvang. Free. Open dawn to dusk. Phone: (805) 688-7529. Rain backup: Solvang Vintage Motorcycle Museum ($6/adult, free &lt;12). Heads up for Koko: the playground can get busy after school hours.</div>
+        
+
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 633 Chalk Hill Rd, Solvang, CA 93463
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('633 Chalk Hill Rd, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a href="https://www.google.com/maps/place/Hans+Christian+Andersen+Park/" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=633%20Chalk%20Hill%20Rd%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-meal" data-block-type="meal">
+      <div class="type-icon">🍽️</div>
+      <div class="time-col">
+        <span class="time-start">5:30 PM</span>
+        <span class="time-end">6:30 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Meal</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/search/?api=1&query=1547%20Mission%20Dr%2C%20Solvang%2C%20CA%2093463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Dinner: Casual Village Dining 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Keep it kid-friendly and low-key for the first night. Solvang Brewing Company or First &amp; Oak are solid options.</div>
+        
+
+        
+        <div class="block-note">Solvang Brewing: 1547 Mission Dr — (805) 688-2337. First &amp; Oak: 409 First St — (805) 688-1703. Both have outdoor seating if weather is nice.</div>
+        
+
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 1547 Mission Dr, Solvang, CA 93463
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('1547 Mission Dr, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=1547%20Mission%20Dr%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-rest" data-block-type="rest">
+      <div class="type-icon">💤</div>
+      <div class="time-col">
+        <span class="time-start">7:00 PM</span>
+        <span class="time-end">7:30 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Rest</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            Wind Down + Bedtime Routine
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Back to the inn. Baths, stories, lights out by 7:30.</div>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+      </div>
+    </div>
+    
+  </div>
+
+  
+  
+  <div class="emergency-inline">
+    <details>
+      <summary>Emergency Info &mdash; Solvang</summary>
+      <div class="emergency-body">
+        <table>
+          
+          <tr><td>Emergency</td><td><a href="tel:911" class="call-link">📞 911</a></td></tr>
+          
+          
+          <tr><td>Hospital</td><td>Santa Ynez Valley Cottage Hospital — 2050 Viborg Rd, Solvang — (805) 688-6431</td></tr>
+          
+          
+          <tr><td>Pediatric</td><td>Santa Barbara Cottage Hospital (35 min) — 400 W Pueblo St, SB — (805) 682-7111</td></tr>
+          
+          
+          
+          
+        </table>
+      </div>
+    </details>
+  </div>
+  
+
+  
+  
+
+</div>
+
+<div class="day-section" id="day-2" data-city="Solvang" data-date="Tuesday, March 31" data-view="both">
+
+  
+  <div class="day-header">
+    <div class="day-number">Day 2</div>
+    <h2>Viking Discovery Day</h2>
+    <div class="day-header-meta">
+      <span>Tuesday, March 31</span>
+      <span class="meta-pill">Solvang</span>
+      
+      <span class="meta-pill">
+        🌤
+        66°F / 48°F
+      </span>
+      
+    </div>
+  </div>
+
+  
+  <div class="glance-bar">
+    
+    <span class="glance-chip weather">
+      🌤
+      Partly cloudy
+      
+    </span>
+    
+
+    
+    
+    <span class="glance-chip intensity-3">
+      Moderate
+      <span class="intensity-dots">
+        <span class="intensity-dot filled"></span><span class="intensity-dot filled"></span><span class="intensity-dot filled"></span><span class="intensity-dot "></span><span class="intensity-dot "></span>
+      </span>
+    </span>
+    
+
+    
+    
+
+    
+    <span class="glance-chip nap">💤 Nap 1:00 PM&ndash;2:30 PM</span>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+  <div class="time-blocks">
+    <div class="now-indicator" id="now-2" data-day-date="Tuesday, March 31"></div>
+    
+    
+    
+    
+    
+
+    <div class="time-block block-meal" data-block-type="meal">
+      <div class="type-icon">🍽️</div>
+      <div class="time-col">
+        <span class="time-start">8:30 AM</span>
+        <span class="time-end">9:00 AM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Meal</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/search/?api=1&query=1529%20Mission%20Dr%2C%20Solvang%2C%20CA%2093463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Breakfast at Olsen’s Bakery 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Back for round two. Fresh pastries, coffee for the grown-ups, juice boxes for the crew.</div>
+        
+
+        
+        <div class="block-note">1529 Mission Dr. Opens 7 AM.</div>
+        
+
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 1529 Mission Dr, Solvang, CA 93463
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('1529 Mission Dr, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=1529%20Mission%20Dr%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-activity" data-block-type="activity">
+      <div class="type-icon">🏛️</div>
+      <div class="time-col">
+        <span class="time-start">9:15 AM</span>
+        <span class="time-end">10:30 AM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Activity</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/place/OstrichLand+USA/" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">OstrichLand USA 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Feed ostriches and emus by hand at this roadside attraction. Over 100 birds roaming a large paddock. The kids will lose their minds.</div>
+        
+
+        
+        <div class="block-note">610 E Hwy 246, Buellton (5 min from Solvang). Open 9 AM–5 PM daily. Admission: $7/adult, $3/child under 12. Feeding bowls $1 extra. Phone: (805) 686-9696. Website: ostrichlandusa.com. KOKO ALERT: Ostriches can be startly loud and assertive when feeding. Prep Koko beforehand — let her observe from a distance first. Rain backup: Skip to Elverhoj Museum early.</div>
+        
+
+        
+        <div class="insider-tip">The emus are gentler than the ostriches — start Koko on the emu side.</div>
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 610 E Hwy 246, Buellton, CA 93427
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('610 E Hwy 246, Buellton, CA 93427');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a href="https://www.google.com/maps/place/OstrichLand+USA/" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=610%20E%20Hwy%20246%2C%20Buellton%2C%20CA%2093427&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-activity" data-block-type="activity">
+      <div class="type-icon">🏛️</div>
+      <div class="time-col">
+        <span class="time-start">10:45 AM</span>
+        <span class="time-end">12:00 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Activity</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/place/Wheel+Fun+Rentals+Solvang/" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Surrey Bike Ride Through the Village 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Rent a 4-wheel surrey from Wheel Fun Rentals and cruise through downtown Solvang. The whole family pedals together.</div>
+        
+
+        
+        <div class="block-note">Wheel Fun Rentals: 475 First St, Solvang. No reservations needed. Open daily except Tuesdays — March 31 is a Tuesday, so check status! If closed, substitute with a village walk or bike rental from Solvang Bike Rentals. Surrey drivers must be 18+. Kids under 42″ ride in the front basket. Rain backup: Solvang Vintage Motorcycle Museum.</div>
+        
+
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 475 First St, Solvang, CA 93463
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('475 First St, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a href="https://www.google.com/maps/place/Wheel+Fun+Rentals+Solvang/" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=475%20First%20St%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-meal" data-block-type="meal">
+      <div class="type-icon">🍽️</div>
+      <div class="time-col">
+        <span class="time-start">12:00 PM</span>
+        <span class="time-end">12:45 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Meal</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/search/?api=1&query=473%20Atterdag%20Rd%2C%20Solvang%2C%20CA%2093463" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Lunch: Peasants DELI &amp; Arcade 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">The casual sibling of Peasants FEAST. Sandwiches, a retro arcade for the kids, and a laid-back vibe.</div>
+        
+
+        
+        <div class="block-note">473 Atterdag Rd, Solvang. Arcade keeps kids entertained while food is prepared.</div>
+        
+
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 473 Atterdag Rd, Solvang, CA 93463
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('473 Atterdag Rd, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=473%20Atterdag%20Rd%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-nap" data-block-type="nap">
+      <div class="type-icon">💤</div>
+      <div class="time-col">
+        <span class="time-start">1:00 PM</span>
+        <span class="time-end">2:30 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Nap</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            Issa&#39;s Nap — Return to Hotel
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Nap time again. Dan and Koko can visit the Elverhoj Museum (5-min walk from hotel).</div>
+        
+
+        
+        <div class="block-note">Optional: Dan takes Koko to the museum while Minako stays with Issa.</div>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-explore" data-block-type="explore">
+      <div class="type-icon">🗺️</div>
+      <div class="time-col">
+        <span class="time-start">2:30 PM</span>
+        <span class="time-end">3:30 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Explore</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/place/Elverhoj+Museum/" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Elverhøj Museum of History &amp; Art 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">A charming museum in a handcrafted Danish-style building. The kids can do a scavenger hunt through the exhibits.</div>
+        
+
+        
+        <div class="block-note">1624 Elverhoy Way, Solvang. Open Thu–Mon 11 AM–5 PM (CLOSED TUESDAYS). Since March 31 is a Tuesday, this museum will be CLOSED. Alternative: Visit during nap window on Day 1 (Monday), or skip. If visiting Mon instead: $5/adult, free &lt;12. Phone: (805) 686-1211. Rain backup: N/A (indoor activity).</div>
+        
+
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 1624 Elverhoy Way, Solvang, CA 93463
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('1624 Elverhoy Way, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a href="https://www.google.com/maps/place/Elverhoj+Museum/" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=1624%20Elverhoy%20Way%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-activity" data-block-type="activity">
+      <div class="type-icon">🏛️</div>
+      <div class="time-col">
+        <span class="time-start">3:30 PM</span>
+        <span class="time-end">5:00 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Activity</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/place/Sunny+Fields+Park/" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Sunny Fields Park 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">A castle-themed playground that feels straight out of a fairy tale. Perfect for burning off energy before dinner.</div>
+        
+
+        
+        <div class="block-note">900 Alamo Pintado Rd, Solvang. Free. Open 8 AM–sunset. Phone: (805) 688-7529. Good shade coverage. Rain backup: Return to hotel for quiet indoor play.</div>
+        
+
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 900 Alamo Pintado Rd, Solvang, CA 93463
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('900 Alamo Pintado Rd, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a href="https://www.google.com/maps/place/Sunny+Fields+Park/" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=900%20Alamo%20Pintado%20Rd%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-meal" data-block-type="meal">
+      <div class="type-icon">🍽️</div>
+      <div class="time-col">
+        <span class="time-start">5:30 PM</span>
+        <span class="time-end">7:00 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Meal</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/place/Peasants+Feast/" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Dinner: Peasants FEAST 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">The signature dinner of the trip. Farm-to-table New American cuisine in a cozy Solvang setting. This is the one restaurant worth reserving.</div>
+        
+
+        
+        <div class="block-note">487 Atterdag Rd, Solvang. Phone: (805) 686-4555. Website: peasantsfeast.com. MAKE RESERVATION for 5:30 PM, party of 4. Michelin-recommended. Kid-friendly but not a kids&#39; menu — order shared plates.</div>
+        
+
+        
+        <div class="insider-tip">Ask about the seasonal tasting menu — it changes weekly based on local farms.</div>
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 487 Atterdag Rd, Solvang, CA 93463
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('487 Atterdag Rd, Solvang, CA 93463');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a href="https://www.google.com/maps/place/Peasants+Feast/" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=487%20Atterdag%20Rd%2C%20Solvang%2C%20CA%2093463&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-rest" data-block-type="rest">
+      <div class="type-icon">💤</div>
+      <div class="time-col">
+        <span class="time-start">7:15 PM</span>
+        <span class="time-end">7:30 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Rest</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            Wind Down + Bedtime
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Walk back to the inn. Last night in Solvang.</div>
+        
+
+        
+        <div class="block-note">Pack bags tonight — check-out tomorrow morning.</div>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+      </div>
+    </div>
+    
+  </div>
+
+  
+  
+  <div class="emergency-inline">
+    <details>
+      <summary>Emergency Info &mdash; Solvang</summary>
+      <div class="emergency-body">
+        <table>
+          
+          <tr><td>Emergency</td><td><a href="tel:911" class="call-link">📞 911</a></td></tr>
+          
+          
+          <tr><td>Hospital</td><td>Santa Ynez Valley Cottage Hospital — 2050 Viborg Rd, Solvang — (805) 688-6431</td></tr>
+          
+          
+          <tr><td>Pediatric</td><td>Santa Barbara Cottage Hospital (35 min) — 400 W Pueblo St, SB — (805) 682-7111</td></tr>
+          
+          
+          
+          
+        </table>
+      </div>
+    </details>
+  </div>
+  
+
+  
+  
+
+</div>
+
+<div class="day-section" id="day-3" data-city="Santa Barbara" data-date="Wednesday, April 1" data-view="both">
+
+  
+  <div class="day-header">
+    <div class="day-number">Day 3</div>
+    <h2>The American Riviera</h2>
+    <div class="day-header-meta">
+      <span>Wednesday, April 1</span>
+      <span class="meta-pill">Santa Barbara</span>
+      
+      <span class="meta-pill">
+        🌤
+        73°F / 54°F
+      </span>
+      
+    </div>
+  </div>
+
+  
+  <div class="glance-bar">
+    
+    <span class="glance-chip weather">
+      🌤
+      Sunny
+      
+    </span>
+    
+
+    
+    
+    <span class="glance-chip intensity-3">
+      Moderate
+      <span class="intensity-dots">
+        <span class="intensity-dot filled"></span><span class="intensity-dot filled"></span><span class="intensity-dot filled"></span><span class="intensity-dot "></span><span class="intensity-dot "></span>
+      </span>
+    </span>
+    
+
+    
+    
+
+    
+    <span class="glance-chip nap">💤 Nap 1:00 PM&ndash;2:30 PM</span>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+  <div class="time-blocks">
+    <div class="now-indicator" id="now-3" data-day-date="Wednesday, April 1"></div>
+    
+    
+    
+    
+    
+
+    <div class="time-block block-meal" data-block-type="meal">
+      <div class="type-icon">🍽️</div>
+      <div class="time-col">
+        <span class="time-start">8:00 AM</span>
+        <span class="time-end">8:30 AM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Meal</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            Breakfast at Hotel + Check Out
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Grab pastries from yesterday’s bakery run (you bought extra, right?).</div>
+        
+
+        
+        <div class="block-note">Check out of King Frederik Inn by 8:30 AM. Load car.</div>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-transit" data-block-type="transit">
+      <div class="type-icon">🚶</div>
+      <div class="time-col">
+        <span class="time-start">8:30 AM</span>
+        <span class="time-end">9:15 AM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Transit</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            Drive: Solvang → Santa Barbara
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">35 minutes down the San Marcos Pass or US-101. Quick and scenic.</div>
+        
+
+        
+        <div class="block-note">Take US-101 South (flat, no winding). Avoid Hwy 154 (curvy, carsick risk for Minako). No piriformis stop needed — under 40 min.</div>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-explore" data-block-type="explore">
+      <div class="type-icon">🗺️</div>
+      <div class="time-col">
+        <span class="time-start">9:30 AM</span>
+        <span class="time-end">9:45 AM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Explore</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/place/Best+Western+Plus+Pepper+Tree+Inn/" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Drop Bags at Best Western Plus Pepper Tree Inn 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">May not be able to check in yet (usually 3 PM), but front desk will hold luggage.</div>
+        
+
+        
+        <div class="block-note">3850 State St, Santa Barbara, CA 93105. Phone: (805) 687-5511. Website: bestwestern.com. Pool on site — bring swimsuits for later.</div>
+        
+
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 3850 State St, Santa Barbara, CA 93105
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('3850 State St, Santa Barbara, CA 93105');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a href="https://www.google.com/maps/place/Best+Western+Plus+Pepper+Tree+Inn/" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=3850%20State%20St%2C%20Santa%20Barbara%2C%20CA%2093105&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-activity" data-block-type="activity">
+      <div class="type-icon">🏛️</div>
+      <div class="time-col">
+        <span class="time-start">10:00 AM</span>
+        <span class="time-end">12:00 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Activity</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/place/MOXI+The+Wolf+Museum/" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">MOXI, The Wolf Museum of Exploration + Innovation 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Three floors of hands-on science exhibits designed for curious kids. Build, experiment, and discover — this is the kind of museum where touching everything is the point.</div>
+        
+
+        
+        <div class="block-note">125 State St, Santa Barbara. Open 10 AM–5 PM. Admission: $25/adult, $20/child (2–12). Issa is free if under 2, else $20. Family of 4: ~$90. PRE-BOOK TIMED ENTRY at moxi.org. Phone: (805) 770-5000. Rain backup: N/A (indoor activity — perfect rain day option).</div>
+        
+
+        
+        <div class="insider-tip">Head to the rooftop Sky Garden first — it gets crowded by 11 AM. Views of the harbor and mountains.</div>
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 125 State St, Santa Barbara, CA 93101
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('125 State St, Santa Barbara, CA 93101');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a href="https://www.google.com/maps/place/MOXI+The+Wolf+Museum/" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=125%20State%20St%2C%20Santa%20Barbara%2C%20CA%2093101&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-meal" data-block-type="meal">
+      <div class="type-icon">🍽️</div>
+      <div class="time-col">
+        <span class="time-start">12:15 PM</span>
+        <span class="time-end">1:00 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Meal</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/place/Santa+Barbara+Shellfish+Company/" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Lunch at Stearns Wharf 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Walk from MOXI to the wharf (5 min). Grab fish and chips or clam chowder at Santa Barbara Shellfish Company.</div>
+        
+
+        
+        <div class="block-note">Santa Barbara Shellfish Company: 230 Stearns Wharf. Outdoor seating with harbor views. Cash-friendly, portions are big — one entree can split for the kids.</div>
+        
+
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 230 Stearns Wharf, Santa Barbara, CA 93101
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('230 Stearns Wharf, Santa Barbara, CA 93101');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a href="https://www.google.com/maps/place/Santa+Barbara+Shellfish+Company/" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=230%20Stearns%20Wharf%2C%20Santa%20Barbara%2C%20CA%2093101&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-nap" data-block-type="nap">
+      <div class="type-icon">💤</div>
+      <div class="time-col">
+        <span class="time-start">1:00 PM</span>
+        <span class="time-end">2:30 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Nap</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/search/?api=1&query=211%20Stearns%20Wharf%2C%20Santa%20Barbara%2C%20CA%2093101" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Issa&#39;s Nap — Stearns Wharf / Sea Center 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">If Issa naps in the stroller: walk the wharf slowly, visit the Sea Center touch tanks. If he needs the car: drive to the hotel for a real nap.</div>
+        
+
+        
+        <div class="block-note">Sea Center: 211 Stearns Wharf. Open 10 AM–5 PM. Admission: $17/adult, $13/child (2–12). Shark touch pool is incredible for Koko. Stroller-friendly.</div>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-activity" data-block-type="activity">
+      <div class="type-icon">🏛️</div>
+      <div class="time-col">
+        <span class="time-start">2:45 PM</span>
+        <span class="time-end">4:00 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Activity</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/place/Kids&#39;+World+Playground/" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Kids’ World Playground + Old Mission Santa Barbara 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Two options based on energy: the wooden castle playground at Alameda Park, or the historic Mission (founded 1786). Do one or both — they’re 10 min apart by car.</div>
+        
+
+        
+        <div class="block-note">Kids’ World: 1400 Santa Barbara St. Free, open dawn–dusk. 8,000 sq ft wooden playground, castle theme, ages 2–12. Old Mission: 2201 Laguna St. Self-guided tours 9:30 AM–4 PM. $17/adult, $12/youth (5–17), free &lt;5. Phone: (805) 682-4713. Website: santabarbaramission.org. Rain backup: Mission is partially covered; Kids’ World is not.</div>
+        
+
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 1400 Santa Barbara St, Santa Barbara, CA 93101
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('1400 Santa Barbara St, Santa Barbara, CA 93101');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a href="https://www.google.com/maps/place/Kids&#39;+World+Playground/" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=1400%20Santa%20Barbara%20St%2C%20Santa%20Barbara%2C%20CA%2093101&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-explore" data-block-type="explore">
+      <div class="type-icon">🗺️</div>
+      <div class="time-col">
+        <span class="time-start">4:15 PM</span>
+        <span class="time-end">5:00 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Explore</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/search/?api=1&query=3850%20State%20St%2C%20Santa%20Barbara%2C%20CA%2093105" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Check In + Pool Time at Pepper Tree Inn 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Check into the hotel, let the kids hit the pool. Dan can stretch out by the pool with his piriformis cushion.</div>
+        
+
+        
+        <div class="block-note">Hotel has two pools and a hot tub. Bring towels from the room.</div>
+        
+
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 3850 State St, Santa Barbara, CA 93105
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('3850 State St, Santa Barbara, CA 93105');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=3850%20State%20St%2C%20Santa%20Barbara%2C%20CA%2093105&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-meal" data-block-type="meal">
+      <div class="type-icon">🍽️</div>
+      <div class="time-col">
+        <span class="time-start">5:30 PM</span>
+        <span class="time-end">6:30 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Meal</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/search/?api=1&query=414%20N%20Milpas%20St%2C%20Santa%20Barbara%2C%20CA%2093103" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Dinner: Casual Santa Barbara Dining 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">State Street has dozens of options. Mesa Burger (great burgers, kid-friendly) or The Lark (upscale but worth it).</div>
+        
+
+        
+        <div class="block-note">Mesa Burger: 414 N Milpas St — (805) 963-2992. The Lark: 131 Anacapa St — (805) 284-0370. Keep it within 15 min of hotel for quick bedtime return.</div>
+        
+
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 414 N Milpas St, Santa Barbara, CA 93103
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('414 N Milpas St, Santa Barbara, CA 93103');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=414%20N%20Milpas%20St%2C%20Santa%20Barbara%2C%20CA%2093103&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-rest" data-block-type="rest">
+      <div class="type-icon">💤</div>
+      <div class="time-col">
+        <span class="time-start">7:00 PM</span>
+        <span class="time-end">7:30 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Rest</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            Wind Down + Bedtime
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Back to the hotel. Bath, stories, out by 7:30.</div>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+      </div>
+    </div>
+    
+  </div>
+
+  
+  
+  <div class="emergency-inline">
+    <details>
+      <summary>Emergency Info &mdash; Santa Barbara</summary>
+      <div class="emergency-body">
+        <table>
+          
+          <tr><td>Emergency</td><td><a href="tel:911" class="call-link">📞 911</a></td></tr>
+          
+          
+          <tr><td>Hospital</td><td>Santa Barbara Cottage Hospital — 400 W Pueblo St — (805) 682-7111</td></tr>
+          
+          
+          <tr><td>Pediatric</td><td>Santa Barbara Cottage Hospital (same) — has pediatric ER</td></tr>
+          
+          
+          
+          
+        </table>
+      </div>
+    </details>
+  </div>
+  
+
+  
+  
+
+</div>
+
+<div class="day-section" id="day-4" data-city="Santa Barbara" data-date="Thursday, April 2" data-view="both">
+
+  
+  <div class="day-header">
+    <div class="day-number">Day 4</div>
+    <h2>The Exhale — Last Adventure + Drive Home</h2>
+    <div class="day-header-meta">
+      <span>Thursday, April 2</span>
+      <span class="meta-pill">Santa Barbara</span>
+      
+      <span class="meta-pill">
+        🌤
+        73°F / 55°F
+      </span>
+      
+    </div>
+  </div>
+
+  
+  <div class="glance-bar">
+    
+    <span class="glance-chip weather">
+      🌤
+      Sunny
+      
+    </span>
+    
+
+    
+    
+    <span class="glance-chip intensity-2">
+      Light
+      <span class="intensity-dots">
+        <span class="intensity-dot filled"></span><span class="intensity-dot filled"></span><span class="intensity-dot "></span><span class="intensity-dot "></span><span class="intensity-dot "></span>
+      </span>
+    </span>
+    
+
+    
+    
+
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+  <div class="time-blocks">
+    <div class="now-indicator" id="now-4" data-day-date="Thursday, April 2"></div>
+    
+    
+    
+    
+    
+
+    <div class="time-block block-meal" data-block-type="meal">
+      <div class="type-icon">🍽️</div>
+      <div class="time-col">
+        <span class="time-start">8:00 AM</span>
+        <span class="time-end">8:30 AM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Meal</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            Breakfast at Hotel
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Fuel up before the last adventure.</div>
+        
+
+        
+        <div class="block-note">Check out by 9 AM. Load car, keep swimsuits accessible if doing beach.</div>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-activity" data-block-type="activity">
+      <div class="type-icon">🏛️</div>
+      <div class="time-col">
+        <span class="time-start">9:00 AM</span>
+        <span class="time-end">11:30 AM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Activity</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/place/Santa+Barbara+Zoo/" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Option A: Santa Barbara Zoo — OR — Option B: East Beach 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">OPTION A: The Santa Barbara Zoo is compact and gorgeous — perched on a bluff overlooking the ocean. Perfect size for young kids (2–3 hours covers everything). OPTION B: East Beach is wide, flat, and uncrowded on a Thursday morning. Free. Bring a bucket and shovels.</div>
+        
+
+        
+        <div class="block-note">ZOO: 500 Niños Dr, SB. Open 9:30 AM–7 PM (summer hours). $39.95/adult, $29.95/child (2–12), free &lt;2. Parking $11. Family of 4: ~$152 total incl. parking. Buy online to save $2/ticket. Phone: (805) 962-5339. Website: sbzoo.org. BEACH: East Beach, 1118 E Cabrillo Blvd. Free. Restrooms + volleyball courts. Decide based on budget and energy. Zoo = $152. Beach = free.</div>
+        
+
+        
+        <div class="insider-tip">At the zoo, the giraffe feeding station opens at 10 AM — go straight there first.</div>
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 500 Niños Dr, Santa Barbara, CA 93103
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('500 Niños Dr, Santa Barbara, CA 93103');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a href="https://www.google.com/maps/place/Santa+Barbara+Zoo/" target="_blank" class="maps-badge" title="Open in Google Maps">📍 View on Map</a>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=500%20Ni%C3%B1os%20Dr%2C%20Santa%20Barbara%2C%20CA%2093103&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-meal" data-block-type="meal">
+      <div class="type-icon">🍽️</div>
+      <div class="time-col">
+        <span class="time-start">11:30 AM</span>
+        <span class="time-end">12:15 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Meal</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/search/?api=1&query=4123%20State%20St%2C%20Santa%20Barbara%2C%20CA%2093110" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Lunch Before Hitting the Road 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Quick lunch in SB before the drive. Mony’s Mexican Food (fast, delicious, cheap) or grab-and-go from Whole Foods on upper State St.</div>
+        
+
+        
+        <div class="block-note">Mony’s: 4123 State St — (805) 683-4229 (near the hotel). Whole Foods: 3761 State St. Get food to-go if kids are getting antsy.</div>
+        
+
+        
+
+        
+
+        
+
+        
+        <div class="block-address">
+          📍 4123 State St, Santa Barbara, CA 93110
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('4123 State St, Santa Barbara, CA 93110');this.textContent='✓ Copied'" title="Copy address">📋</button>
+        </div>
+        
+        <a class="navigate-btn" href="https://www.google.com/maps/dir/?api=1&destination=4123%20State%20St%2C%20Santa%20Barbara%2C%20CA%2093110&travelmode=walking" target="_blank" rel="noopener" title="Get walking directions">🧭 Navigate here</a>
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-transit" data-block-type="transit">
+      <div class="type-icon">🚶</div>
+      <div class="time-col">
+        <span class="time-start">12:30 PM</span>
+        <span class="time-end">2:30 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Transit</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            <a href="https://www.google.com/maps/place/Ventura+Harbor+Village/" target="_blank" rel="noopener" class="stop-link" title="View on Google Maps">Drive: Santa Barbara → Irvine (via US-101 → I-405) 📍</a>
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">~2 hours on a good day. The 101 to the 405 is the flattest route. Leave by 12:30 to beat LA rush hour buildup.</div>
+        
+
+        
+        <div class="block-note">Piriformis stop: Ventura, ~45 min in. San Buenaventura State Beach parking lot or Ventura Harbor Village (quick restroom + stretch). If traffic looks bad on the 405, consider the 101 → 118 → 5 route. Issa will probably nap in the car — this replaces his nap window.</div>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+      </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="time-block block-rest" data-block-type="rest">
+      <div class="type-icon">💤</div>
+      <div class="time-col">
+        <span class="time-start">2:30 PM</span>
+        <span class="time-end">3:00 PM</span>
+      </div>
+      <div class="block-content">
+        <span class="block-type-badge">Rest</span>
+        <h4 class="block-name" style="font-family: Georgia, serif;">
+          
+            Home Sweet Home
+          
+        </h4>
+
+        
+
+        
+        <div class="block-narrative">Arrive in Irvine. Unload, unpack, settle back in. Sandy shoes in the garage, sugar-dusted memories in the heart.</div>
+        
+
+        
+        <div class="block-note">Early return means normal bedtime routine. Trip complete.</div>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+      </div>
+    </div>
+    
+  </div>
+
+  
+  
+  <div class="emergency-inline">
+    <details>
+      <summary>Emergency Info &mdash; Santa Barbara</summary>
+      <div class="emergency-body">
+        <table>
+          
+          <tr><td>Emergency</td><td><a href="tel:911" class="call-link">📞 911</a></td></tr>
+          
+          
+          <tr><td>Hospital</td><td>Santa Barbara Cottage Hospital — 400 W Pueblo St — (805) 682-7111</td></tr>
+          
+          
+          
+          
+          
+        </table>
+      </div>
+    </details>
+  </div>
+  
+
+  
+  
+
+</div>
+
+
+
+
+<h2 class="section-title" data-view="planning">Budget</h2>
+<div class="budget-card" data-view="planning">
+  <div class="budget-header">
+    <h3>Estimated Trip Budget</h3>
+    <div class="budget-range">Range: $1,200 &ndash; $1,600</div>
+  </div>
+  <table class="budget">
+    
+    <tr>
+      <td>Lodging (3 nights)</td>
+      <td>$450</td>
+    </tr>
+    
+    <tr>
+      <td>Gas (round-trip ~350 mi)</td>
+      <td>$65</td>
+    </tr>
+    
+    <tr>
+      <td>Dining &amp; Snacks</td>
+      <td>$350</td>
+    </tr>
+    
+    <tr>
+      <td>Activities &amp; Attractions</td>
+      <td>$250</td>
+    </tr>
+    
+    <tr>
+      <td>Souvenirs &amp; Misc</td>
+      <td>$100</td>
+    </tr>
+    
+    <tr>
+      <td>Emergency Buffer</td>
+      <td>$183</td>
+    </tr>
+    
+    <tr class="total-row">
+      <td><strong>Total (midpoint estimate)</strong></td>
+      <td><strong>$1,398</strong></td>
+    </tr>
+  </table>
+</div>
+
+
+
+<h2 class="section-title" data-view="planning">Packing Checklist</h2>
+
+
+
+<div class="packing-card" id="packing-list" data-view="planning">
+  <div class="packing-section-title">For Everyone</div>
+  <div class="packing-grid">
+    
+    <label class="packing-item" data-item="Passport (valid 6+ months past return)">
+      <input type="checkbox"><span>Passport (valid 6+ months past return)</span>
+    </label>
+    
+    <label class="packing-item" data-item="Travel insurance documents">
+      <input type="checkbox"><span>Travel insurance documents</span>
+    </label>
+    
+    <label class="packing-item" data-item="Printed itinerary (this doc)">
+      <input type="checkbox"><span>Printed itinerary (this doc)</span>
+    </label>
+    
+    <label class="packing-item" data-item="Credit cards + notify bank">
+      <input type="checkbox"><span>Credit cards + notify bank</span>
+    </label>
+    
+    <label class="packing-item" data-item="Phone chargers + adapters (EU Type F)">
+      <input type="checkbox"><span>Phone chargers + adapters (EU Type F)</span>
+    </label>
+    
+    <label class="packing-item" data-item="Portable battery pack">
+      <input type="checkbox"><span>Portable battery pack</span>
+    </label>
+    
+    <label class="packing-item" data-item="Basic first-aid kit">
+      <input type="checkbox"><span>Basic first-aid kit</span>
+    </label>
+    
+    <label class="packing-item" data-item="Sunscreen SPF 50+">
+      <input type="checkbox"><span>Sunscreen SPF 50+</span>
+    </label>
+    
+    <label class="packing-item" data-item="Comfortable walking shoes">
+      <input type="checkbox"><span>Comfortable walking shoes</span>
+    </label>
+    
+    <label class="packing-item" data-item="Light rain jacket">
+      <input type="checkbox"><span>Light rain jacket</span>
+    </label>
+    
+    <label class="packing-item" data-item="Reusable water bottles">
+      <input type="checkbox"><span>Reusable water bottles</span>
+    </label>
+    
+    <label class="packing-item" data-item="Snacks for travel day">
+      <input type="checkbox"><span>Snacks for travel day</span>
+    </label>
+    
+  </div>
+
+  
+
+  
+  <div class="packing-section-title">Kids (School Age)</div>
+  <div class="packing-grid">
+    
+    <label class="packing-item" data-item="Small backpack (theirs to carry)">
+      <input type="checkbox"><span>Small backpack (theirs to carry)</span>
+    </label>
+    
+    <label class="packing-item" data-item="Activity book / coloring supplies">
+      <input type="checkbox"><span>Activity book / coloring supplies</span>
+    </label>
+    
+    <label class="packing-item" data-item="Favorite small toy / comfort item">
+      <input type="checkbox"><span>Favorite small toy / comfort item</span>
+    </label>
+    
+    <label class="packing-item" data-item="Earbuds for flights">
+      <input type="checkbox"><span>Earbuds for flights</span>
+    </label>
+    
+    <label class="packing-item" data-item="Downloaded movies/shows offline">
+      <input type="checkbox"><span>Downloaded movies/shows offline</span>
+    </label>
+    
+    <label class="packing-item" data-item="Snack supply for flight + day trips">
+      <input type="checkbox"><span>Snack supply for flight + day trips</span>
+    </label>
+    
+  </div>
+  
+</div>
+
+
+<h2 class="section-title" data-view="both">Emergency Contacts</h2>
+<div class="emergency-card" data-view="both">
+  <h3>Emergency Contacts &amp; Info</h3>
+  <table class="emergency">
+    <tr><td>Emergency (Portugal)</td><td><a href="tel:112" class="call-link">📞 112</a></td></tr>
+    <tr><td>US Embassy Lisbon</td><td><a href="tel:+351217273300" class="call-link">📞 +351 21 727 3300</a> &middot; <a href="https://pt.usembassy.gov">pt.usembassy.gov</a></td></tr>
+    <tr><td>Poison Control (US)</td><td><a href="tel:18002221222" class="call-link">📞 1-800-222-1222</a></td></tr>
+    <tr><td>Travel insurance 24hr</td><td>___________________________</td></tr>
+    <tr><td>Home emergency contact</td><td>___________________________</td></tr>
+    
+  </table>
+</div>
+
+
+<h2 class="section-title" data-view="planning">Booking Checklist</h2>
+<div class="booking-card" data-view="planning">
+  <table class="booking">
+    <thead>
+      <tr><th>Item</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td>Flights (outbound + return)</td>
+        <td>Book 6-8 weeks out. Google Flights price alerts recommended.</td>
+      </tr>
+      
+      <tr>
+        <td>Accommodation - all nights</td>
+        <td>Confirm stroller/crib availability.</td>
+      </tr>
+      
+      <tr>
+        <td>Travel insurance</td>
+        <td>Cover trip cancellation + medical expenses.</td>
+      </tr>
+      
+      <tr>
+        <td>Airport transfers</td>
+        <td>Uber/taxi vs. pre-booked transfer.</td>
+      </tr>
+      
+      <tr>
+        <td>Key museum / attraction tickets</td>
+        <td>Pre-book online. Many venues sell out.</td>
+      </tr>
+      
+      <tr>
+        <td>Key restaurant reservations</td>
+        <td>Book 1-2 weeks ahead for popular spots.</td>
+      </tr>
+      
+      <tr>
+        <td>Notify credit card companies</td>
+        <td>3-5 days before departure.</td>
+      </tr>
+      
+      <tr>
+        <td>International phone plan</td>
+        <td>T-Mobile free international, or buy local SIM.</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+
+
+<div class="footer">
+  Generated by Phoebe &middot; March 21, 2026 &middot;
+  Personal use only &middot; Verify all hours and ticket availability before travel.
+</div>
+
+</div>
+
+<nav class="trip-bottom-bar no-print" data-view="trip" id="trip-bar">
+    <a href="tel:112" class="bar-item" title="Emergency call">
+        <span>🆘</span>
+        <span class="bar-label">SOS</span>
+    </a>
+    <a href="#phrases-section" class="bar-item" title="Quick phrases">
+        <span>💬</span>
+        <span class="bar-label">Phrases</span>
+    </a>
+    <button class="bar-item" onclick="navigateToNext()" title="Navigate to next stop">
+        <span>📍</span>
+        <span class="bar-label">Navigate</span>
+    </button>
+    <button class="bar-item" onclick="toggleTripMode()" title="Show full itinerary">
+        <span>📋</span>
+        <span class="bar-label">Full View</span>
+    </button>
+</nav>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   1. Trip Countdown Timer
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function() {
+    var el = document.getElementById('countdown');
+    if (!el) return;
+    var start = el.getAttribute('data-start');
+    if (!start) { el.style.display = 'none'; return; }
+    var tripDate = new Date(start + 'T00:00:00');
+    var now = new Date();
+    var diff = Math.ceil((tripDate - now) / (1000 * 60 * 60 * 24));
+    if (diff > 0) el.textContent = diff + ' days until takeoff!';
+    else if (diff === 0) el.textContent = 'Today is the day!';
+    else el.textContent = 'Trip started ' + Math.abs(diff) + ' days ago';
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   2. Active Nav Pill via IntersectionObserver
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function() {
+    var sections = document.querySelectorAll('.day-section');
+    var pills = document.querySelectorAll('.nav-pill');
+    if (!sections.length || !pills.length) return;
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                var id = entry.target.id;
+                pills.forEach(function(p) {
+                    p.classList.toggle('active', p.getAttribute('href') === '#' + id);
+                });
+            }
+        });
+    }, { rootMargin: '-20% 0px -60% 0px' });
+    sections.forEach(function(s) { observer.observe(s); });
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3. Day Filter Toggle
+   ═══════════════════════════════════════════════════════════════════════════ */
+var filterActive = null;
+document.querySelectorAll('.nav-pill').forEach(function(pill) {
+    pill.addEventListener('click', function(e) {
+        var day = this.getAttribute('data-day');
+        if (filterActive === day) {
+            showAllDays();
+            e.preventDefault();
+            return;
+        }
+        // Don't filter, just scroll (default anchor behavior)
+        filterActive = null;
+    });
+    pill.addEventListener('dblclick', function(e) {
+        e.preventDefault();
+        var day = this.getAttribute('data-day');
+        filterActive = day;
+        document.querySelectorAll('.day-section').forEach(function(s) {
+            s.style.display = s.id === 'day-' + day ? '' : 'none';
+        });
+    });
+});
+
+function showAllDays() {
+    filterActive = null;
+    document.querySelectorAll('.day-section').forEach(function(s) {
+        s.style.display = '';
+        s.classList.remove('dim');
+    });
+    document.querySelectorAll('.time-block').forEach(function(b) {
+        b.classList.remove('dim');
+    });
+    document.querySelectorAll('.nav-filter').forEach(function(f) {
+        f.classList.remove('active-filter');
+    });
+}
+
+function filterByCity(city) {
+    // Clear other filters
+    document.querySelectorAll('.nav-filter').forEach(function(f) { f.classList.remove('active-filter'); });
+    document.querySelectorAll('.time-block').forEach(function(b) { b.classList.remove('dim'); });
+
+    var btn = document.querySelector('[data-filter-city="' + city + '"]');
+    if (btn && btn.classList.contains('active-filter')) {
+        showAllDays();
+        return;
+    }
+    if (btn) btn.classList.add('active-filter');
+
+    filterActive = null;
+    document.querySelectorAll('.day-section').forEach(function(s) {
+        var dayCity = s.getAttribute('data-city');
+        if (dayCity && dayCity.toLowerCase() === city.toLowerCase()) {
+            s.style.display = '';
+            s.classList.remove('dim');
+        } else {
+            s.classList.add('dim');
+            s.style.display = '';
+        }
+    });
+}
+
+function filterByType(type) {
+    // Clear city filters
+    document.querySelectorAll('.nav-filter[data-filter-city]').forEach(function(f) { f.classList.remove('active-filter'); });
+    document.querySelectorAll('.day-section').forEach(function(s) { s.style.display = ''; s.classList.remove('dim'); });
+
+    var btn = document.querySelector('[data-filter-type="' + type + '"]');
+    if (btn && btn.classList.contains('active-filter')) {
+        showAllDays();
+        return;
+    }
+    document.querySelectorAll('.nav-filter[data-filter-type]').forEach(function(f) { f.classList.remove('active-filter'); });
+    if (btn) btn.classList.add('active-filter');
+
+    // Dim blocks that don't match the type
+    document.querySelectorAll('.time-block').forEach(function(b) {
+        var blockType = b.getAttribute('data-block-type') || '';
+        if (blockType === type || (type === 'food' && blockType === 'meal')) {
+            b.classList.remove('dim');
+        } else {
+            b.classList.add('dim');
+        }
+    });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4. Packing Checklist localStorage
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function() {
+    var key = 'packing-' + document.title.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+    var saved = {};
+    try { saved = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e) {}
+
+    document.querySelectorAll('.packing-item').forEach(function(item) {
+        var name = item.getAttribute('data-item');
+        var cb = item.querySelector('input[type="checkbox"]');
+        if (!cb || !name) return;
+        if (saved[name]) { cb.checked = true; item.classList.add('checked'); }
+        cb.addEventListener('change', function() {
+            item.classList.toggle('checked', cb.checked);
+            saved[name] = cb.checked;
+            try { localStorage.setItem(key, JSON.stringify(saved)); } catch(e) {}
+        });
+    });
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   5. Share Button
+   ═══════════════════════════════════════════════════════════════════════════ */
+function sharePage() {
+    if (navigator.share) {
+        navigator.share({ title: document.title, url: window.location.href });
+    } else {
+        navigator.clipboard.writeText(window.location.href).then(function() {
+            alert('Link copied to clipboard!');
+        });
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   6. Dark Mode Toggle
+   ═══════════════════════════════════════════════════════════════════════════ */
+function toggleDarkMode() {
+    var html = document.documentElement;
+    var isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? '' : 'dark');
+    document.getElementById('dark-btn').textContent = isDark ? '🌙' : '☀️';
+    try { localStorage.setItem('theme', isDark ? 'light' : 'dark'); } catch(e) {}
+}
+(function() {
+    try {
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            var btn = document.getElementById('dark-btn');
+            if (btn) btn.textContent = '☀️';
+        }
+    } catch(e) {}
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   7. PWA Offline Support (inline service worker)
+   ═══════════════════════════════════════════════════════════════════════════ */
+if ('serviceWorker' in navigator) {
+    try {
+        var sw = "self.addEventListener('install',function(e){e.waitUntil(caches.open('trip-v1').then(function(c){return c.add(location.href)}))});self.addEventListener('fetch',function(e){e.respondWith(caches.match(e.request).then(function(r){return r||fetch(e.request)}))});";
+        var blob = new Blob([sw], {type: 'application/javascript'});
+        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(function(){});
+    } catch(e) {}
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TRIP MODE ENGINE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+// Trip date range (set from Jinja2)
+var TRIP_START = 'Monday, March 30';
+var TRIP_END = 'Thursday, April 2';
+
+// Auto-detect Trip Mode
+(function() {
+    var today = new Date();
+    var todayStr = today.toISOString().split('T')[0];
+    var isMobile = window.innerWidth <= 768;
+    var isDuringTrip = TRIP_START && TRIP_END && todayStr >= TRIP_START && todayStr <= TRIP_END;
+
+    // Auto-enable trip mode on mobile during trip dates
+    if (isMobile && isDuringTrip) {
+        document.body.classList.add('trip-mode');
+        showTodayOnly(todayStr);
+    }
+
+    // Restore saved preference
+    try {
+        var saved = localStorage.getItem('trip-mode-' + document.title);
+        if (saved === 'true') document.body.classList.add('trip-mode');
+    } catch(e) {}
+})();
+
+function toggleTripMode() {
+    var active = document.body.classList.toggle('trip-mode');
+    try { localStorage.setItem('trip-mode-' + document.title, active); } catch(e) {}
+    var icon = document.getElementById('trip-toggle-icon');
+    var label = document.getElementById('trip-toggle-label');
+    if (icon) icon.textContent = active ? '📋' : '🗺️';
+    if (label) label.textContent = active ? 'Full View' : 'Trip Mode';
+    if (active) {
+        var todayStr = new Date().toISOString().split('T')[0];
+        showTodayOnly(todayStr);
+    } else {
+        showAllDays();
+    }
+}
+
+function showTodayOnly(dateStr) {
+    var found = false;
+    document.querySelectorAll('.day-section').forEach(function(s) {
+        var dayDate = s.getAttribute('data-date');
+        if (dayDate === dateStr) {
+            s.style.display = '';
+            found = true;
+        } else {
+            s.style.display = 'none';
+        }
+    });
+    if (!found) {
+        document.querySelectorAll('.day-section').forEach(function(s) {
+            s.style.display = '';
+        });
+    }
+}
+
+// Now indicator — position based on current time
+function updateNowIndicator() {
+    var now = new Date();
+    var todayStr = now.toISOString().split('T')[0];
+    var currentHour = now.getHours() + now.getMinutes() / 60;
+
+    document.querySelectorAll('.now-indicator').forEach(function(el) {
+        var dayDate = el.getAttribute('data-day-date');
+        if (dayDate === todayStr && currentHour >= 7 && currentHour <= 23) {
+            el.style.display = 'block';
+            var blocks = el.parentElement.querySelectorAll('.time-block');
+            var inserted = false;
+            blocks.forEach(function(block) {
+                var timeStr = block.querySelector('.time-start');
+                if (timeStr && !inserted) {
+                    var match = timeStr.textContent.match(/(\d+):(\d+)\s*(AM|PM)/i);
+                    if (match) {
+                        var h = parseInt(match[1]);
+                        var m = parseInt(match[2]);
+                        if (match[3].toUpperCase() === 'PM' && h !== 12) h += 12;
+                        if (match[3].toUpperCase() === 'AM' && h === 12) h = 0;
+                        var blockHour = h + m / 60;
+                        if (currentHour < blockHour) {
+                            block.parentElement.insertBefore(el, block);
+                            inserted = true;
+                        }
+                    }
+                }
+            });
+            if (!inserted && blocks.length) {
+                blocks[blocks.length - 1].parentElement.appendChild(el);
+            }
+        } else {
+            el.style.display = 'none';
+        }
+    });
+
+    // Highlight current block
+    document.querySelectorAll('.time-block').forEach(function(block) {
+        block.classList.remove('current-block');
+    });
+    var allBlocks = document.querySelectorAll('[data-date="' + todayStr + '"] .time-block');
+    for (var i = allBlocks.length - 1; i >= 0; i--) {
+        var timeEl = allBlocks[i].querySelector('.time-start');
+        if (timeEl) {
+            var match = timeEl.textContent.match(/(\d+):(\d+)\s*(AM|PM)/i);
+            if (match) {
+                var h = parseInt(match[1]);
+                var m = parseInt(match[2]);
+                if (match[3].toUpperCase() === 'PM' && h !== 12) h += 12;
+                if (match[3].toUpperCase() === 'AM' && h === 12) h = 0;
+                if (currentHour >= h + m / 60) {
+                    allBlocks[i].classList.add('current-block');
+                    break;
+                }
+            }
+        }
+    }
+}
+
+// Navigate to the next upcoming stop
+function navigateToNext() {
+    var now = new Date();
+    var todayStr = now.toISOString().split('T')[0];
+    var currentHour = now.getHours() + now.getMinutes() / 60;
+    var allBlocks = document.querySelectorAll('[data-date="' + todayStr + '"] .time-block');
+
+    for (var i = 0; i < allBlocks.length; i++) {
+        var navBtn = allBlocks[i].querySelector('.navigate-btn');
+        if (navBtn) {
+            var timeEl = allBlocks[i].querySelector('.time-start');
+            if (timeEl) {
+                var match = timeEl.textContent.match(/(\d+):(\d+)\s*(AM|PM)/i);
+                if (match) {
+                    var h = parseInt(match[1]);
+                    var m = parseInt(match[2]);
+                    if (match[3].toUpperCase() === 'PM' && h !== 12) h += 12;
+                    if (match[3].toUpperCase() === 'AM' && h === 12) h = 0;
+                    if (currentHour <= h + m / 60 + 1) {
+                        window.open(navBtn.href, '_blank');
+                        return;
+                    }
+                }
+            }
+        }
+    }
+    var firstNav = document.querySelector('.time-block:not([style*="display: none"]) .navigate-btn');
+    if (firstNav) window.open(firstNav.href, '_blank');
+    else alert('No navigation target found for today');
+}
+
+// Platform-aware navigation helper
+function navigateTo(address) {
+    var encoded = encodeURIComponent(address);
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    var url = isIOS
+        ? 'http://maps.apple.com/?daddr=' + encoded + '&dirflg=w'
+        : 'https://www.google.com/maps/dir/?api=1&destination=' + encoded + '&travelmode=walking';
+    window.open(url, '_blank');
+}
+
+// Screen Wake Lock (keeps screen on during navigation)
+var wakeLock = null;
+async function toggleWakeLock() {
+    if (wakeLock) {
+        wakeLock.release();
+        wakeLock = null;
+    } else if ('wakeLock' in navigator) {
+        try { wakeLock = await navigator.wakeLock.request('screen'); } catch(e) {}
+    }
+}
+
+// Update now indicator every 60 seconds
+updateNowIndicator();
+setInterval(updateNowIndicator, 60000);
+</script>
+</body>
+</html>
