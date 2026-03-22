@@ -7,6 +7,8 @@
 <link rel="manifest" href="data:application/json,{}">
 <meta name="theme-color" content="#a85f3f">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 /* ─── Google Fonts ────────────────────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -1402,6 +1404,19 @@ table.booking tr:last-child td { border-bottom: none; }
 
     /* ── Footer ───────────────────────────────────────────────────────────── */
     .footer { font-size: 10px; padding: 14px 12px 8px; }
+
+    /* ── Inline Map — shorter on mobile ──────────────────────────────────── */
+    .day-map-container { padding: 0 8px 8px; }
+    .map-wrap { height: 250px; }
+    .map-toggle { font-size: 12px; padding: 8px 12px; }
+
+    /* ── Calendar button — compact on mobile ─────────────────────────────── */
+    .calendar-btn { font-size: 12px; padding: 6px 14px; margin-left: 0; margin-top: 6px; }
+
+    /* ── Intensity meter — compact ───────────────────────────────────────── */
+    .intensity-meter { gap: 6px; }
+    .intensity-meter-label { font-size: 9px; }
+    .intensity-bar { max-width: 80px; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -1416,6 +1431,7 @@ table.booking tr:last-child td { border-bottom: none; }
     .hero { box-shadow: none; border: 1px solid #ddd; }
     .budget-card, .packing-card, .booking-card, .emergency-card { box-shadow: none; }
     .no-print { display: none !important; }
+    .day-map-container { display: none !important; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -1556,6 +1572,116 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
     min-height: 44px;
 }
 .call-link:hover { background: rgba(231,76,60,0.15); text-decoration: none; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INLINE MAP (Leaflet.js) — collapsible per day
+   ═══════════════════════════════════════════════════════════════════════════ */
+.day-map-container {
+    padding: 0 20px 12px;
+}
+.map-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    border: 1px dashed var(--line);
+    background: var(--bg);
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sea);
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background 0.15s;
+}
+.map-toggle:hover { background: rgba(95,127,143,0.1); }
+.map-wrap {
+    height: 300px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+    border: 1px solid var(--line);
+}
+.map-wrap .leaflet-control-attribution { font-size: 9px; }
+[data-theme="dark"] .map-wrap { filter: brightness(0.85) contrast(1.1); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CALENDAR EXPORT BUTTON
+   ═══════════════════════════════════════════════════════════════════════════ */
+.calendar-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    background: var(--sea);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    text-decoration: none;
+    margin-left: 8px;
+}
+.calendar-btn:hover { background: #4a6a7a; text-decoration: none; color: #fff; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DAY INTENSITY METER — visual bar in day header
+   ═══════════════════════════════════════════════════════════════════════════ */
+.intensity-meter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+.intensity-meter-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+.intensity-bar {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    max-width: 100px;
+    overflow: hidden;
+}
+.intensity-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SWIPE HINT — shown once on mobile
+   ═══════════════════════════════════════════════════════════════════════════ */
+.swipe-hint {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 500;
+    animation: swipe-hint-anim 2s ease-in-out;
+    pointer-events: none;
+    opacity: 0;
+}
+@keyframes swipe-hint-anim {
+    0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+}
 
 /* Battery saving */
 @media (prefers-reduced-motion: reduce) {
@@ -1829,6 +1955,13 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
 [data-theme="dark"] .bottom-day-tab.active-tab {
     border-top-color: var(--accent);
 }
+[data-theme="dark"] .map-toggle {
+    background: rgba(50,50,50,0.6);
+    border-color: var(--line);
+}
+[data-theme="dark"] .calendar-btn {
+    background: var(--sea);
+}
 
 /* ═══════════════════════════════════════════════════════════════════════════
    RESPONSIVE — Bottom bar + SOS on phone
@@ -1895,6 +2028,7 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
       <span><strong>Budget</strong> $1,350&ndash;$1,750</span>
       <span><strong>Generated</strong> March 21, 2026</span>
     </div>
+    <button class="calendar-btn" onclick="exportCalendar()" title="Download .ics calendar file">📅 Add to Calendar</button>
   </div>
 </div>
 
@@ -2032,6 +2166,14 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
       </span>
       
     </div>
+    
+    <div class="intensity-meter">
+      <span class="intensity-meter-label">Light day</span>
+      <div class="intensity-bar">
+        <div class="intensity-fill" style="width: 40%; background: #4caf50;"></div>
+      </div>
+    </div>
+    
   </div>
 
   
@@ -2067,6 +2209,17 @@ body.trip-mode .trip-toggle { background: var(--accent); color: #fff; border-col
 
     
   </div>
+
+  
+  
+  <div class="day-map-container no-print">
+    <button class="map-toggle" onclick="toggleMap(this)">
+      <span>🗺️ Show Day Map</span>
+    </button>
+    <div class="map-wrap" id="map-day-1" style="display:none;"
+         data-map="{"center": [34.5958, -120.1386], "pins": [{"lat": 34.5964, "lng": -120.1373, "name": "The Hadsten", "type": "rest"}, {"lat": 34.596, "lng": -120.138, "name": "Village Walk \u2014 Mission Dr", "type": "explore"}, {"lat": 34.5989, "lng": -120.1429, "name": "HCA Park", "type": "activity"}, {"lat": 34.5955, "lng": -120.1378, "name": "CHOMP", "type": "food"}], "zoom": 14}"></div>
+  </div>
+  
 
   
   
@@ -2599,6 +2752,14 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
       </span>
       
     </div>
+    
+    <div class="intensity-meter">
+      <span class="intensity-meter-label">Light day</span>
+      <div class="intensity-bar">
+        <div class="intensity-fill" style="width: 25%; background: #4caf50;"></div>
+      </div>
+    </div>
+    
   </div>
 
   
@@ -2634,6 +2795,17 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
     
   </div>
+
+  
+  
+  <div class="day-map-container no-print">
+    <button class="map-toggle" onclick="toggleMap(this)">
+      <span>🗺️ Show Day Map</span>
+    </button>
+    <div class="map-wrap" id="map-day-2" style="display:none;"
+         data-map="{"center": [34.5958, -120.1386], "pins": [{"lat": 34.596, "lng": -120.138, "name": "Paula\u0027s Pancake House", "type": "meal"}, {"lat": 34.5957, "lng": -120.1412, "name": "Mission Santa Ines", "type": "faith"}, {"lat": 34.5962, "lng": -120.1393, "name": "Copenhagen Dr \u2014 Village Browsing", "type": "explore"}, {"lat": 34.5989, "lng": -120.1429, "name": "HCA Park", "type": "activity"}, {"lat": 34.595, "lng": -120.1361, "name": "Craft House at Corque", "type": "meal"}], "zoom": 14}"></div>
+  </div>
+  
 
   
   
@@ -3537,6 +3709,14 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
       </span>
       
     </div>
+    
+    <div class="intensity-meter">
+      <span class="intensity-meter-label">Full day</span>
+      <div class="intensity-bar">
+        <div class="intensity-fill" style="width: 65%; background: #ff9800;"></div>
+      </div>
+    </div>
+    
   </div>
 
   
@@ -3572,6 +3752,17 @@ Craft House at Corque: 420 Alisal Rd, Solvang. Phone: (805) 693-2258. Hours: 3:3
 
     
   </div>
+
+  
+  
+  <div class="day-map-container no-print">
+    <button class="map-toggle" onclick="toggleMap(this)">
+      <span>🗺️ Show Day Map</span>
+    </button>
+    <div class="map-wrap" id="map-day-3" style="display:none;"
+         data-map="{"center": [34.415, -119.7], "pins": [{"lat": 34.4075, "lng": -119.6915, "name": "On The Alley", "type": "meal"}, {"lat": 34.4095, "lng": -119.6853, "name": "Stearns Wharf", "type": "activity"}, {"lat": 34.4097, "lng": -119.6855, "name": "Sea Center", "type": "activity"}, {"lat": 34.4117, "lng": -119.6803, "name": "Chase Palm Park", "type": "activity"}, {"lat": 34.4375, "lng": -119.714, "name": "Old Mission Santa Barbara", "type": "faith"}, {"lat": 34.4564, "lng": -119.7117, "name": "SB Botanic Garden", "type": "activity"}, {"lat": 34.4019, "lng": -119.7073, "name": "Shoreline Park", "type": "activity"}], "zoom": 13}"></div>
+  </div>
+  
 
   
   
@@ -4629,6 +4820,14 @@ Reunion Kitchen: 1118 E Cabrillo Blvd. Phone: (805) 364-3366. Wed 11 AM–8:30 P
       </span>
       
     </div>
+    
+    <div class="intensity-meter">
+      <span class="intensity-meter-label">Easy day</span>
+      <div class="intensity-bar">
+        <div class="intensity-fill" style="width: 20%; background: #4caf50;"></div>
+      </div>
+    </div>
+    
   </div>
 
   
@@ -4662,6 +4861,17 @@ Reunion Kitchen: 1118 E Cabrillo Blvd. Phone: (805) 364-3366. Wed 11 AM–8:30 P
 
     
   </div>
+
+  
+  
+  <div class="day-map-container no-print">
+    <button class="map-toggle" onclick="toggleMap(this)">
+      <span>🗺️ Show Day Map</span>
+    </button>
+    <div class="map-wrap" id="map-day-4" style="display:none;"
+         data-map="{"center": [34.415, -119.7], "pins": [{"lat": 34.43, "lng": -119.74, "name": "Residence Inn Goleta", "type": "rest"}, {"lat": 34.4184, "lng": -119.6823, "name": "SB Zoo", "type": "activity"}, {"lat": 34.4167, "lng": -119.683, "name": "East Beach", "type": "activity"}], "zoom": 13}"></div>
+  </div>
+  
 
   
   
@@ -5666,6 +5876,14 @@ Reunion Kitchen: 1118 E Cabrillo Blvd. Phone: (805) 364-3366. Wed 11 AM–8:30 P
     </div>
 </div>
 
+
+
+<script id="calendar-data" type="application/json">[{"description": "Leave Irvine 9:30 AM. Stretch stop in Ventura at 90 min mark.", "dtend": "20260330T130000", "dtstart": "20260330T093000", "location": "US-101 North", "summary": "Drive: Irvine to Solvang"}, {"description": "Tapestry Collection by Hilton. Phone: (805) 688-3210", "dtend": "20260330T143000", "dtstart": "20260330T130000", "location": "1450 Mission Dr, Solvang, CA 93463", "summary": "Check in \u2014 The Hadsten Solvang"}, {"description": "Bakeries, shops, windmills. Try Olsen\u0027s aebleskiver.", "dtend": "20260330T163000", "dtstart": "20260330T143000", "location": "1529 Mission Dr, Solvang, CA 93463", "summary": "Village Walk \u2014 Central Solvang"}, {"description": "Playground and open fields. Named for Denmark\u0027s famous storyteller.", "dtend": "20260330T173000", "dtstart": "20260330T163000", "location": "633 Chalk Hill Rd, Solvang, CA 93463", "summary": "HCA Park or Hotel Downtime"}, {"description": "CHOMP: burgers, fries, shakes. Craft House: upscale casual New American.", "dtend": "20260330T190000", "dtstart": "20260330T180000", "location": "1693 Mission Dr, Solvang, CA 93463", "summary": "Dinner: CHOMP or Craft House at Corque"}, {"description": "Danish pancakes, waffles, aebleskiver. Open 7 AM-3 PM.", "dtend": "20260331T090000", "dtstart": "20260331T080000", "location": "1531 Mission Dr, Solvang, CA 93463", "summary": "Breakfast: Paula\u0027s Pancake House"}, {"description": "Founded 1804. Self-guided tours 9-4:30. $8/adult, kids 5 \u0026 under free.", "dtend": "20260331T110000", "dtstart": "20260331T093000", "location": "1760 Mission Dr, Solvang, CA 93464", "summary": "Old Mission Santa Ines"}, {"description": "Book Loft, Jule Hus, Rasmussen\u0027s toys, bakeries.", "dtend": "20260331T123000", "dtstart": "20260331T111500", "location": "Copenhagen Dr, Solvang, CA 93463", "summary": "Village Browsing + Pastry \u0026 Coffee"}, {"description": "Issa nap window 2-4 PM.", "dtend": "20260331T160000", "dtstart": "20260331T140000", "location": "633 Chalk Hill Rd, Solvang, CA 93463", "summary": "HCA Park / Hotel Pool / Nap Time"}, {"description": "Upscale casual. Dinner 3:30-9:30 PM. Pack bags tonight.", "dtend": "20260331T183000", "dtstart": "20260331T173000", "location": "420 Alisal Rd, Solvang, CA 93463", "summary": "Dinner: Craft House at Corque"}, {"description": "Check out of The Hadsten by 9:30 AM.", "dtend": "20260401T093000", "dtstart": "20260401T083000", "location": "1450 Mission Dr, Solvang, CA 93463", "summary": "Breakfast + Final Solvang Stroll"}, {"description": "34 mi / 43 min. Take US-101 South (not Hwy 154).", "dtend": "20260401T111500", "dtstart": "20260401T103000", "location": "US-101 South", "summary": "Drive: Solvang to Santa Barbara"}, {"description": "Fresh fish tacos, burgers, outdoor harbor seating.", "dtend": "20260401T123000", "dtstart": "20260401T113000", "location": "117 Harbor Way, Santa Barbara, CA 93109", "summary": "Lunch: On The Alley"}, {"description": "California\u0027s oldest working wharf since 1872. Free to walk.", "dtend": "20260401T143000", "dtstart": "20260401T130000", "location": "Stearns Wharf, Santa Barbara, CA 93101", "summary": "Stearns Wharf"}, {"description": "$17/adult, $13/child. Daily 10 AM-5 PM.", "dtend": "20260401T160000", "dtstart": "20260401T143000", "location": "211 Stearns Wharf, Santa Barbara, CA 93101", "summary": "Sea Center \u2014 Touch Tanks \u0026 Marine Science"}, {"description": "Pirate ship playground, lagoon, carousel. Free.", "dtend": "20260401T171500", "dtstart": "20260401T161500", "location": "236 E Cabrillo Blvd, Santa Barbara, CA 93103", "summary": "Chase Palm Park \u2014 Shipwreck Playground"}, {"description": "Ocean views, heated patio. Happy hour 2:30-6 PM.", "dtend": "20260401T191500", "dtstart": "20260401T180000", "location": "1118 E Cabrillo Blvd, Santa Barbara, CA 93103", "summary": "Dinner: Reunion Kitchen"}, {"description": "Complimentary breakfast buffet. Check out and load car.", "dtend": "20260402T090000", "dtstart": "20260402T080000", "location": "6350 Hollister Ave, Goleta, CA 93117", "summary": "Hotel Breakfast \u2014 Residence Inn"}, {"description": "Zoo: $39.95/adult, $29.95/child. Beach: free.", "dtend": "20260402T110000", "dtstart": "20260402T091500", "location": "500 Ninos Dr, Santa Barbara, CA 93103", "summary": "SB Zoo or East Beach"}, {"description": "Stretch stop in Ventura. Arrive 1:30-3 PM. Issa naps in car.", "dtend": "20260402T140000", "dtstart": "20260402T110000", "location": "US-101 South", "summary": "Drive Home \u2014 Santa Barbara to Irvine"}]</script>
+
+
+
+<div class="swipe-hint" id="swipe-hint">👆 Swipe left/right to switch days</div>
+
 <script>
 /* ═══════════════════════════════════════════════════════════════════════════
    UTILITY: Parse human-readable date strings ("Monday, March 30") to Date
@@ -6268,6 +6486,165 @@ updateNowIndicator();
 setInterval(updateNowIndicator, 60000);
 // Update countdown every hour (for "X days until" changes)
 setInterval(updateCountdown, 3600000);
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FEATURE 1: INLINE LEAFLET MAP — lazy-loaded per day
+   ═══════════════════════════════════════════════════════════════════════════ */
+function toggleMap(btn) {
+    var wrap = btn.nextElementSibling;
+    if (wrap.style.display === 'none') {
+        wrap.style.display = 'block';
+        btn.querySelector('span').textContent = '🗺️ Hide Day Map';
+        if (!wrap._mapInit) initDayMap(wrap);
+    } else {
+        wrap.style.display = 'none';
+        btn.querySelector('span').textContent = '🗺️ Show Day Map';
+    }
+}
+
+function initDayMap(wrap) {
+    var raw = wrap.getAttribute('data-map');
+    if (!raw) return;
+    var data;
+    try { data = JSON.parse(raw); } catch(e) { return; }
+    var map = L.map(wrap, { scrollWheelZoom: false }).setView(data.center, data.zoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 18
+    }).addTo(map);
+
+    var pinColors = {
+        food: '#c97c00', meal: '#c97c00',
+        activity: '#2e7d32',
+        explore: '#2563a8',
+        rest: '#558b2f',
+        transit: '#9e9e8e',
+        faith: '#6b3fa0',
+        nap: '#43a047',
+        default: '#a85f3f'
+    };
+
+    var latlngs = [];
+    if (data.pins && data.pins.length) {
+        data.pins.forEach(function(p) {
+            var color = pinColors[p.type] || pinColors['default'];
+            var marker = L.circleMarker([p.lat, p.lng], {
+                radius: 8, fillColor: color, fillOpacity: 0.9,
+                color: '#fff', weight: 2
+            }).bindPopup('<strong>' + p.name + '</strong>').addTo(map);
+            latlngs.push([p.lat, p.lng]);
+        });
+        // Draw route line
+        if (latlngs.length > 1) {
+            L.polyline(latlngs, { color: '#a85f3f', weight: 2, opacity: 0.5, dashArray: '6,8' }).addTo(map);
+        }
+        // Fit bounds to show all pins
+        if (latlngs.length > 1) {
+            map.fitBounds(latlngs, { padding: [30, 30] });
+        }
+    }
+    wrap._mapInit = true;
+    setTimeout(function() { map.invalidateSize(); }, 150);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FEATURE 2: CALENDAR EXPORT (.ics)
+   ═══════════════════════════════════════════════════════════════════════════ */
+function exportCalendar() {
+    var dataEl = document.getElementById('calendar-data');
+    if (!dataEl) { alert('No calendar data available'); return; }
+    var events;
+    try { events = JSON.parse(dataEl.textContent); } catch(e) { alert('Calendar data error'); return; }
+    if (!events || !events.length) { alert('No events to export'); return; }
+
+    var lines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Phoebe Travel Planner//EN',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH'
+    ];
+
+    events.forEach(function(evt) {
+        lines.push('BEGIN:VEVENT');
+        lines.push('DTSTART:' + evt.dtstart);
+        lines.push('DTEND:' + evt.dtend);
+        lines.push('SUMMARY:' + icsEscape(evt.summary || ''));
+        if (evt.location) lines.push('LOCATION:' + icsEscape(evt.location));
+        if (evt.description) lines.push('DESCRIPTION:' + icsEscape(evt.description));
+        lines.push('END:VEVENT');
+    });
+
+    lines.push('END:VCALENDAR');
+    var icsContent = lines.join('\r\n');
+    var blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'solvang-trip-2026.ics';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function icsEscape(str) {
+    return str.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FEATURE 4: SWIPE NAVIGATION BETWEEN DAYS (mobile)
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function() {
+    var touchStartX = 0;
+    var touchStartY = 0;
+    var totalDays = document.querySelectorAll('.day-section').length;
+
+    document.addEventListener('touchstart', function(e) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    document.addEventListener('touchend', function(e) {
+        var dx = e.changedTouches[0].clientX - touchStartX;
+        var dy = e.changedTouches[0].clientY - touchStartY;
+        // Only trigger on horizontal swipes with min 60px, and more horizontal than vertical
+        if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+            var currentDay = getCurrentVisibleDay();
+            if (currentDay < 1) return;
+            if (dx < 0 && currentDay < totalDays) {
+                selectDay(currentDay + 1);
+            } else if (dx > 0 && currentDay > 1) {
+                selectDay(currentDay - 1);
+            }
+        }
+    }, { passive: true });
+
+    function getCurrentVisibleDay() {
+        var sections = document.querySelectorAll('.day-section');
+        for (var i = 0; i < sections.length; i++) {
+            if (sections[i].style.display !== 'none') {
+                return parseInt(sections[i].id.replace('day-', ''));
+            }
+        }
+        return 1;
+    }
+
+    // Show swipe hint on first mobile visit
+    if (window.innerWidth <= 768) {
+        try {
+            var hintKey = 'swipe-hint-shown-' + document.title;
+            if (!localStorage.getItem(hintKey)) {
+                localStorage.setItem(hintKey, 'true');
+                var hint = document.getElementById('swipe-hint');
+                if (hint) {
+                    hint.style.opacity = '1';
+                    setTimeout(function() { hint.remove(); }, 2500);
+                }
+            }
+        } catch(e) {}
+    }
+})();
 </script>
 </body>
 </html>
