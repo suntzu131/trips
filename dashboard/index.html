@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#a85f3f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Phoebe Dashboard</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  CSS VARIABLES — Johnny's Design DNA                                      */
+/* ══════════════════════════════════════════════════════════════════════════ */
+:root {
+    --bg: #f6f1ea;
+    --paper: #fffdf9;
+    --ink: #1f2937;
+    --ink-secondary: #5b6573;
+    --line: #ddd3c7;
+    --accent: #a85f3f;
+    --accent-light: rgba(168,95,63,0.08);
+    --accent-2: #d8b58a;
+    --sea: #5f7f8f;
+    --sky: #cfdde6;
+    --green: #16a34a;
+    --green-bg: #dcfce7;
+    --amber: #d97706;
+    --amber-bg: #fef3c7;
+    --red: #dc2626;
+    --red-bg: #fee2e2;
+    --blue: #2563eb;
+    --blue-bg: #dbeafe;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 1px 3px rgba(40,36,30,0.06), 0 4px 16px rgba(40,36,30,0.06);
+    --shadow-lg: 0 4px 12px rgba(40,36,30,0.08), 0 16px 40px rgba(40,36,30,0.10);
+    --shadow-card: 0 1px 2px rgba(40,36,30,0.04), 0 4px 12px rgba(40,36,30,0.06);
+    --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+[data-theme="dark"] {
+    --bg: #111111;
+    --paper: #1c1c1c;
+    --ink: #e5e5e5;
+    --ink-secondary: #a0a0a0;
+    --line: #2e2e2e;
+    --accent: #d4845a;
+    --accent-light: rgba(212,132,90,0.12);
+    --accent-2: #e8c99a;
+    --sea: #7fa0b0;
+    --sky: #1e2a32;
+    --green: #22c55e;
+    --green-bg: #14291e;
+    --amber: #f59e0b;
+    --amber-bg: #2e2510;
+    --red: #ef4444;
+    --red-bg: #2e1515;
+    --blue: #60a5fa;
+    --blue-bg: #172040;
+    --shadow: 0 1px 3px rgba(0,0,0,0.2);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,0.3);
+    --shadow-card: 0 1px 2px rgba(0,0,0,0.15);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  RESET & BASE                                                             */
+/* ══════════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    min-height: 100dvh;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  LAYOUT                                                                   */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.dashboard {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 16px 100px;
+}
+
+/* ── Header ────────────────────────────────────────────────────────────── */
+.dash-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: linear-gradient(135deg, #2c1810 0%, var(--accent) 60%, #c47a55 100%);
+    margin: 0 -16px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    box-shadow: 0 2px 12px rgba(44,24,16,0.25);
+}
+.dash-header h1 {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.stress-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+.date-label {
+    font-size: 11px;
+    opacity: 0.8;
+}
+.theme-btn {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+.theme-btn:hover { background: rgba(255,255,255,0.25); }
+
+/* ── Section Titles ────────────────────────────────────────────────────── */
+.section-title {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--accent);
+    margin: 28px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.section-title .count-badge {
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--accent);
+    color: #fff;
+    padding: 1px 8px;
+    border-radius: 10px;
+}
+
+/* ── Cards ─────────────────────────────────────────────────────────────── */
+.card {
+    background: var(--paper);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+.card-body {
+    padding: 16px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  QUICK ACTIONS                                                            */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.action-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+    border-left: 4px solid var(--line);
+    background: var(--paper);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 8px;
+    cursor: default;
+    transition: transform 0.1s;
+    flex-wrap: wrap;
+}
+.action-card:active { transform: scale(0.99); }
+.action-card.urgent { border-left-color: var(--red); background: var(--red-bg); }
+.action-card.high { border-left-color: var(--amber); background: var(--amber-bg); }
+.action-card.medium { border-left-color: var(--blue); background: var(--blue-bg); }
+.action-badge {
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+.action-card.urgent .action-badge { background: var(--red); color: #fff; }
+.action-card.high .action-badge { background: var(--amber); color: #fff; }
+.action-card.medium .action-badge { background: var(--blue); color: #fff; }
+.action-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    flex: 1;
+    min-width: 0;
+}
+.action-meta {
+    font-size: 11px;
+    color: var(--ink-secondary);
+    width: 100%;
+    padding-left: 50px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  METRIC CARDS                                                             */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.metric-card {
+    background: var(--paper);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    padding: 14px 16px;
+    text-align: center;
+}
+.metric-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--ink-secondary);
+    display: block;
+    margin-bottom: 4px;
+}
+.metric-value {
+    font-size: 22px;
+    font-weight: 800;
+    display: block;
+    line-height: 1.2;
+}
+.metric-value.positive { color: var(--green); }
+.metric-value.negative { color: var(--red); }
+.metric-value.warning { color: var(--amber); }
+.metric-detail {
+    font-size: 11px;
+    color: var(--ink-secondary);
+    display: block;
+    margin-top: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  FAMILY CARDS (horizontal scroll)                                         */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.family-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 0 12px;
+    scrollbar-width: none;
+}
+.family-scroll::-webkit-scrollbar { display: none; }
+.family-card {
+    flex: 0 0 140px;
+    scroll-snap-align: start;
+    background: var(--paper);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.family-card.has-alert {
+    border: 1px solid var(--amber);
+}
+.family-card strong {
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.family-age {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-secondary);
+    background: var(--bg);
+    padding: 1px 6px;
+    border-radius: 8px;
+}
+.family-notes {
+    font-size: 11px;
+    color: var(--ink-secondary);
+    line-height: 1.4;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  RISK CLUSTERS                                                            */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.cluster-row {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+}
+.cluster-row:last-child { border-bottom: none; }
+.cluster-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+.cluster-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink);
+}
+.cluster-score {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--ink-secondary);
+}
+.cluster-bar-track {
+    height: 8px;
+    background: var(--bg);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.cluster-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+}
+.bar-critical { background: linear-gradient(90deg, var(--red), #ef4444); }
+.bar-warning { background: linear-gradient(90deg, var(--amber), #f59e0b); }
+.bar-info { background: linear-gradient(90deg, var(--blue), #60a5fa); }
+.cluster-meta {
+    font-size: 10px;
+    color: var(--ink-secondary);
+    margin-top: 4px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  ANOMALIES                                                                */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.anomalies-list { max-height: 400px; overflow-y: auto; }
+.anomaly-item {
+    display: grid;
+    grid-template-columns: 70px 70px 1fr;
+    grid-template-rows: auto auto;
+    gap: 2px 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 12px;
+}
+.anomaly-item:last-child { border-bottom: none; }
+.anomaly-severity {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    align-self: center;
+}
+.anomaly-item.critical .anomaly-severity { color: var(--red); }
+.anomaly-item.warning .anomaly-severity { color: var(--amber); }
+.anomaly-item.info .anomaly-severity { color: var(--blue); }
+.anomaly-domain {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--ink-secondary);
+    text-transform: uppercase;
+    align-self: center;
+}
+.anomaly-title {
+    font-weight: 600;
+    color: var(--ink);
+    grid-column: 1 / -1;
+}
+.anomaly-action {
+    font-size: 11px;
+    color: var(--ink-secondary);
+    grid-column: 1 / -1;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  TIMELINE (Compliance + Calendar)                                         */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.timeline-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+}
+.timeline-item:last-child { border-bottom: none; }
+.timeline-date {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-secondary);
+    min-width: 80px;
+    flex-shrink: 0;
+}
+.timeline-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+.timeline-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    flex: 1;
+    min-width: 0;
+}
+.timeline-days {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+.timeline-item.critical .timeline-days { background: var(--red-bg); color: var(--red); }
+.timeline-item.warning .timeline-days { background: var(--amber-bg); color: var(--amber); }
+.timeline-item.info .timeline-days { background: var(--blue-bg); color: var(--blue); }
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  GOALS                                                                    */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.goals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+}
+.goal-card {
+    background: var(--paper);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-card);
+    padding: 12px 14px;
+    border-left: 3px solid var(--sea);
+}
+.goal-card.active { border-left-color: var(--green); }
+.goal-card.planning { border-left-color: var(--accent-2); }
+.goal-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    display: block;
+}
+.goal-target {
+    font-size: 11px;
+    color: var(--ink-secondary);
+    display: block;
+    margin-top: 2px;
+}
+.goal-status {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--sea);
+    display: block;
+    margin-top: 4px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  CHARTS                                                                   */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.chart-card {
+    background: var(--paper);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    padding: 16px;
+}
+.chart-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+}
+canvas { max-width: 100%; }
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  TAB NAVIGATION                                                           */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.tab-bar {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-bottom: 12px;
+    padding: 4px 0;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+    flex-shrink: 0;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--paper);
+    color: var(--ink-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+.tab-btn:hover { border-color: var(--accent); color: var(--accent); }
+.tab-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  FOOTER                                                                   */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.dash-footer {
+    text-align: center;
+    padding: 24px 16px;
+    font-size: 11px;
+    color: var(--ink-secondary);
+}
+.dash-footer a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  COLLAPSIBLE SECTIONS                                                     */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.collapsible-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-family: var(--font);
+    color: var(--ink);
+}
+.collapsible-toggle .chevron {
+    transition: transform 0.2s;
+    font-size: 12px;
+    color: var(--ink-secondary);
+}
+.collapsible-toggle[aria-expanded="true"] .chevron {
+    transform: rotate(180deg);
+}
+.collapsible-body {
+    display: none;
+    padding: 0 16px 16px;
+}
+.collapsible-body.open {
+    display: block;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  RESPONSIVE — 480px (Phone)                                               */
+/* ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+    .dash-header {
+        padding: 10px 14px;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .dash-header h1 { font-size: 17px; }
+    .date-label { font-size: 10px; }
+    .stress-pill { font-size: 11px; padding: 3px 8px; }
+
+    .dashboard { padding: 0 10px 80px; }
+
+    .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    .metric-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-align: left;
+        padding: 12px 14px;
+    }
+    .metric-label { margin-bottom: 0; }
+    .metric-value { font-size: 18px; }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-meta { padding-left: 0; }
+
+    .anomaly-item {
+        grid-template-columns: 1fr;
+    }
+    .anomaly-severity, .anomaly-domain {
+        display: inline;
+    }
+
+    .family-card { flex: 0 0 120px; padding: 10px; }
+    .family-card strong { font-size: 13px; }
+
+    .goals-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline-date { min-width: 65px; font-size: 10px; }
+    .timeline-title { font-size: 11px; }
+
+    .section-title { font-size: 12px; margin: 20px 0 8px; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  RESPONSIVE — 900px (Tablet)                                              */
+/* ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) and (min-width: 481px) {
+    .charts-grid { grid-template-columns: 1fr 1fr; }
+    .metrics-grid { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- ══════════════ HEADER ══════════════ -->
+    <header class="dash-header">
+        <div>
+            <h1>Phoebe</h1>
+            <span class="date-label">March 23, 2026 at 09:50 AM</span>
+        </div>
+        <div class="header-right">
+            <span class="stress-pill warning">
+                Stress: 54.8
+            </span>
+            <button class="theme-btn" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- ══════════════ QUICK ACTIONS ══════════════ -->
+    <div class="section-title">Today's Priorities <span class="count-badge">10</span></div>
+    <div class="action-card urgent" data-index="0">
+            <span class="action-badge">URGENT</span>
+            <span class="action-text">Extend home care (ramp + backup caregiver + monitoring)</span>
+            <span class="action-meta">$2K-$5K upfront &middot; 2-4 weeks</span>
+        </div>
+<div class="action-card urgent" data-index="1">
+            <span class="action-badge">URGENT</span>
+            <span class="action-text">Add ZDX to policy immediately</span>
+            <span class="action-meta">~$100-$200/mo &middot; 1 phone call</span>
+        </div>
+<div class="action-card urgent" data-index="2">
+            <span class="action-badge">URGENT</span>
+            <span class="action-text">Call Osamu Hashizu (714) 258-2819</span>
+            <span class="action-meta">CPA fees ~$1K-$3K &middot; 1 phone call</span>
+        </div>
+<div class="action-card high" data-index="3">
+            <span class="action-badge">HIGH</span>
+            <span class="action-text">Pause distributions via Security Benefit</span>
+            <span class="action-meta">Free &middot; 1 phone call</span>
+        </div>
+<div class="action-card high" data-index="4">
+            <span class="action-badge">HIGH</span>
+            <span class="action-text">Schedule via Kaiser</span>
+            <span class="action-meta">Covered by Kaiser &middot; 1 call</span>
+        </div>
+<div class="action-card high" data-index="5">
+            <span class="action-badge">HIGH</span>
+            <span class="action-text">Schedule ultrasound via Kaiser</span>
+            <span class="action-meta">Covered by Kaiser &middot; 1 call</span>
+        </div>
+<div class="action-card high" data-index="6">
+            <span class="action-badge">HIGH</span>
+            <span class="action-text">None — disease progression is inevitable</span>
+            <span class="action-meta">N/A &middot; N/A</span>
+        </div>
+
+
+    <!-- ══════════════ METRICS ══════════════ -->
+    <div class="section-title">Key Metrics</div>
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <span class="metric-label">Cash Flow</span>
+            <span class="metric-value positive">+$6,502/mo</span>
+            <span class="metric-detail">Income $13,059</span>
+        </div>
+        <div class="metric-card">
+            <span class="metric-label">Care Stage</span>
+            <span class="metric-value warning">FAST 6e</span>
+            <span class="metric-detail">Hannah only</span>
+        </div>
+        <div class="metric-card">
+            <span class="metric-label">Runway</span>
+            <span class="metric-value positive">38 mo</span>
+            <span class="metric-detail">Mother's assets</span>
+        </div>
+    </div>
+
+    <!-- ══════════════ FAMILY ══════════════ -->
+    <div class="section-title">Family</div>
+    <div class="family-scroll">
+        <div class="family-card">
+            <strong>Dan </strong>
+            <span class="family-notes">Weight: 165 lbs, TKD goal 145 lbs, piriformis syndrome</span>
+        </div>
+<div class="family-card has-alert">
+            <strong>Minako </strong>
+            <span class="family-notes">2 overdue Kaiser appts, hand specialist needed</span>
+        </div>
+<div class="family-card">
+            <strong>Koko <span class="family-age">6</span></strong>
+            <span class="family-notes">IEP needed, RCOC: swimming + TKD</span>
+        </div>
+<div class="family-card">
+            <strong>Issa <span class="family-age">4</span></strong>
+            <span class="family-notes">Preschool at Cadenza</span>
+        </div>
+<div class="family-card has-alert">
+            <strong>Mother <span class="family-age">83</span></strong>
+            <span class="family-notes">FAST 6e | 93.8 lbs | RCFE decision made</span>
+        </div>
+
+    </div>
+
+    <!-- ══════════════ CHARTS ══════════════ -->
+    <div class="section-title">Intelligence</div>
+    <div class="charts-grid">
+        <div class="chart-card">
+            <div class="chart-title">Stress Components</div>
+            <canvas id="stressChart" height="200"></canvas>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">Risk Clusters</div>
+            <canvas id="riskChart" height="200"></canvas>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">Income Breakdown</div>
+            <canvas id="incomeChart" height="200"></canvas>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">Risk Cluster Probability</div>
+            <canvas id="probChart" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- ══════════════ RISK CLUSTERS ══════════════ -->
+    <div class="section-title">Risk Clusters <span class="count-badge">6</span></div>
+    <div class="card">
+        <div class="card-body">
+            <div class="cluster-row">
+            <div class="cluster-header">
+                <span class="cluster-name">MINAKO HEALTH BACKLOG</span>
+                <span class="cluster-score">88/100</span>
+            </div>
+            <div class="cluster-bar-track">
+                <div class="cluster-bar bar-critical" style="width:88.0%"></div>
+            </div>
+            <div class="cluster-meta">health, family &middot; 100% compound probability</div>
+        </div>
+<div class="cluster-row">
+            <div class="cluster-header">
+                <span class="cluster-name">IMMEDIATE LEGAL DEADLINES</span>
+                <span class="cluster-score">79/100</span>
+            </div>
+            <div class="cluster-bar-track">
+                <div class="cluster-bar bar-critical" style="width:78.7%"></div>
+            </div>
+            <div class="cluster-meta">legal, finances &middot; 100% compound probability</div>
+        </div>
+<div class="cluster-row">
+            <div class="cluster-header">
+                <span class="cluster-name">FINANCIAL VISIBILITY GAP</span>
+                <span class="cluster-score">65/100</span>
+            </div>
+            <div class="cluster-bar-track">
+                <div class="cluster-bar bar-warning" style="width:65.0%"></div>
+            </div>
+            <div class="cluster-meta">finances &middot; 100% compound probability</div>
+        </div>
+<div class="cluster-row">
+            <div class="cluster-header">
+                <span class="cluster-name">MEDI-CAL / IRA CHAIN</span>
+                <span class="cluster-score">63/100</span>
+            </div>
+            <div class="cluster-bar-track">
+                <div class="cluster-bar bar-warning" style="width:62.8%"></div>
+            </div>
+            <div class="cluster-meta">finances, care, legal &middot; 99% compound probability</div>
+        </div>
+<div class="cluster-row">
+            <div class="cluster-header">
+                <span class="cluster-name">CARE CRISIS CLUSTER</span>
+                <span class="cluster-score">58/100</span>
+            </div>
+            <div class="cluster-bar-track">
+                <div class="cluster-bar bar-warning" style="width:58.3%"></div>
+            </div>
+            <div class="cluster-meta">care, health, finances &middot; 99% compound probability</div>
+        </div>
+<div class="cluster-row">
+            <div class="cluster-header">
+                <span class="cluster-name">PERSONAL GUARANTEE EXPOSURE</span>
+                <span class="cluster-score">12/100</span>
+            </div>
+            <div class="cluster-bar-track">
+                <div class="cluster-bar bar-info" style="width:12.4%"></div>
+            </div>
+            <div class="cluster-meta">legal, finances, goals &middot; 24% compound probability</div>
+        </div>
+
+        </div>
+    </div>
+
+    <!-- ══════════════ ANOMALIES ══════════════ -->
+    <div class="card">
+        <button class="collapsible-toggle" onclick="toggleSection(this)" aria-expanded="false">
+            <span class="section-title" style="margin:0">Anomalies <span class="count-badge">19</span></span>
+            <span class="chevron">&#9660;</span>
+        </button>
+        <div class="collapsible-body anomalies-list">
+            <div class="anomaly-item warning">
+            <span class="anomaly-severity">WARNING</span>
+            <span class="anomaly-domain">calendar</span>
+            <span class="anomaly-title">TKD Black Belt test ~7 months away — ZERO training events in 30 days</span>
+            <span class="anomaly-action">Schedule TKD classes immediately. Minimum 3x/week to build toward black belt test. Contact dojang.</span>
+        </div>
+<div class="anomaly-item warning">
+            <span class="anomaly-severity">WARNING</span>
+            <span class="anomaly-domain">care</span>
+            <span class="anomaly-title">Anaheim Villa RCFE application follow-up — due in 23 days (2026-04-15)</span>
+            <span class="anomaly-action">Call Yumi Kim (714) 308-9800. Get current status.</span>
+        </div>
+<div class="anomaly-item warning">
+            <span class="anomaly-severity">WARNING</span>
+            <span class="anomaly-domain">health</span>
+            <span class="anomaly-title">Missed medication pattern detected</span>
+            <span class="anomaly-action">Review medication adherence pattern. If systemic, discuss with psychiatrist.</span>
+        </div>
+<div class="anomaly-item warning">
+            <span class="anomaly-severity">WARNING</span>
+            <span class="anomaly-domain">calendar</span>
+            <span class="anomaly-title">Weight Loss: ZERO calendar events in 30 days</span>
+            <span class="anomaly-action">Schedule recurring time blocks for 'Weight Loss'. This goal is invisible in your calendar.</span>
+        </div>
+<div class="anomaly-item warning">
+            <span class="anomaly-severity">WARNING</span>
+            <span class="anomaly-domain">finances</span>
+            <span class="anomaly-title">Financial balance facts (6 items) last updated 265+ days ago</span>
+            <span class="anomaly-action">Update financial balances — request latest bank/account statements.</span>
+        </div>
+<div class="anomaly-item warning">
+            <span class="anomaly-severity">WARNING</span>
+            <span class="anomaly-domain">health</span>
+            <span class="anomaly-title">Dan's weight (165 lbs) — no downward progress toward 145 lb target</span>
+            <span class="anomaly-action">Log current weight. If still 165+, flag as goal deviation. Schedule gym 3x/week minimum.</span>
+        </div>
+<div class="anomaly-item warning">
+            <span class="anomaly-severity">WARNING</span>
+            <span class="anomaly-domain">relationships</span>
+            <span class="anomaly-title">No recent email contact with Hannah in 30+ days</span>
+            <span class="anomaly-action">Reach out to Hannah. Primary caregiver — should have regular contact.</span>
+        </div>
+<div class="anomaly-item info">
+            <span class="anomaly-severity">INFO</span>
+            <span class="anomaly-domain">health</span>
+            <span class="anomaly-title">Medical follow-up status unclear: Eustachian tube balloon dilation (Dr. Keschner)</span>
+            <span class="anomaly-action">Check if ET balloon dilation was scheduled and completed. If not, schedule with Dr. Keschner.</span>
+        </div>
+<div class="anomaly-item info">
+            <span class="anomaly-severity">INFO</span>
+            <span class="anomaly-domain">calendar</span>
+            <span class="anomaly-title">Retire at 55 / Business Exit: ZERO calendar events in 30 days</span>
+            <span class="anomaly-action">Schedule recurring time blocks for 'Retire at 55 / Business Exit'. This goal is invisible in your calendar.</span>
+        </div>
+<div class="anomaly-item info">
+            <span class="anomaly-severity">INFO</span>
+            <span class="anomaly-domain">care</span>
+            <span class="anomaly-title">Single active caregiver (Hannah) — backup: Angela Seo</span>
+            <span class="anomaly-action">Verify backup availability monthly. Consider recruiting a second backup.</span>
+        </div>
+<div class="anomaly-item info">
+            <span class="anomaly-severity">INFO</span>
+            <span class="anomaly-domain">health</span>
+            <span class="anomaly-title">Minako pelvic ultrasound — due in 70 days (2026-06-01)</span>
+            <span class="anomaly-action">Schedule Kaiser appointment immediately. GI scheduling: 714-279-4200.</span>
+        </div>
+<div class="anomaly-item info">
+            <span class="anomaly-severity">INFO</span>
+            <span class="anomaly-domain">health</span>
+            <span class="anomaly-title">Minako echocardiogram — due in 38 days (2026-04-30)</span>
+            <span class="anomaly-action">Schedule Kaiser cardiology appointment. Should have been done 10+ months ago.</span>
+        </div>
+<div class="anomaly-item info">
+            <span class="anomaly-severity">INFO</span>
+            <span class="anomaly-domain">care</span>
+            <span class="anomaly-title">IHSS reassessment request — mother mobility decline — due in 53 days (2026-05-15)</span>
+            <span class="anomaly-action">Request IHSS reassessment through county social worker.</span>
+        </div>
+<div class="anomaly-item info">
+            <span class="anomaly-severity">INFO</span>
+            <span class="anomaly-domain">health</span>
+            <span class="anomaly-title">Medical follow-up status unclear: GI follow-up post-colonoscopy (Dr. Niho)</span>
+            <span class="anomaly-action">Confirm if GI follow-up was scheduled and attended after Jan 30, 2026 colonoscopy.</span>
+        </div>
+<div class="anomaly-item info">
+            <span class="anomaly-severity">INFO</span>
+            <span class="anomaly-domain">health</span>
+            <span class="anomaly-title">Medical follow-up status unclear: Fatty liver weight loss follow-up</span>
+            <span class="anomaly-action">Schedule liver function follow-up if weight loss goal not achieved (165 → target 145 lbs).</span>
+        </div>
+<div class="anomaly-item info">
+            <span class="anomaly-severity">INFO</span>
+            <span class="anomaly-domain">relationships</span>
+            <span class="anomaly-title">No recent email contact with Eddie in 30+ days</span>
+            <span class="anomaly-action">Reach out to Eddie. Close friend since 1999.</span>
+        </div>
+<div class="anomaly-item info">
+            <span class="anomaly-severity">INFO</span>
+            <span class="anomaly-domain">relationships</span>
+            <span class="anomaly-title">No recent email contact with Calvin in 30+ days</span>
+            <span class="anomaly-action">Reach out to Calvin. Close friend, yokly colleague.</span>
+        </div>
+<div class="anomaly-item info">
+            <span class="anomaly-severity">INFO</span>
+            <span class="anomaly-domain">relationships</span>
+            <span class="anomaly-title">No recent email contact with Angela Seo in 30+ days</span>
+            <span class="anomaly-action">Reach out to Angela Seo. Backup caregiver.</span>
+        </div>
+<div class="anomaly-item info">
+            <span class="anomaly-severity">INFO</span>
+            <span class="anomaly-domain">relationships</span>
+            <span class="anomaly-title">No recent email contact with Pastor Samuel in 30+ days</span>
+            <span class="anomaly-action">Reach out to Pastor Samuel. Church leadership.</span>
+        </div>
+
+        </div>
+    </div>
+
+    <!-- ══════════════ TABBED: DEADLINES + CALENDAR ══════════════ -->
+    <div class="section-title">Upcoming</div>
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab(event, 'tab-deadlines')">Deadlines</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tab-calendar')">Calendar</button>
+    </div>
+    <div class="card">
+        <div class="card-body tab-panel active" id="tab-deadlines">
+            <div class="timeline-item critical">
+            <div class="timeline-date">2023-03-28</div>
+            <div class="timeline-content">
+                <span class="timeline-title">CCW license renewal</span>
+                <span class="timeline-days">-1091d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2023-05-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Nanny status — is the nanny still employed? What's the monthly cost?</span>
+                <span class="timeline-days">-1043d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2024-09-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Dental work — receding gums, crowns, missing teeth. Any upcoming procedures? Does Kaiser cover?</span>
+                <span class="timeline-days">-554d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2024-10-10</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Lease renewal — Irvine house at $5,745/mo, lease start Oct 2024</span>
+                <span class="timeline-days">-529d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2024-12-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">IHSS back-tracking application (Dan as joint provider)</span>
+                <span class="timeline-days">-463d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2025-01-03</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Funeral pre-payment reimbursement from mother's account</span>
+                <span class="timeline-days">-444d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2025-01-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Father's van title transfer to aunt (gomo)</span>
+                <span class="timeline-days">-432d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2025-05-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Minako echocardiogram (follow-up to CT cardiomegaly finding)</span>
+                <span class="timeline-days">-312d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2025-05-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">~~Medi-Cal DHCS appeal (filed ~May 2025 after $1,350 SOC)~~</span>
+                <span class="timeline-days">-312d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2025-06-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Second vehicle confirmation — vehicles status</span>
+                <span class="timeline-days">-281d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2025-10-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Anaheim Villa RCFE application — 2-3 month wait after approval</span>
+                <span class="timeline-days">-159d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2025-12-12</div>
+            <div class="timeline-content">
+                <span class="timeline-title">IRA annuity pause request (Security Benefit, $973.48/mo distributions)</span>
+                <span class="timeline-days">-101d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2025-12-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Minako pelvic ultrasound follow-up (6-12 months post June 2025)</span>
+                <span class="timeline-days">-98d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2026-02-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Insurance broker contact (Tyler Joseph/AJG) — find ~$100/mo premium to reduce mother's income below Medi-Cal threshold</span>
+                <span class="timeline-days">-36d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2026-03-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">TKD belt test — red/black to red/black w/ stripe</span>
+                <span class="timeline-days">-8d</span>
+            </div>
+        </div>
+
+        </div>
+        <div class="card-body tab-panel" id="tab-calendar">
+            <div style="padding:12px;font-size:13px;color:var(--ink-secondary)">Calendar not connected. Run <code>reauth_expanded_scopes.py</code> to enable.</div>
+        </div>
+    </div>
+
+    <!-- ══════════════ GOALS ══════════════ -->
+    <div class="section-title">Goals</div>
+    <div class="goals-grid">
+        <div class="goal-card active">
+            <span class="goal-label">TKD Black Belt</span>
+            <span class="goal-target">Black belt test Nov 2026</span>
+            <span class="goal-status">active</span>
+        </div>
+<div class="goal-card active">
+            <span class="goal-label">Weight Loss (165 → 145 lbs)</span>
+            <span class="goal-target">145 lbs</span>
+            <span class="goal-status">active</span>
+        </div>
+<div class="goal-card planning">
+            <span class="goal-label">Retire at 55 / $15M Exit</span>
+            <span class="goal-target">$15M exit, retire 2038</span>
+            <span class="goal-status">planning</span>
+        </div>
+<div class="goal-card planning">
+            <span class="goal-label">Multi-Country Real Estate (JP/KR/US/PH)</span>
+            <span class="goal-target">Properties in JP/KR/US/PH</span>
+            <span class="goal-status">research</span>
+        </div>
+<div class="goal-card planning">
+            <span class="goal-label">Mother's Care Transition</span>
+            <span class="goal-target">RCFE when needed</span>
+            <span class="goal-status">monitoring</span>
+        </div>
+<div class="goal-card active">
+            <span class="goal-label">Agapay Mission / Faith Growth</span>
+            <span class="goal-target">Active faith mission</span>
+            <span class="goal-status">active</span>
+        </div>
+
+    </div>
+
+    <!-- ══════════════ FOOTER ══════════════ -->
+    <div class="dash-footer">
+        Generated March 23, 2026 at 09:50 AM<br>
+        Phoebe Life Intelligence &middot; <a href="../">Trip Planner</a>
+    </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<!--  SCRIPTS                                                              -->
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<script>
+/* ── Theme Toggle ──────────────────────────────────────────────────────── */
+function toggleTheme() {
+    var html = document.documentElement;
+    var isDark = html.getAttribute("data-theme") === "dark";
+    html.setAttribute("data-theme", isDark ? "" : "dark");
+    try { localStorage.setItem("phoebe-theme", isDark ? "light" : "dark"); } catch(e) {}
+    initCharts();
+}
+(function() {
+    try {
+        if (localStorage.getItem("phoebe-theme") === "dark") {
+            document.documentElement.setAttribute("data-theme", "dark");
+        }
+    } catch(e) {}
+})();
+
+/* ── Collapsible Sections ──────────────────────────────────────────────── */
+function toggleSection(btn) {
+    var body = btn.nextElementSibling;
+    var expanded = btn.getAttribute("aria-expanded") === "true";
+    btn.setAttribute("aria-expanded", !expanded);
+    body.classList.toggle("open");
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────────────── */
+function switchTab(e, id) {
+    var btns = e.target.parentElement.querySelectorAll(".tab-btn");
+    btns.forEach(function(b) { b.classList.remove("active"); });
+    e.target.classList.add("active");
+    var panels = e.target.parentElement.nextElementSibling.querySelectorAll(".tab-panel");
+    panels.forEach(function(p) { p.classList.remove("active"); });
+    document.getElementById(id).classList.add("active");
+}
+
+/* ── Charts ────────────────────────────────────────────────────────────── */
+var charts = {};
+function initCharts() {
+    var isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    var textColor = isDark ? "#a0a0a0" : "#5b6573";
+    var gridColor = isDark ? "#2e2e2e" : "#ddd3c7";
+
+    // Destroy existing
+    Object.values(charts).forEach(function(c) { if (c) c.destroy(); });
+
+    // Stress Components — Radar
+    var ctx1 = document.getElementById("stressChart").getContext("2d");
+    charts.stress = new Chart(ctx1, {
+        type: "radar",
+        data: {
+            labels: ["income_gap", "pg_exposure", "care_trajectory", "runway", "budget_unknowns"],
+            datasets: [{
+                label: "Stress Score",
+                data: [0, 100, 80.5, 68.3, 50.0],
+                borderColor: isDark ? "#d4845a" : "#a85f3f",
+                backgroundColor: isDark ? "rgba(212,132,90,0.15)" : "rgba(168,95,63,0.12)",
+                borderWidth: 2,
+                pointRadius: 4,
+                pointBackgroundColor: isDark ? "#d4845a" : "#a85f3f",
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: { color: textColor, font: { size: 10 }, stepSize: 25 },
+                    grid: { color: gridColor },
+                    pointLabels: { color: textColor, font: { size: 10 } },
+                    angleLines: { color: gridColor },
+                }
+            }
+        }
+    });
+
+    // Risk Clusters — Horizontal Bar
+    var ctx2 = document.getElementById("riskChart").getContext("2d");
+    charts.risk = new Chart(ctx2, {
+        type: "bar",
+        data: {
+            labels: ["MINAKO HEALTH BACKLOG", "IMMEDIATE LEGAL DEADLINES", "FINANCIAL VISIBILITY GAP", "MEDI-CAL / IRA CHAIN", "CARE CRISIS CLUSTER", "PERSONAL GUARANTEE EXPOSU"],
+            datasets: [{
+                data: [88.0, 78.7, 65.0, 62.8, 58.3, 12.4],
+                backgroundColor: ["rgba(220,38,38,0.7)", "rgba(220,38,38,0.7)", "rgba(217,119,6,0.7)", "rgba(217,119,6,0.7)", "rgba(217,119,6,0.7)", "rgba(37,99,235,0.7)"],
+                borderRadius: 6,
+            }]
+        },
+        options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { beginAtZero: true, max: 100, ticks: { color: textColor }, grid: { color: gridColor } },
+                y: { ticks: { color: textColor, font: { size: 10 } }, grid: { display: false } },
+            }
+        }
+    });
+
+    // Income Donut
+    var ctx3 = document.getElementById("incomeChart").getContext("2d");
+    charts.income = new Chart(ctx3, {
+        type: "doughnut",
+        data: {
+            labels: ["Dan Salary (Agape)", "Dan Salary (Yokly/Ji", "Dan + Minako IHSS (c", "Minako Cadenza", "Mother Room & Board", "Mother SS", "Mother IRA Distribut"],
+            datasets: [{
+                data: [1900, 2900, 5349, 910, 2000, 1985, 876],
+                backgroundColor: [
+                    isDark ? "#d4845a" : "#a85f3f",
+                    isDark ? "#7fa0b0" : "#5f7f8f",
+                    isDark ? "#e8c99a" : "#d8b58a",
+                    isDark ? "#22c55e" : "#16a34a",
+                    isDark ? "#60a5fa" : "#2563eb",
+                    isDark ? "#c084fc" : "#9333ea",
+                ],
+                borderWidth: 0,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: "bottom",
+                    labels: { color: textColor, font: { size: 10 }, boxWidth: 10, padding: 8 },
+                },
+            },
+            cutout: "65%",
+        }
+    });
+
+    // Risk Probability — Polar Area
+    var ctx4 = document.getElementById("probChart").getContext("2d");
+    charts.prob = new Chart(ctx4, {
+        type: "polarArea",
+        data: {
+            labels: ["MINAKO HEALTH BACKLOG", "IMMEDIATE LEGAL DEADLINES", "FINANCIAL VISIBILITY GAP", "MEDI-CAL / IRA CHAIN", "CARE CRISIS CLUSTER", "PERSONAL GUARANTEE EXPOSU"],
+            datasets: [{
+                data: [99.9, 100.0, 100.0, 98.6, 99.4, 23.5],
+                backgroundColor: [
+                    "rgba(220,38,38,0.5)",
+                    "rgba(217,119,6,0.5)",
+                    "rgba(168,95,63,0.5)",
+                    "rgba(37,99,235,0.5)",
+                    "rgba(95,127,143,0.5)",
+                    "rgba(22,163,74,0.5)",
+                ],
+                borderWidth: 0,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: "bottom",
+                    labels: { color: textColor, font: { size: 9 }, boxWidth: 10, padding: 6 },
+                },
+            },
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: { display: false },
+                    grid: { color: gridColor },
+                },
+            },
+        }
+    });
+}
+
+// Initialize charts on load
+document.addEventListener("DOMContentLoaded", initCharts);
+
+/* ── PWA Service Worker ────────────────────────────────────────────────── */
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js").catch(function() {});
+}
+</script>
+</body>
+</html>
