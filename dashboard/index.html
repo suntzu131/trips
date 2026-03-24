@@ -1073,6 +1073,10 @@ canvas { max-width: 100%; }
     .chat-input-area input { padding: 8px 12px; font-size: 16px; }
     .chat-input-area button { padding: 8px 16px; }
     .chat-status { font-size: 10px; }
+    .thread-tabs { padding: 6px 8px; }
+    .thread-tab { padding: 5px 10px; font-size: 11px; min-height: 28px; }
+    .msg-avatar { width: 28px; height: 28px; font-size: 11px; }
+    .chat-msg { max-width: 90%; }
     .report-card { padding: 14px; }
     .report-section-title { font-size: 12px; }
 }
@@ -1111,6 +1115,66 @@ canvas { max-width: 100%; }
 }
 .chat-status.connected { color: var(--green); }
 .chat-status.error { color: var(--red); }
+
+/* ── Thread Tabs ──────────────────────────────────────────────────────── */
+.chat-threads {
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+}
+.thread-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 8px 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.thread-tabs::-webkit-scrollbar { display: none; }
+.thread-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font);
+    cursor: pointer;
+    white-space: nowrap;
+    min-height: 32px;
+    transition: all 0.15s;
+}
+.thread-tab:hover { border-color: var(--accent); color: var(--ink); }
+.thread-tab.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+.thread-tab .unread-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: var(--red);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+}
+.thread-tab.active .unread-badge { background: rgba(255,255,255,0.3); }
+.thread-tab-new {
+    border-style: dashed;
+    opacity: 0.7;
+}
+.thread-tab-new:hover { opacity: 1; }
+
+/* ── Messages ─────────────────────────────────────────────────────────── */
 .chat-messages {
     flex: 1;
     overflow-y: auto;
@@ -1124,37 +1188,64 @@ canvas { max-width: 100%; }
 .chat-messages::-webkit-scrollbar { width: 4px; }
 .chat-messages::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
 .chat-msg {
-    max-width: 80%;
-    padding: 10px 14px;
-    border-radius: 16px;
-    font-size: 14px;
-    line-height: 1.4;
-    word-wrap: break-word;
+    display: flex;
+    gap: 8px;
+    max-width: 85%;
     animation: chatMsgIn 0.2s ease;
 }
 @keyframes chatMsgIn {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
 }
-.chat-msg.phoebe {
-    align-self: flex-start;
+.chat-msg.phoebe { align-self: flex-start; }
+.chat-msg.user { align-self: flex-end; flex-direction: row-reverse; }
+.chat-msg.thinking { align-self: flex-start; }
+
+/* Avatars */
+.msg-avatar {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    margin-top: 2px;
+}
+.msg-avatar.av-phoebe { background: var(--accent); }
+.msg-avatar.av-dan { background: var(--sea, #5f7f8f); }
+.msg-avatar.av-minako { background: #c47a9e; }
+.msg-avatar.av-default { background: var(--ink-secondary); }
+
+/* Bubble */
+.msg-bubble {
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+.chat-msg.phoebe .msg-bubble,
+.chat-msg.thinking .msg-bubble {
     background: var(--bg);
     border-bottom-left-radius: 4px;
     color: var(--ink);
 }
-.chat-msg.user {
-    align-self: flex-end;
+.chat-msg.user .msg-bubble {
     background: var(--accent);
     color: #fff;
     border-bottom-right-radius: 4px;
 }
-.chat-msg .msg-time {
+.msg-bubble .msg-time {
     font-size: 10px;
     opacity: 0.6;
     margin-top: 4px;
     display: block;
 }
-.chat-msg .msg-sender {
+.msg-bubble .msg-sender {
     font-size: 11px;
     font-weight: 600;
     margin-bottom: 2px;
@@ -1162,6 +1253,30 @@ canvas { max-width: 100%; }
     opacity: 0.8;
 }
 .chat-msg.phoebe .msg-sender { color: var(--accent); }
+
+/* Thinking dots animation */
+.thinking-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 0;
+}
+.thinking-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--ink-secondary);
+    border-radius: 50%;
+    animation: thinkingBounce 1.4s infinite ease-in-out;
+}
+.thinking-dot:nth-child(1) { animation-delay: 0s; }
+.thinking-dot:nth-child(2) { animation-delay: 0.2s; }
+.thinking-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes thinkingBounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1.0); }
+}
+
+/* ── Empty state ──────────────────────────────────────────────────────── */
 .chat-empty {
     display: flex;
     flex-direction: column;
@@ -1176,6 +1291,8 @@ canvas { max-width: 100%; }
 .chat-empty-icon { font-size: 48px; opacity: 0.3; }
 .chat-empty-text { font-size: 14px; line-height: 1.6; }
 .chat-empty-sub { font-size: 12px; opacity: 0.7; }
+
+/* ── Input area ───────────────────────────────────────────────────────── */
 .chat-input-area {
     display: flex;
     gap: 8px;
@@ -1351,7 +1468,7 @@ canvas { max-width: 100%; }
         <button class="sidebar-theme-btn" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
-        <span class="sidebar-footer-text">Phoebe v2026.3 &middot; 2026-03-24 07:40</span>
+        <span class="sidebar-footer-text">Phoebe v2026.3 &middot; 2026-03-24 08:58</span>
     </div>
 </aside>
 
@@ -1486,7 +1603,7 @@ canvas { max-width: 100%; }
         </div>
 
         <div style="text-align:center;padding:24px 0;font-size:11px;color:var(--ink-secondary)">
-            Generated March 24, 2026 at 07:40 AM &middot;
+            Generated March 24, 2026 at 08:58 AM &middot;
             Phoebe Life Intelligence &middot; <a href="../" style="color:var(--accent);text-decoration:none">Trip Planner</a>
         </div>
     </div>
@@ -1499,6 +1616,12 @@ canvas { max-width: 100%; }
             <div class="chat-header">
                 <h3>Phoebe Chat</h3>
                 <span class="chat-status" id="chat-status">Connecting...</span>
+            </div>
+            <div class="chat-threads">
+                <div class="thread-tabs" id="thread-tabs">
+                    <button class="thread-tab active" data-thread="phoebe-family" onclick="switchThread('phoebe-family', this)">Family</button>
+                    <button class="thread-tab thread-tab-new" onclick="createNewThread()">+ New</button>
+                </div>
             </div>
             <div class="chat-messages" id="chat-messages">
                 <div class="chat-empty" id="chat-empty">
@@ -2084,7 +2207,7 @@ canvas { max-width: 100%; }
         <div class="reports-list">
         <div class="report-card">
             <div class="report-title">Morning Brief</div>
-            <div class="report-meta">Generated March 24, 2026 at 07:40 AM</div>
+            <div class="report-meta">Generated March 24, 2026 at 08:58 AM</div>
             <div class="report-content" id="morning-brief-content">
                 <div class="report-item"><span class="report-item-bullet good"></span><span class="report-item-text">Cash flow: +$6,502/mo (MODERATE stress at 54.8)</span></div>
 <div class="report-item"><span class="report-item-bullet warning"></span><span class="report-item-text">Mother: FAST 6e | RCFE application in progress</span></div>
@@ -2096,7 +2219,7 @@ canvas { max-width: 100%; }
         </div>
         <div class="report-card">
             <div class="report-title">Intelligence Report</div>
-            <div class="report-meta">Last updated: March 24, 2026 at 07:40 AM</div>
+            <div class="report-meta">Last updated: March 24, 2026 at 08:58 AM</div>
             <div class="report-content" id="intel-report-content">
                 <div class="report-section-title">Priority Actions</div>
 <div class="report-item"><span class="report-item-bullet critical"></span><span class="report-item-text">Call Osamu Hashizu (714) 258-2819</span></div>
@@ -2130,10 +2253,10 @@ canvas { max-width: 100%; }
         <div class="sysstat-grid">
         <div class="sysstat-item"><span class="sysstat-val">36</span><span class="sysstat-lbl">Agents</span></div>
         <div class="sysstat-item"><span class="sysstat-val">29</span><span class="sysstat-lbl">Skills</span></div>
-        <div class="sysstat-item"><span class="sysstat-val">80</span><span class="sysstat-lbl">Tools</span></div>
+        <div class="sysstat-item"><span class="sysstat-val">81</span><span class="sysstat-lbl">Tools</span></div>
         <div class="sysstat-item"><span class="sysstat-val">44</span><span class="sysstat-lbl">Timers</span></div>
         <div class="sysstat-item sysstat-wide"><span class="sysstat-val">45,000 / 363,000</span><span class="sysstat-lbl">Graph nodes / rels</span></div>
-        <div class="sysstat-item sysstat-wide"><span class="sysstat-val">2026-03-24 07:40</span><span class="sysstat-lbl">Last render</span></div>
+        <div class="sysstat-item sysstat-wide"><span class="sysstat-val">2026-03-24 08:58</span><span class="sysstat-lbl">Last render</span></div>
     </div>
     </div>
 
@@ -2907,7 +3030,7 @@ function updateSwipeCounter(dismissed, snoozed) {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
-/*  12. FIREBASE CHAT                                                       */
+/*  12. FIREBASE CHAT — multi-thread, thinking indicator, avatars           */
 /* ══════════════════════════════════════════════════════════════════════════ */
 var FIREBASE_CONFIG = {
     apiKey: "AIzaSyDPBOJbb5U68DKaauYQzIypmVK9rqVxHO0",
@@ -2924,6 +3047,21 @@ var chatRef = null;
 var CHAT_USER = "Dan";
 var _chatInitialized = false;
 var _chatMsgCount = 0;
+var _currentThread = "phoebe-family";
+var _threadListeners = {};
+
+/* Avatar lookup */
+var AVATAR_MAP = {
+    "Phoebe": { cls: "av-phoebe", letter: "P" },
+    "Dan":    { cls: "av-dan",    letter: "D" },
+    "Minako": { cls: "av-minako", letter: "M" },
+};
+
+function getAvatar(sender) {
+    var a = AVATAR_MAP[sender];
+    if (!a) a = { cls: "av-default", letter: (sender || "?").charAt(0).toUpperCase() };
+    return '<div class="msg-avatar ' + a.cls + '">' + a.letter + '</div>';
+}
 
 function initChat() {
     if (_chatInitialized) return;
@@ -2959,18 +3097,16 @@ function initChat() {
     }
 
     try {
-        var app = firebase.initializeApp(FIREBASE_CONFIG);
+        if (!firebase.apps || !firebase.apps.length) {
+            firebase.initializeApp(FIREBASE_CONFIG);
+        }
         chatDb = firebase.database();
-        chatRef = chatDb.ref("chat/phoebe-family");
 
-        /* Listen for new messages — last 50 */
-        chatRef.orderByChild("timestamp").limitToLast(50).on("child_added", function(snapshot) {
-            var msg = snapshot.val();
-            if (!msg) return;
-            _chatMsgCount++;
-            if (emptyEl && _chatMsgCount > 0) emptyEl.style.display = "none";
-            appendChatMessage(msg.sender, msg.text, msg.timestamp, msg.type || "user");
-        });
+        /* Load thread list from /threads/ and populate tabs */
+        loadThreadList();
+
+        /* Attach to default thread */
+        attachThread(_currentThread);
 
         /* Connection state monitoring */
         var connRef = firebase.database().ref(".info/connected");
@@ -2992,26 +3128,192 @@ function initChat() {
     }
 }
 
-function appendChatMessage(sender, text, timestamp, type) {
+/* ── Thread management ────────────────────────────────────────────────── */
+function loadThreadList() {
+    if (!chatDb) return;
+    var threadsRef = chatDb.ref("threads");
+    threadsRef.on("value", function(snap) {
+        var threads = snap.val() || {};
+        var tabsEl = document.getElementById("thread-tabs");
+        if (!tabsEl) return;
+
+        /* Keep + New button */
+        var html = "";
+        /* Always show Family first */
+        var threadIds = Object.keys(threads);
+        if (threadIds.indexOf("phoebe-family") === -1) {
+            html += buildThreadTab("phoebe-family", "Family");
+        }
+        for (var tid in threads) {
+            var t = threads[tid];
+            html += buildThreadTab(tid, t.name || tid);
+        }
+        html += '<button class="thread-tab thread-tab-new" onclick="createNewThread()">+ New</button>';
+        tabsEl.innerHTML = html;
+    });
+}
+
+function buildThreadTab(threadId, name) {
+    var active = (threadId === _currentThread) ? " active" : "";
+    return '<button class="thread-tab' + active + '" data-thread="' + threadId + '" onclick="switchThread('' + threadId + '', this)">' +
+        escHtml(name) +
+        '<span class="unread-badge" id="unread-' + threadId + '" style="display:none">0</span>' +
+        '</button>';
+}
+
+function switchThread(threadId, btnEl) {
+    if (threadId === _currentThread) return;
+
+    /* Detach old listener */
+    detachThread(_currentThread);
+
+    _currentThread = threadId;
+    _chatMsgCount = 0;
+
+    /* Update tab active state */
+    var tabs = document.querySelectorAll(".thread-tab");
+    for (var i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove("active");
+        if (tabs[i].getAttribute("data-thread") === threadId) tabs[i].classList.add("active");
+    }
+
+    /* Clear messages */
+    var messagesEl = document.getElementById("chat-messages");
+    if (messagesEl) {
+        messagesEl.innerHTML = '<div class="chat-empty" id="chat-empty">' +
+            '<div class="chat-empty-icon">&#128172;</div>' +
+            '<div class="chat-empty-text">Loading...</div></div>';
+    }
+
+    /* Clear unread badge for this thread */
+    var badge = document.getElementById("unread-" + threadId);
+    if (badge) { badge.style.display = "none"; badge.textContent = "0"; }
+
+    /* Attach new thread */
+    attachThread(threadId);
+}
+
+function attachThread(threadId) {
+    if (!chatDb) return;
+    chatRef = chatDb.ref("chat/" + threadId);
+    var emptyEl = document.getElementById("chat-empty");
+    var messagesEl = document.getElementById("chat-messages");
+
+    /* Listen for new messages -- last 50 */
+    var addRef = chatRef.orderByChild("timestamp").limitToLast(50);
+    addRef.on("child_added", function(snapshot) {
+        var msg = snapshot.val();
+        if (!msg) return;
+        _chatMsgCount++;
+        if (emptyEl) emptyEl.style.display = (_chatMsgCount > 0) ? "none" : "";
+        appendChatMessage(snapshot.key, msg.sender, msg.text, msg.timestamp, msg.type || "user");
+    });
+
+    /* Listen for changes -- thinking -> response transitions */
+    chatRef.on("child_changed", function(snapshot) {
+        var msg = snapshot.val();
+        var key = snapshot.key;
+        var el = document.getElementById("msg-" + key);
+        if (el && msg && msg.type !== "thinking") {
+            /* Replace thinking dots with actual response */
+            el.className = "chat-msg phoebe";
+            var bubble = el.querySelector(".msg-bubble");
+            if (bubble) {
+                var time = "";
+                if (msg.responded_at) {
+                    try { time = new Date(msg.responded_at).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}); } catch(e) {}
+                }
+                var safeText = escHtml(msg.text || "").replace(/\n/g, "<br>");
+                bubble.innerHTML =
+                    '<span class="msg-sender">' + escHtml(msg.sender || "Phoebe") + '</span>' +
+                    '<span class="msg-text">' + safeText + '</span>' +
+                    '<span class="msg-time">' + time + '</span>';
+            }
+        }
+    });
+
+    _threadListeners[threadId] = { addRef: addRef, ref: chatRef };
+}
+
+function detachThread(threadId) {
+    var l = _threadListeners[threadId];
+    if (l) {
+        if (l.addRef) l.addRef.off("child_added");
+        if (l.ref) l.ref.off("child_changed");
+        delete _threadListeners[threadId];
+    }
+}
+
+function createNewThread() {
+    var name = prompt("Thread topic (e.g. Solvang Trip, Health, School):");
+    if (!name || !name.trim()) return;
+    name = name.trim();
+    var slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    if (!slug) slug = "thread-" + Date.now();
+
+    /* Write thread metadata to /threads/ */
+    if (chatDb) {
+        chatDb.ref("threads/" + slug).set({
+            name: name,
+            created_at: firebase.database.ServerValue.TIMESTAMP,
+            created_by: CHAT_USER
+        });
+    }
+
+    /* Switch to new thread */
+    switchThread(slug, null);
+}
+
+/* ── Message rendering ────────────────────────────────────────────────── */
+function appendChatMessage(key, sender, text, timestamp, type) {
     var container = document.getElementById("chat-messages");
     if (!container) return;
+
     var div = document.createElement("div");
-    var isPhoebe = (sender === "Phoebe" || type === "phoebe");
-    div.className = "chat-msg " + (isPhoebe ? "phoebe" : "user");
+    var isPhoebe = (sender === "Phoebe" || type === "phoebe" || type === "thinking");
+    var isThinking = (type === "thinking");
+
+    div.id = "msg-" + key;
+    div.className = "chat-msg " + (isThinking ? "thinking" : (isPhoebe ? "phoebe" : "user"));
 
     var time = "";
-    if (timestamp) {
+    if (timestamp && !isThinking) {
         try {
             var d = new Date(timestamp);
             time = d.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
         } catch(e) { time = ""; }
     }
 
-    var safeText = escHtml(text || "").replace(/\n/g, "<br>");
-    div.innerHTML =
-        '<span class="msg-sender">' + escHtml(sender || "Unknown") + '</span>' +
-        safeText +
-        '<span class="msg-time">' + time + '</span>';
+    var avatarHtml = getAvatar(isPhoebe ? "Phoebe" : sender);
+    var bubbleContent = "";
+
+    if (isThinking) {
+        bubbleContent =
+            '<span class="msg-sender">' + escHtml(sender || "Phoebe") + '</span>' +
+            '<span class="msg-text"><span class="thinking-dots">' +
+            '<span class="thinking-dot"></span><span class="thinking-dot"></span><span class="thinking-dot"></span>' +
+            '</span></span>';
+    } else {
+        var safeText = escHtml(text || "").replace(/\n/g, "<br>");
+        bubbleContent =
+            '<span class="msg-sender">' + escHtml(sender || "Unknown") + '</span>' +
+            '<span class="msg-text">' + safeText + '</span>' +
+            '<span class="msg-time">' + time + '</span>';
+    }
+
+    div.innerHTML = avatarHtml + '<div class="msg-bubble">' + bubbleContent + '</div>';
+
+    /* Context menu -- copy text on right-click / long-press */
+    div.addEventListener("contextmenu", function(e) {
+        e.preventDefault();
+        var txt = (text || "").trim();
+        if (txt && navigator.clipboard) {
+            navigator.clipboard.writeText(txt).then(function() {
+                div.style.opacity = "0.6";
+                setTimeout(function() { div.style.opacity = "1"; }, 300);
+            });
+        }
+    });
 
     container.appendChild(div);
     container.scrollTop = container.scrollHeight;
@@ -3029,6 +3331,15 @@ function sendChatMessage() {
         timestamp: firebase.database.ServerValue.TIMESTAMP,
         type: "user"
     });
+
+    /* Update thread metadata with last message */
+    if (chatDb) {
+        chatDb.ref("threads/" + _currentThread + "/last_message").set({
+            text: text.substring(0, 80),
+            sender: CHAT_USER,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        });
+    }
 
     input.value = "";
     if (navigator.vibrate) navigator.vibrate(30);
