@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  CSS VARIABLES — Johnny's Design DNA                                      */
@@ -792,6 +793,405 @@ canvas { max-width: 100%; }
     .charts-grid { grid-template-columns: 1fr 1fr; }
     .metrics-grid { grid-template-columns: repeat(3, 1fr); }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  TASK CHECKBOXES                                                         */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.task-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--line);
+    border-radius: 6px;
+    flex-shrink: 0;
+    cursor: pointer;
+    position: relative;
+    background: var(--paper);
+    transition: all 0.2s ease;
+    align-self: center;
+    min-width: 22px;
+    min-height: 22px;
+}
+.task-checkbox:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+.task-checkbox:checked::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 12px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+.action-card.checked,
+.task-item.checked {
+    text-decoration: line-through;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+}
+.clear-completed-btn {
+    display: none;
+    margin: 8px 0;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font);
+    color: var(--ink-secondary);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    min-height: 44px;
+    transition: all 0.15s;
+}
+.clear-completed-btn.visible {
+    display: inline-block;
+}
+.clear-completed-btn:hover {
+    background: var(--accent-light);
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  COLLAPSIBLE SECTION TITLES                                              */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.section-title {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    min-height: 44px;
+    padding: 4px 0;
+}
+.section-title .section-chevron {
+    font-size: 10px;
+    transition: transform 0.2s ease;
+    color: var(--ink-secondary);
+    margin-left: auto;
+}
+.section-title.collapsed .section-chevron {
+    transform: rotate(-90deg);
+}
+.section-content {
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.2s ease;
+    max-height: 5000px;
+    opacity: 1;
+}
+.section-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  FAMILY DETAIL VIEW                                                      */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.family-card {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.family-card:active {
+    transform: scale(0.97);
+}
+.family-detail {
+    display: none;
+    padding: 8px 0 0;
+    margin-top: 8px;
+    border-top: 1px solid var(--line);
+    font-size: 11px;
+    color: var(--ink-secondary);
+    line-height: 1.5;
+}
+.family-card.expanded {
+    flex: 0 0 220px;
+}
+.family-card.expanded .family-detail {
+    display: block;
+}
+.family-detail-row {
+    padding: 2px 0;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  BOTTOM NAV BAR                                                          */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 56px;
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+    box-shadow: 0 -2px 12px rgba(40,36,30,0.08);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+[data-theme="dark"] .bottom-nav {
+    background: rgba(28,28,28,0.92);
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.3);
+}
+.nav-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 12px;
+    min-width: 48px;
+    min-height: 48px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: var(--font);
+    color: var(--ink-secondary);
+    font-size: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.15s;
+    justify-content: center;
+    border-radius: 8px;
+}
+.nav-tab:hover, .nav-tab.active {
+    color: var(--accent);
+}
+.nav-tab.active {
+    background: var(--accent-light);
+}
+.nav-tab-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+.nav-tab-label {
+    font-size: 10px;
+    line-height: 1;
+}
+@media (min-width: 769px) {
+    .bottom-nav { display: none; }
+}
+@media (max-width: 768px) {
+    .dashboard { padding-bottom: 140px; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  FLOATING ACTION BUTTON + COMMAND BAR                                    */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.fab {
+    position: fixed;
+    bottom: 72px;
+    right: 16px;
+    z-index: 110;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s, background 0.15s;
+}
+.fab:hover { transform: scale(1.08); }
+.fab:active { transform: scale(0.95); }
+.fab.open {
+    background: var(--red);
+    transform: rotate(45deg);
+}
+@media (min-width: 769px) {
+    .fab { bottom: 24px; right: 24px; }
+}
+
+.command-overlay {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 105;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+.command-overlay.open { display: flex; align-items: flex-end; }
+.command-panel {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    background: var(--paper);
+    border-radius: var(--radius) var(--radius) 0 0;
+    box-shadow: var(--shadow-lg);
+    padding: 16px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0));
+}
+.command-input-wrap {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.command-input {
+    flex: 1;
+    padding: 12px 14px;
+    font-size: 15px;
+    font-family: var(--font);
+    border: 2px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--ink);
+    outline: none;
+    min-height: 48px;
+}
+.command-input:focus { border-color: var(--accent); }
+.command-input::placeholder { color: var(--ink-secondary); }
+.command-hints {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+.command-hint {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: var(--accent-light);
+    color: var(--accent);
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-family: var(--font);
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+}
+.command-hint:hover { border-color: var(--accent); }
+
+/* Quick notes panel */
+.quick-notes {
+    margin-top: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+    font-size: 12px;
+}
+.quick-note-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--line);
+    gap: 8px;
+}
+.quick-note-item:last-child { border-bottom: none; }
+.quick-note-text { color: var(--ink); flex: 1; }
+.quick-note-time { color: var(--ink-secondary); font-size: 10px; flex-shrink: 0; white-space: nowrap; }
+.quick-note-del {
+    background: none;
+    border: none;
+    color: var(--red);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0 4px;
+    min-width: 28px;
+    min-height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Text highlight from find command */
+.cmd-highlight {
+    background: var(--amber-bg);
+    color: var(--ink);
+    outline: 2px solid var(--amber);
+    border-radius: 2px;
+    animation: highlight-pulse 0.6s ease-out;
+}
+@keyframes highlight-pulse {
+    0% { outline-width: 4px; }
+    100% { outline-width: 2px; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  TIME-OF-DAY BANNER                                                      */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.tod-banner {
+    padding: 12px 16px 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.tod-banner .tod-icon {
+    font-size: 20px;
+}
+.tod-banner .tod-text {
+    opacity: 0.85;
+}
+.tod-emphasis {
+    display: none;
+}
+.tod-emphasis.active {
+    display: block;
+    padding: 4px 16px 8px;
+    font-size: 12px;
+    color: var(--ink-secondary);
+    font-style: italic;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  CHART DRILL-DOWN                                                        */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.chart-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.chart-card:active {
+    transform: scale(0.98);
+}
+.chart-card.expanded {
+    grid-column: 1 / -1;
+    padding: 20px;
+}
+.chart-card.expanded canvas {
+    max-height: 350px;
+}
+.chart-expand-hint {
+    font-size: 10px;
+    color: var(--ink-secondary);
+    text-align: center;
+    margin-top: 6px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.chart-card:hover .chart-expand-hint {
+    opacity: 1;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  PHONE RESPONSIVE ADDITIONS                                              */
+/* ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+    .fab { bottom: 68px; right: 12px; width: 48px; height: 48px; font-size: 22px; }
+    .command-panel { border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+    .family-card.expanded { flex: 0 0 200px; }
+    .tod-banner { font-size: 13px; padding: 10px 12px 6px; }
+}
 </style>
 </head>
 <body>
@@ -802,7 +1202,7 @@ canvas { max-width: 100%; }
     <header class="dash-header">
         <div>
             <h1>Phoebe</h1>
-            <span class="date-label">March 23, 2026 at 05:43 PM</span>
+            <span class="date-label">March 23, 2026 at 05:52 PM</span>
         </div>
         <div class="header-right">
             <span class="stress-pill warning">
@@ -814,71 +1214,95 @@ canvas { max-width: 100%; }
         </div>
     </header>
 
+    <!-- ══════════════ TIME-OF-DAY BANNER ══════════════ -->
+    <div class="tod-banner" id="tod-banner">
+        <span class="tod-icon" id="tod-icon"></span>
+        <span class="tod-text" id="tod-text"></span>
+    </div>
+    <div class="tod-emphasis" id="tod-emphasis"></div>
+
     <!-- ══════════════ QUICK ACTIONS ══════════════ -->
-    <div class="section-title">Today's Priorities <span class="count-badge">8</span></div>
-    <div class="action-card urgent" data-index="0">
+    <div class="section-title" id="sec-priorities" onclick="toggleSectionCollapse(this)">Today's Priorities <span class="count-badge">8</span> <span class="section-chevron">&#9660;</span></div>
+    <div class="section-content" data-section="sec-priorities">
+    <div class="action-card urgent" data-index="action-0" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="action-0" onchange="handleCheck(this)" aria-label="Mark complete">
             <span class="action-badge">URGENT</span>
             <span class="action-text">Call Osamu Hashizu <a href="tel:7142582819">(714) 258-2819</a></span>
             <span class="action-meta">CPA fees ~$1K-$3K &middot; 1 phone call</span>
         </div>
-<div class="action-card high" data-index="1">
+<div class="action-card high" data-index="action-1" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="action-1" onchange="handleCheck(this)" aria-label="Mark complete">
             <span class="action-badge">HIGH</span>
             <span class="action-text">Pause distributions via Security Benefit</span>
             <span class="action-meta">Free &middot; 1 phone call</span>
         </div>
-<div class="action-card high" data-index="2">
+<div class="action-card high" data-index="action-2" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="action-2" onchange="handleCheck(this)" aria-label="Mark complete">
             <span class="action-badge">HIGH</span>
             <span class="action-text">Schedule Minako appointment via Kaiser</span>
             <span class="action-meta">Covered by Kaiser &middot; 1 call</span>
         </div>
-<div class="action-card high" data-index="3">
+<div class="action-card high" data-index="action-3" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="action-3" onchange="handleCheck(this)" aria-label="Mark complete">
             <span class="action-badge">HIGH</span>
             <span class="action-text">Schedule Minako pelvic ultrasound via Kaiser</span>
             <span class="action-meta">Covered by Kaiser &middot; 1 call</span>
         </div>
-<div class="action-card high" data-index="4">
+<div class="action-card high" data-index="action-4" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="action-4" onchange="handleCheck(this)" aria-label="Mark complete">
             <span class="action-badge">HIGH</span>
             <span class="action-text">Submit bond for mother's assets</span>
             <span class="action-meta">Bond premium ~$500-$1K &middot; 1-2 weeks</span>
         </div>
-<div class="action-card high" data-index="5">
+<div class="action-card high" data-index="action-5" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="action-5" onchange="handleCheck(this)" aria-label="Mark complete">
             <span class="action-badge">HIGH</span>
             <span class="action-text">Provide 7 expense amounts + 4 balances</span>
             <span class="action-meta">Free &middot; 20 min of Dan's time</span>
         </div>
-<div class="action-card high" data-index="6">
+<div class="action-card high" data-index="action-6" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="action-6" onchange="handleCheck(this)" aria-label="Mark complete">
             <span class="action-badge">HIGH</span>
             <span class="action-text">Pause IRA (requires conservatorship)</span>
             <span class="action-meta">Free &middot; Blocked</span>
         </div>
 
+    <button class="clear-completed-btn" id="clearCompleted" onclick="clearChecked()">Clear completed</button>
+    </div>
 
     <!-- ══════════════ ACTIVE TASKS ══════════════ -->
-    <div class="section-title">Active Tasks <span class="count-badge">4</span></div>
-    <div class="task-item critical">
+    <div class="section-title" id="sec-tasks" onclick="toggleSectionCollapse(this)">Active Tasks <span class="count-badge">4</span> <span class="section-chevron">&#9660;</span></div>
+    <div class="section-content" data-section="sec-tasks">
+    <div class="task-item critical" data-index="task-0" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="task-0" onchange="handleCheck(this)" aria-label="Mark complete">
             <span class="action-badge">URGENT</span>
             <span class="task-id">Bond</span>
             <span class="task-text">Print form from Danny Lee, BOTH Dan+Thomas sign same page, mail to Han &amp; Park. Conservatorship letters blocked until done.</span>
         </div>
-<div class="task-item critical">
+<div class="task-item critical" data-index="task-1" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="task-1" onchange="handleCheck(this)" aria-label="Mark complete">
             <span class="action-badge">URGENT</span>
             <span class="task-id">SNT</span>
             <span class="task-text">Schedule Mar 27 slot with Yujin Park. RCFE decision made — SNT is next.</span>
         </div>
-<div class="task-item critical">
+<div class="task-item critical" data-index="task-2" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="task-2" onchange="handleCheck(this)" aria-label="Mark complete">
             <span class="action-badge">URGENT</span>
             <span class="task-id">Solvang</span>
             <span class="task-text">Book Goleta Residence Inn + confirm Hannah+Thomas coverage. Trip departs Mar 30.</span>
         </div>
-<div class="task-item critical">
+<div class="task-item critical" data-index="task-3" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="task-3" onchange="handleCheck(this)" aria-label="Mark complete">
             <span class="action-badge">URGENT</span>
             <span class="task-id">Form</span>
             <span class="task-text">Call Osamu Hashizu (714) 258-2819 to confirm engagement. Due April 15 = 23 days.</span>
         </div>
 
+    </div>
 
     <!-- ══════════════ METRICS ══════════════ -->
-    <div class="section-title">Key Metrics</div>
+    <div class="section-title" id="sec-metrics" onclick="toggleSectionCollapse(this)">Key Metrics <span class="section-chevron">&#9660;</span></div>
+    <div class="section-content" data-section="sec-metrics">
     <div class="metrics-grid">
         <div class="metric-card">
             <span class="metric-label">Cash Flow</span>
@@ -896,35 +1320,44 @@ canvas { max-width: 100%; }
             <span class="metric-detail">Mother's assets</span>
         </div>
     </div>
+    </div>
 
     <!-- ══════════════ FAMILY ══════════════ -->
-    <div class="section-title">Family</div>
+    <div class="section-title" id="sec-family" onclick="toggleSectionCollapse(this)">Family <span class="section-chevron">&#9660;</span></div>
+    <div class="section-content" data-section="sec-family">
     <div class="family-scroll">
-        <div class="family-card">
+        <div class="family-card" onclick="toggleFamilyDetail(this)">
             <strong>Dan </strong>
             <span class="family-notes">Weight: 165 lbs, TKD goal 145 lbs, piriformis syndrome</span>
+            <div class="family-detail"><div class="family-detail-row">Weight: 165 lbs</div><div class="family-detail-row">TKD goal 145 lbs</div><div class="family-detail-row">piriformis syndrome</div></div>
         </div>
-<div class="family-card has-alert">
+<div class="family-card has-alert" onclick="toggleFamilyDetail(this)">
             <strong>Minako </strong>
             <span class="family-notes">2 overdue Kaiser appts, hand specialist needed</span>
+            <div class="family-detail"><div class="family-detail-row">2 overdue Kaiser appts</div><div class="family-detail-row">hand specialist needed</div></div>
         </div>
-<div class="family-card">
+<div class="family-card" onclick="toggleFamilyDetail(this)">
             <strong>Koko <span class="family-age">6</span></strong>
             <span class="family-notes">IEP needed, RCOC: swimming + TKD</span>
+            <div class="family-detail"><div class="family-detail-row">IEP needed</div><div class="family-detail-row">RCOC: swimming + TKD</div></div>
         </div>
-<div class="family-card">
+<div class="family-card" onclick="toggleFamilyDetail(this)">
             <strong>Issa <span class="family-age">4</span></strong>
             <span class="family-notes">Preschool at Cadenza</span>
+            <div class="family-detail"><div class="family-detail-row">Preschool at Cadenza</div></div>
         </div>
-<div class="family-card has-alert">
+<div class="family-card has-alert" onclick="toggleFamilyDetail(this)">
             <strong>Mother <span class="family-age">67</span></strong>
             <span class="family-notes">FAST 6e | 93.8 lbs | RCFE decision made</span>
+            <div class="family-detail"><div class="family-detail-row">FAST 6e</div><div class="family-detail-row">93.8 lbs</div><div class="family-detail-row">RCFE decision made</div></div>
         </div>
 
     </div>
+    </div>
 
     <!-- ══════════════ RCFE STATUS ══════════════ -->
-    <div class="section-title">RCFE Transition</div>
+    <div class="section-title" id="sec-rcfe" onclick="toggleSectionCollapse(this)">RCFE Transition <span class="section-chevron">&#9660;</span></div>
+    <div class="section-content" data-section="sec-rcfe">
     <div class="rcfe-card">
         <div class="rcfe-row"><span class="rcfe-label">Facility</span><span class="rcfe-value">Anaheim Villa</span></div>
         <div class="rcfe-row"><span class="rcfe-label">Status</span><span class="rcfe-value rcfe-active">Application in progress</span></div>
@@ -932,30 +1365,38 @@ canvas { max-width: 100%; }
         <div class="rcfe-row"><span class="rcfe-label">Next Step</span><span class="rcfe-value">Medication list from Dr. Chang</span></div>
         <div class="rcfe-row"><span class="rcfe-label">Timeline</span><span class="rcfe-value">~3 months (Korean-run, CalOptima)</span></div>
     </div>
+    </div>
 
     <!-- ══════════════ CHARTS ══════════════ -->
-    <div class="section-title">Intelligence</div>
+    <div class="section-title" id="sec-charts" onclick="toggleSectionCollapse(this)">Intelligence <span class="section-chevron">&#9660;</span></div>
+    <div class="section-content" data-section="sec-charts">
     <div class="charts-grid">
-        <div class="chart-card">
+        <div class="chart-card" onclick="toggleChartExpand(this)">
             <div class="chart-title">Stress Components</div>
             <canvas id="stressChart" height="200"></canvas>
+            <div class="chart-expand-hint">Tap to expand</div>
         </div>
-        <div class="chart-card">
+        <div class="chart-card" onclick="toggleChartExpand(this)">
             <div class="chart-title">Risk Clusters</div>
             <canvas id="riskChart" height="200"></canvas>
+            <div class="chart-expand-hint">Tap to expand</div>
         </div>
-        <div class="chart-card">
+        <div class="chart-card" onclick="toggleChartExpand(this)">
             <div class="chart-title">Income Breakdown</div>
             <canvas id="incomeChart" height="200"></canvas>
+            <div class="chart-expand-hint">Tap to expand</div>
         </div>
-        <div class="chart-card">
+        <div class="chart-card" onclick="toggleChartExpand(this)">
             <div class="chart-title">Risk Cluster Probability</div>
             <canvas id="probChart" height="200"></canvas>
+            <div class="chart-expand-hint">Tap to expand</div>
         </div>
+    </div>
     </div>
 
     <!-- ══════════════ RISK CLUSTERS ══════════════ -->
-    <div class="section-title">Risk Clusters <span class="count-badge">6</span></div>
+    <div class="section-title" id="sec-risks" onclick="toggleSectionCollapse(this)">Risk Clusters <span class="count-badge">6</span> <span class="section-chevron">&#9660;</span></div>
+    <div class="section-content" data-section="sec-risks">
     <div class="card">
         <div class="card-body">
             <div class="cluster-row">
@@ -1021,11 +1462,14 @@ canvas { max-width: 100%; }
 
         </div>
     </div>
+    </div>
 
     <!-- ══════════════ ANOMALIES ══════════════ -->
+    <div class="section-title" id="sec-anomalies" onclick="toggleSectionCollapse(this)">Anomalies <span class="count-badge">19</span> <span class="section-chevron">&#9660;</span></div>
+    <div class="section-content" data-section="sec-anomalies">
     <div class="card">
-        <button class="collapsible-toggle" onclick="toggleSection(this)" aria-expanded="false">
-            <span class="section-title" style="margin:0">Anomalies <span class="count-badge">19</span></span>
+        <button class="collapsible-toggle" onclick="event.stopPropagation(); toggleSection(this)" aria-expanded="false">
+            <span style="font-size:12px;font-weight:600;color:var(--ink)">Show details</span>
             <span class="chevron">&#9660;</span>
         </button>
         <div class="collapsible-body anomalies-list">
@@ -1149,9 +1593,11 @@ canvas { max-width: 100%; }
 </div>
         </div>
     </div>
+    </div>
 
     <!-- ══════════════ TABBED: DEADLINES + CALENDAR ══════════════ -->
-    <div class="section-title">Upcoming</div>
+    <div class="section-title" id="sec-calendar" onclick="toggleSectionCollapse(this)">Upcoming <span class="section-chevron">&#9660;</span></div>
+    <div class="section-content" data-section="sec-calendar">
     <div class="tab-bar">
         <button class="tab-btn active" onclick="switchTab(event, 'tab-deadlines')">Deadlines</button>
         <button class="tab-btn" onclick="switchTab(event, 'tab-calendar')">Calendar</button>
@@ -1266,66 +1712,14 @@ canvas { max-width: 100%; }
 
         </div>
         <div class="card-body tab-panel" id="tab-calendar">
-            <div class="timeline-item info">
-            <div class="timeline-date">2026-03-28</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Wedding Anniversary</span>
-            </div>
+            <div style="padding:12px;font-size:13px;color:var(--ink-secondary)">Calendar not connected. Run <code>reauth_expanded_scopes.py</code> to enable.</div>
         </div>
-<div class="timeline-item info">
-            <div class="timeline-date">2026-03-30</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Stay at The Hadsten Solvang, Tapestry Collection by Hilton</span>
-            </div>
-        </div>
-<div class="timeline-item info">
-            <div class="timeline-date">Apr 05, 08:00 AM</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Trim Hair</span>
-            </div>
-        </div>
-<div class="timeline-item info">
-            <div class="timeline-date">Apr 05, 09:00 AM</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Prepare tithe</span>
-            </div>
-        </div>
-<div class="timeline-item info">
-            <div class="timeline-date">Apr 10, 04:00 PM</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Updated invitation: Send koko video  @ Monthly from 4pm to 5pm on day 10 (PDT) (corp131@hotmail.com)</span>
-            </div>
-        </div>
-<div class="timeline-item info">
-            <div class="timeline-date">2026-04-11</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Grandpa Han's Birthday</span>
-            </div>
-        </div>
-<div class="timeline-item info">
-            <div class="timeline-date">2026-04-12</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Chris Eun's Birthday</span>
-            </div>
-        </div>
-<div class="timeline-item info">
-            <div class="timeline-date">Apr 12, 04:00 PM</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Vacuum all filters for air purifiers</span>
-            </div>
-        </div>
-<div class="timeline-item info">
-            <div class="timeline-date">2026-04-21</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Plan for Summer Trip</span>
-            </div>
-        </div>
-
-        </div>
+    </div>
     </div>
 
     <!-- ══════════════ GOALS ══════════════ -->
-    <div class="section-title">Goals</div>
+    <div class="section-title" id="sec-goals" onclick="toggleSectionCollapse(this)">Goals <span class="section-chevron">&#9660;</span></div>
+    <div class="section-content" data-section="sec-goals">
     <div class="goals-grid">
         <div class="goal-card active">
             <span class="goal-label">TKD Black Belt</span>
@@ -1359,31 +1753,77 @@ canvas { max-width: 100%; }
         </div>
 
     </div>
+    </div>
 
     <!-- ══════════════ SYSTEM STATS ══════════════ -->
-    <div class="section-title">System Stats</div>
+    <div class="section-title" id="sec-system" onclick="toggleSectionCollapse(this)">System Stats <span class="section-chevron">&#9660;</span></div>
+    <div class="section-content" data-section="sec-system">
     <div class="sysstat-grid">
         <div class="sysstat-item"><span class="sysstat-val">32</span><span class="sysstat-lbl">Agents</span></div>
         <div class="sysstat-item"><span class="sysstat-val">0</span><span class="sysstat-lbl">Skills</span></div>
-        <div class="sysstat-item"><span class="sysstat-val">76</span><span class="sysstat-lbl">Tools</span></div>
-        <div class="sysstat-item"><span class="sysstat-val">42</span><span class="sysstat-lbl">Timers</span></div>
+        <div class="sysstat-item"><span class="sysstat-val">77</span><span class="sysstat-lbl">Tools</span></div>
+        <div class="sysstat-item"><span class="sysstat-val">44</span><span class="sysstat-lbl">Timers</span></div>
         <div class="sysstat-item sysstat-wide"><span class="sysstat-val">45,000 / 363,000</span><span class="sysstat-lbl">Graph nodes / rels</span></div>
-        <div class="sysstat-item sysstat-wide"><span class="sysstat-val">2026-03-23 17:43</span><span class="sysstat-lbl">Last render</span></div>
+        <div class="sysstat-item sysstat-wide"><span class="sysstat-val">2026-03-23 17:52</span><span class="sysstat-lbl">Last render</span></div>
+    </div>
     </div>
 
     <!-- ══════════════ FOOTER ══════════════ -->
     <div class="dash-footer">
-        Generated March 23, 2026 at 05:43 PM<br>
+        Generated March 23, 2026 at 05:52 PM<br>
         Phoebe Life Intelligence &middot; <a href="../">Trip Planner</a>
     </div>
 
+</div>
+
+<!-- ══════════════ BOTTOM NAV BAR ══════════════ -->
+<nav class="bottom-nav" id="bottomNav">
+    <button class="nav-tab active" onclick="navTo('sec-priorities', this)" aria-label="Home">
+        <span class="nav-tab-icon">&#127968;</span>
+        <span class="nav-tab-label">Home</span>
+    </button>
+    <button class="nav-tab" onclick="navTo('sec-tasks', this)" aria-label="Tasks">
+        <span class="nav-tab-icon">&#9989;</span>
+        <span class="nav-tab-label">Tasks</span>
+    </button>
+    <button class="nav-tab" onclick="navTo('sec-calendar', this)" aria-label="Calendar">
+        <span class="nav-tab-icon">&#128197;</span>
+        <span class="nav-tab-label">Calendar</span>
+    </button>
+    <button class="nav-tab" onclick="navTo('sec-family', this)" aria-label="Family">
+        <span class="nav-tab-icon">&#128106;</span>
+        <span class="nav-tab-label">Family</span>
+    </button>
+    <button class="nav-tab" onclick="navTo('sec-charts', this)" aria-label="Charts">
+        <span class="nav-tab-icon">&#128202;</span>
+        <span class="nav-tab-label">Charts</span>
+    </button>
+</nav>
+
+<!-- ══════════════ FAB + COMMAND BAR ══════════════ -->
+<button class="fab" id="fab" onclick="toggleCommandBar()" aria-label="Quick command">&#9889;</button>
+
+<div class="command-overlay" id="commandOverlay" onclick="if(event.target===this) toggleCommandBar()">
+    <div class="command-panel">
+        <div class="command-input-wrap">
+            <input type="text" class="command-input" id="commandInput" placeholder="call, note:, find..." autocomplete="off" onkeydown="handleCommandKey(event)">
+        </div>
+        <div class="command-hints">
+            <button class="command-hint" onclick="setCommand('call ')">call [name]</button>
+            <button class="command-hint" onclick="setCommand('note: ')">note: [text]</button>
+            <button class="command-hint" onclick="setCommand('find ')">find [term]</button>
+        </div>
+        <div class="quick-notes" id="quickNotes"></div>
+    </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════════════ -->
 <!--  SCRIPTS                                                              -->
 <!-- ══════════════════════════════════════════════════════════════════════ -->
 <script>
-/* ── Theme Toggle ──────────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  1. THEME TOGGLE                                                         */
+/* ══════════════════════════════════════════════════════════════════════════ */
 function toggleTheme() {
     var html = document.documentElement;
     var isDark = html.getAttribute("data-theme") === "dark";
@@ -1399,7 +1839,106 @@ function toggleTheme() {
     } catch(e) {}
 })();
 
-/* ── Collapsible Sections ──────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  2. TASK CHECKBOXES                                                      */
+/* ══════════════════════════════════════════════════════════════════════════ */
+function getCheckedTasks() {
+    try { return JSON.parse(localStorage.getItem("phoebe_checked_tasks") || "[]"); } catch(e) { return []; }
+}
+function saveCheckedTasks(arr) {
+    try { localStorage.setItem("phoebe_checked_tasks", JSON.stringify(arr)); } catch(e) {}
+}
+function handleCheck(cb) {
+    var taskId = cb.getAttribute("data-task-id");
+    var card = cb.closest("[data-checkable]");
+    var checked = getCheckedTasks();
+    if (cb.checked) {
+        card.classList.add("checked");
+        if (checked.indexOf(taskId) === -1) checked.push(taskId);
+    } else {
+        card.classList.remove("checked");
+        checked = checked.filter(function(id) { return id !== taskId; });
+    }
+    saveCheckedTasks(checked);
+    updateClearBtn();
+}
+function restoreCheckedTasks() {
+    var checked = getCheckedTasks();
+    checked.forEach(function(taskId) {
+        var cb = document.querySelector('[data-task-id="' + taskId + '"]');
+        if (cb) {
+            cb.checked = true;
+            var card = cb.closest("[data-checkable]");
+            if (card) card.classList.add("checked");
+        }
+    });
+    updateClearBtn();
+}
+function clearChecked() {
+    saveCheckedTasks([]);
+    document.querySelectorAll(".task-checkbox").forEach(function(cb) {
+        cb.checked = false;
+        var card = cb.closest("[data-checkable]");
+        if (card) card.classList.remove("checked");
+    });
+    updateClearBtn();
+}
+function updateClearBtn() {
+    var btn = document.getElementById("clearCompleted");
+    if (btn) {
+        var hasChecked = getCheckedTasks().length > 0;
+        btn.classList.toggle("visible", hasChecked);
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  3. COLLAPSIBLE SECTION TITLES                                           */
+/* ══════════════════════════════════════════════════════════════════════════ */
+function getCollapsedSections() {
+    try { return JSON.parse(localStorage.getItem("phoebe_collapsed_sections") || "[]"); } catch(e) { return []; }
+}
+function saveCollapsedSections(arr) {
+    try { localStorage.setItem("phoebe_collapsed_sections", JSON.stringify(arr)); } catch(e) {}
+}
+function toggleSectionCollapse(titleEl) {
+    var sectionId = titleEl.id;
+    var contentEl = document.querySelector('[data-section="' + sectionId + '"]');
+    if (!contentEl) return;
+    var isCollapsed = titleEl.classList.contains("collapsed");
+    var collapsed = getCollapsedSections();
+    if (isCollapsed) {
+        titleEl.classList.remove("collapsed");
+        contentEl.classList.remove("collapsed");
+        collapsed = collapsed.filter(function(id) { return id !== sectionId; });
+    } else {
+        titleEl.classList.add("collapsed");
+        contentEl.classList.add("collapsed");
+        if (collapsed.indexOf(sectionId) === -1) collapsed.push(sectionId);
+    }
+    saveCollapsedSections(collapsed);
+}
+function restoreCollapsedSections() {
+    var collapsed = getCollapsedSections();
+    collapsed.forEach(function(sectionId) {
+        var titleEl = document.getElementById(sectionId);
+        var contentEl = document.querySelector('[data-section="' + sectionId + '"]');
+        if (titleEl && contentEl) {
+            titleEl.classList.add("collapsed");
+            contentEl.classList.add("collapsed");
+        }
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  4. FAMILY DETAIL VIEW                                                   */
+/* ══════════════════════════════════════════════════════════════════════════ */
+function toggleFamilyDetail(card) {
+    card.classList.toggle("expanded");
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  5. COLLAPSIBLE CARD SECTIONS (anomalies)                                */
+/* ══════════════════════════════════════════════════════════════════════════ */
 function toggleSection(btn) {
     var body = btn.nextElementSibling;
     var expanded = btn.getAttribute("aria-expanded") === "true";
@@ -1429,15 +1968,278 @@ function switchTab(e, id) {
     document.getElementById(id).classList.add("active");
 }
 
-/* ── Charts ────────────────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  6. BOTTOM NAVIGATION                                                    */
+/* ══════════════════════════════════════════════════════════════════════════ */
+function navTo(sectionId, btn) {
+    // Ensure section is expanded first
+    var titleEl = document.getElementById(sectionId);
+    var contentEl = document.querySelector('[data-section="' + sectionId + '"]');
+    if (titleEl && titleEl.classList.contains("collapsed")) {
+        titleEl.classList.remove("collapsed");
+        if (contentEl) contentEl.classList.remove("collapsed");
+        var collapsed = getCollapsedSections().filter(function(id) { return id !== sectionId; });
+        saveCollapsedSections(collapsed);
+    }
+    // Scroll to section
+    if (sectionId === "sec-priorities") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (titleEl) {
+        titleEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    // Update active state
+    document.querySelectorAll(".nav-tab").forEach(function(t) { t.classList.remove("active"); });
+    if (btn) btn.classList.add("active");
+}
+
+// Auto-highlight bottom nav on scroll
+var _navSections = ["sec-priorities","sec-tasks","sec-calendar","sec-family","sec-charts"];
+var _navDebounce = null;
+window.addEventListener("scroll", function() {
+    clearTimeout(_navDebounce);
+    _navDebounce = setTimeout(function() {
+        var scrollY = window.scrollY + 120;
+        var activeIdx = 0;
+        _navSections.forEach(function(id, idx) {
+            var el = document.getElementById(id);
+            if (el && el.offsetTop <= scrollY) activeIdx = idx;
+        });
+        var tabs = document.querySelectorAll(".nav-tab");
+        tabs.forEach(function(t, i) {
+            t.classList.toggle("active", i === activeIdx);
+        });
+    }, 80);
+});
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  7. COMMAND BAR (FAB)                                                    */
+/* ══════════════════════════════════════════════════════════════════════════ */
+function toggleCommandBar() {
+    var overlay = document.getElementById("commandOverlay");
+    var fab = document.getElementById("fab");
+    var isOpen = overlay.classList.contains("open");
+    overlay.classList.toggle("open");
+    fab.classList.toggle("open");
+    if (!isOpen) {
+        var input = document.getElementById("commandInput");
+        setTimeout(function() { input.focus(); }, 100);
+        renderQuickNotes();
+    }
+}
+function setCommand(text) {
+    var input = document.getElementById("commandInput");
+    input.value = text;
+    input.focus();
+}
+function handleCommandKey(e) {
+    if (e.key === "Enter") {
+        executeCommand(e.target.value.trim());
+        e.target.value = "";
+    } else if (e.key === "Escape") {
+        toggleCommandBar();
+    }
+}
+function executeCommand(cmd) {
+    if (!cmd) return;
+    var lower = cmd.toLowerCase();
+
+    // call [name] — find phone number
+    if (lower.startsWith("call ")) {
+        var name = cmd.substring(5).trim();
+        var links = document.querySelectorAll('a[href^="tel:"]');
+        var found = false;
+        links.forEach(function(a) {
+            if (a.textContent.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+                a.closest(".family-card, .rcfe-card, .action-card, .anomaly-item") &&
+                a.closest(".family-card, .rcfe-card, .action-card, .anomaly-item").textContent.toLowerCase().indexOf(name.toLowerCase()) !== -1) {
+                if (!found) {
+                    window.location.href = a.href;
+                    found = true;
+                }
+            }
+        });
+        if (!found) {
+            alert("No phone number found for: " + name);
+        }
+        toggleCommandBar();
+        return;
+    }
+
+    // note: [text] — save a quick note
+    if (lower.startsWith("note:") || lower.startsWith("note ")) {
+        var noteText = cmd.replace(/^note[: ]*/i, "").trim();
+        if (noteText) {
+            var notes = getQuickNotes();
+            notes.unshift({ text: noteText, time: new Date().toISOString() });
+            if (notes.length > 50) notes = notes.slice(0, 50);
+            saveQuickNotes(notes);
+            renderQuickNotes();
+        }
+        return;
+    }
+
+    // find [term] — highlight text on page
+    if (lower.startsWith("find ")) {
+        var term = cmd.substring(5).trim();
+        clearHighlights();
+        if (term.length < 2) return;
+        highlightText(document.querySelector(".dashboard"), term);
+        toggleCommandBar();
+        // Scroll to first highlight
+        var first = document.querySelector(".cmd-highlight");
+        if (first) first.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+    }
+
+    // Unknown command
+    alert("Commands: call [name], note: [text], find [term]");
+}
+
+/* Quick notes localStorage */
+function getQuickNotes() {
+    try { return JSON.parse(localStorage.getItem("phoebe_quick_notes") || "[]"); } catch(e) { return []; }
+}
+function saveQuickNotes(arr) {
+    try { localStorage.setItem("phoebe_quick_notes", JSON.stringify(arr)); } catch(e) {}
+}
+function renderQuickNotes() {
+    var container = document.getElementById("quickNotes");
+    if (!container) return;
+    var notes = getQuickNotes();
+    if (notes.length === 0) {
+        container.innerHTML = "";
+        return;
+    }
+    var html = "";
+    notes.slice(0, 10).forEach(function(n, i) {
+        var d = new Date(n.time);
+        var timeStr = d.toLocaleDateString() + " " + d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+        html += '<div class="quick-note-item">' +
+            '<span class="quick-note-text">' + escHtml(n.text) + '</span>' +
+            '<span class="quick-note-time">' + timeStr + '</span>' +
+            '<button class="quick-note-del" onclick="deleteNote(' + i + ')" aria-label="Delete note">&times;</button>' +
+            '</div>';
+    });
+    container.innerHTML = html;
+}
+function deleteNote(idx) {
+    var notes = getQuickNotes();
+    notes.splice(idx, 1);
+    saveQuickNotes(notes);
+    renderQuickNotes();
+}
+function escHtml(s) {
+    var d = document.createElement("div");
+    d.textContent = s;
+    return d.innerHTML;
+}
+
+/* Text highlighting for find command */
+function highlightText(root, term) {
+    if (!root) return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+    var matches = [];
+    while (walker.nextNode()) {
+        var node = walker.currentNode;
+        var idx = node.textContent.toLowerCase().indexOf(term.toLowerCase());
+        if (idx !== -1) matches.push({ node: node, index: idx, length: term.length });
+    }
+    // Process in reverse to avoid offset issues
+    matches.reverse().forEach(function(m) {
+        var range = document.createRange();
+        range.setStart(m.node, m.index);
+        range.setEnd(m.node, m.index + m.length);
+        var span = document.createElement("span");
+        span.className = "cmd-highlight";
+        range.surroundContents(span);
+    });
+}
+function clearHighlights() {
+    document.querySelectorAll(".cmd-highlight").forEach(function(el) {
+        var parent = el.parentNode;
+        parent.replaceChild(document.createTextNode(el.textContent), el);
+        parent.normalize();
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  8. TIME-OF-DAY CONTEXT                                                  */
+/* ══════════════════════════════════════════════════════════════════════════ */
+function setTimeOfDay() {
+    var hour = new Date().getHours();
+    var banner = document.getElementById("tod-banner");
+    var icon = document.getElementById("tod-icon");
+    var text = document.getElementById("tod-text");
+    var emphasis = document.getElementById("tod-emphasis");
+    if (!banner || !icon || !text) return;
+
+    if (hour >= 5 && hour < 11) {
+        icon.textContent = "\u2600\uFE0F";
+        text.textContent = "Good morning, Dan";
+        if (emphasis) { emphasis.textContent = "Review today's priorities and action items"; emphasis.classList.add("active"); }
+    } else if (hour >= 11 && hour < 17) {
+        icon.textContent = "\u26C5";
+        text.textContent = "Good afternoon, Dan";
+        if (emphasis) { emphasis.textContent = "Focus on tasks and upcoming calendar"; emphasis.classList.add("active"); }
+    } else if (hour >= 17 && hour < 22) {
+        icon.textContent = "\uD83C\uDF05";
+        text.textContent = "Good evening, Dan";
+        if (emphasis) { emphasis.textContent = "Check in on family and personal goals"; emphasis.classList.add("active"); }
+    } else {
+        icon.textContent = "\uD83C\uDF19";
+        text.textContent = "Goodnight, Dan";
+        if (emphasis) { emphasis.textContent = "Review tomorrow's calendar"; emphasis.classList.add("active"); }
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  9. CHART DRILL-DOWN                                                     */
+/* ══════════════════════════════════════════════════════════════════════════ */
+function toggleChartExpand(card) {
+    var wasExpanded = card.classList.contains("expanded");
+    // Close all expanded charts first
+    document.querySelectorAll(".chart-card.expanded").forEach(function(c) {
+        c.classList.remove("expanded");
+    });
+    if (!wasExpanded) {
+        card.classList.add("expanded");
+        card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+    // Rebuild charts to resize properly
+    setTimeout(function() { initCharts(); }, 100);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  10. CHARTS                                                              */
+/* ══════════════════════════════════════════════════════════════════════════ */
+// Register datalabels plugin
+if (typeof ChartDataLabels !== "undefined") {
+    Chart.register(ChartDataLabels);
+}
+
 var charts = {};
 function initCharts() {
     var isDark = document.documentElement.getAttribute("data-theme") === "dark";
     var textColor = isDark ? "#a0a0a0" : "#5b6573";
     var gridColor = isDark ? "#2e2e2e" : "#ddd3c7";
+    var anyExpanded = document.querySelector(".chart-card.expanded") !== null;
 
     // Destroy existing
     Object.values(charts).forEach(function(c) { if (c) c.destroy(); });
+
+    // Datalabels config — only show when chart is expanded
+    var dlOff = { datalabels: { display: false } };
+    var dlOn = { datalabels: {
+        display: true,
+        color: textColor,
+        font: { size: 11, weight: "bold" },
+        formatter: function(value) { return Math.round(value); }
+    } };
+    function dlForCard(canvasId) {
+        if (!anyExpanded) return dlOff;
+        var card = document.getElementById(canvasId).closest(".chart-card");
+        return card && card.classList.contains("expanded") ? dlOn : dlOff;
+    }
 
     // Stress Components — Radar
     var ctx1 = document.getElementById("stressChart").getContext("2d");
@@ -1458,7 +2260,7 @@ function initCharts() {
         options: {
             responsive: true,
             maintainAspectRatio: true,
-            plugins: { legend: { display: false } },
+            plugins: Object.assign({ legend: { display: false } }, dlForCard("stressChart")),
             scales: {
                 r: {
                     beginAtZero: true,
@@ -1488,7 +2290,7 @@ function initCharts() {
             indexAxis: "y",
             responsive: true,
             maintainAspectRatio: true,
-            plugins: { legend: { display: false } },
+            plugins: Object.assign({ legend: { display: false } }, dlForCard("riskChart")),
             scales: {
                 x: { beginAtZero: true, max: 100, ticks: { color: textColor }, grid: { color: gridColor } },
                 y: { ticks: { color: textColor, font: { size: 10 } }, grid: { display: false } },
@@ -1498,6 +2300,10 @@ function initCharts() {
 
     // Income Donut
     var ctx3 = document.getElementById("incomeChart").getContext("2d");
+    var dlIncome = dlForCard("incomeChart");
+    if (dlIncome.datalabels && dlIncome.datalabels.display) {
+        dlIncome.datalabels.formatter = function(value) { return "$" + Math.round(value).toLocaleString(); };
+    }
     charts.income = new Chart(ctx3, {
         type: "doughnut",
         data: {
@@ -1518,18 +2324,22 @@ function initCharts() {
         options: {
             responsive: true,
             maintainAspectRatio: true,
-            plugins: {
+            plugins: Object.assign({
                 legend: {
                     position: "bottom",
                     labels: { color: textColor, font: { size: 10 }, boxWidth: 10, padding: 8 },
                 },
-            },
+            }, dlIncome),
             cutout: "65%",
         }
     });
 
     // Risk Probability — Polar Area
     var ctx4 = document.getElementById("probChart").getContext("2d");
+    var dlProb = dlForCard("probChart");
+    if (dlProb.datalabels && dlProb.datalabels.display) {
+        dlProb.datalabels.formatter = function(value) { return value + "%"; };
+    }
     charts.prob = new Chart(ctx4, {
         type: "polarArea",
         data: {
@@ -1550,12 +2360,12 @@ function initCharts() {
         options: {
             responsive: true,
             maintainAspectRatio: true,
-            plugins: {
+            plugins: Object.assign({
                 legend: {
                     position: "bottom",
                     labels: { color: textColor, font: { size: 9 }, boxWidth: 10, padding: 6 },
                 },
-            },
+            }, dlProb),
             scales: {
                 r: {
                     beginAtZero: true,
@@ -1568,8 +2378,15 @@ function initCharts() {
     });
 }
 
-// Initialize charts on load
-document.addEventListener("DOMContentLoaded", initCharts);
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  INIT ON DOM READY                                                       */
+/* ══════════════════════════════════════════════════════════════════════════ */
+document.addEventListener("DOMContentLoaded", function() {
+    initCharts();
+    restoreCheckedTasks();
+    restoreCollapsedSections();
+    setTimeOfDay();
+});
 
 /* ── PWA Service Worker ────────────────────────────────────────────────── */
 if ("serviceWorker" in navigator) {
