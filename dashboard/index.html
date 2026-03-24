@@ -13,6 +13,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
 <style>
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  CSS VARIABLES — Johnny's Design DNA                                      */
@@ -1192,6 +1194,130 @@ canvas { max-width: 100%; }
     .family-card.expanded { flex: 0 0 200px; }
     .tod-banner { font-size: 13px; padding: 10px 12px 6px; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  PROGRESS RINGS                                                          */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.metric-ring-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.metric-ring-wrap svg {
+    display: block;
+}
+.metric-ring-wrap .metric-ring-value {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.1;
+    text-align: center;
+    pointer-events: none;
+}
+@media (max-width: 480px) {
+    .metric-ring-wrap svg { width: 56px; height: 56px; }
+    .metric-ring-wrap .metric-ring-value { font-size: 12px; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  SWIPE TO DISMISS / SNOOZE                                               */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.anomaly-item {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;
+}
+.anomaly-item.swiping {
+    transition: none;
+}
+.anomaly-item.swipe-dismiss {
+    transform: translateX(-120%);
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    overflow: hidden;
+    transition: transform 0.3s ease, opacity 0.3s ease, max-height 0.3s ease 0.1s, padding 0.3s ease 0.1s;
+}
+.anomaly-item.swipe-snooze {
+    transform: translateX(120%);
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    overflow: hidden;
+    transition: transform 0.3s ease, opacity 0.3s ease, max-height 0.3s ease 0.1s, padding 0.3s ease 0.1s;
+}
+.anomaly-swipe-counter {
+    font-size: 11px;
+    color: var(--ink-secondary);
+    padding: 6px 0 2px;
+    text-align: center;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  UNDO TOAST                                                              */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.undo-toast {
+    position: fixed;
+    bottom: 72px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    z-index: 120;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 18px;
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--font);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+.undo-toast.visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+.undo-toast-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: var(--font);
+    cursor: pointer;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+}
+.undo-toast-btn:hover { background: var(--red); }
+.undo-toast-countdown {
+    display: inline-block;
+    min-width: 16px;
+    text-align: center;
+}
+@media (max-width: 768px) {
+    .undo-toast { bottom: 68px; font-size: 12px; padding: 8px 14px; }
+}
 </style>
 </head>
 <body>
@@ -1202,7 +1328,7 @@ canvas { max-width: 100%; }
     <header class="dash-header">
         <div>
             <h1>Phoebe</h1>
-            <span class="date-label">March 23, 2026 at 05:52 PM</span>
+            <span class="date-label">March 23, 2026 at 06:08 PM</span>
         </div>
         <div class="header-right">
             <span class="stress-pill warning">
@@ -1306,18 +1432,42 @@ canvas { max-width: 100%; }
     <div class="metrics-grid">
         <div class="metric-card">
             <span class="metric-label">Cash Flow</span>
-            <span class="metric-value positive">+$6,502/mo</span>
+            <div class="metric-ring-wrap">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--line)" stroke-width="4"/>
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--green)" stroke-width="4"
+                    stroke-dasharray="175.93" stroke-dashoffset="88.3"
+                    stroke-linecap="round" transform="rotate(-90 32 32)"/>
+            </svg>
+            <span class="metric-ring-value"><span class="metric-value positive" style="font-size:inherit">+${abs(surplus):,.0f}</span></span>
+        </div>
             <span class="metric-detail">Income $13,059</span>
         </div>
         <div class="metric-card">
             <span class="metric-label">Care Stage</span>
-            <span class="metric-value warning">FAST 6e</span>
-            <span class="metric-detail">Hannah only</span>
+            <div class="metric-ring-wrap">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--line)" stroke-width="4"/>
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--amber)" stroke-width="4"
+                    stroke-dasharray="175.93" stroke-dashoffset="124.9"
+                    stroke-linecap="round" transform="rotate(-90 32 32)"/>
+            </svg>
+            <span class="metric-ring-value"><span class="metric-value warning" style="font-size:inherit">2/7</span></span>
+        </div>
+            <span class="metric-detail">FAST 6e &middot; RCFE 29%</span>
         </div>
         <div class="metric-card">
             <span class="metric-label">Runway</span>
-            <span class="metric-value positive">38 mo</span>
-            <span class="metric-detail">Mother's assets</span>
+            <div class="metric-ring-wrap">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--line)" stroke-width="4"/>
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--green)" stroke-width="4"
+                    stroke-dasharray="175.93" stroke-dashoffset="65.1"
+                    stroke-linecap="round" transform="rotate(-90 32 32)"/>
+            </svg>
+            <span class="metric-ring-value"><span class="metric-value positive" style="font-size:inherit">38mo</span></span>
+        </div>
+            <span class="metric-detail">of 60 month target</span>
         </div>
     </div>
     </div>
@@ -1473,31 +1623,31 @@ canvas { max-width: 100%; }
             <span class="chevron">&#9660;</span>
         </button>
         <div class="collapsible-body anomalies-list">
-            <div class="anomaly-item warning">
+            <div class="anomaly-item warning" data-anomaly-id="anomaly-0">
             <span class="anomaly-severity">WARNING</span>
             <span class="anomaly-domain">calendar</span>
             <span class="anomaly-title">TKD Black Belt test ~7 months away — ZERO training events in 30 days</span>
             <span class="anomaly-action">Schedule TKD classes immediately. Minimum 3x/week to build toward black belt test. Contact dojang.</span>
         </div>
-<div class="anomaly-item warning">
+<div class="anomaly-item warning" data-anomaly-id="anomaly-1">
             <span class="anomaly-severity">WARNING</span>
             <span class="anomaly-domain">care</span>
             <span class="anomaly-title">Anaheim Villa RCFE application follow-up — due in 23 days (2026-04-15)</span>
             <span class="anomaly-action">Call Yumi Kim <a href="tel:7143089800">(714) 308-9800</a>. Get current status.</span>
         </div>
-<div class="anomaly-item warning">
+<div class="anomaly-item warning" data-anomaly-id="anomaly-2">
             <span class="anomaly-severity">WARNING</span>
             <span class="anomaly-domain">health</span>
             <span class="anomaly-title">Missed medication pattern detected</span>
             <span class="anomaly-action">Review medication adherence pattern. If systemic, discuss with psychiatrist.</span>
         </div>
-<div class="anomaly-item warning">
+<div class="anomaly-item warning" data-anomaly-id="anomaly-3">
             <span class="anomaly-severity">WARNING</span>
             <span class="anomaly-domain">calendar</span>
             <span class="anomaly-title">Weight Loss: ZERO calendar events in 30 days</span>
             <span class="anomaly-action">Schedule recurring time blocks for 'Weight Loss'. This goal is invisible in your calendar.</span>
         </div>
-<div class="anomaly-item warning">
+<div class="anomaly-item warning" data-anomaly-id="anomaly-4">
             <span class="anomaly-severity">WARNING</span>
             <span class="anomaly-domain">finances</span>
             <span class="anomaly-title">Financial balance facts (6 items) last updated 265+ days ago</span>
@@ -1506,85 +1656,85 @@ canvas { max-width: 100%; }
 <button class="show-more-btn" onclick="toggleAnomalyExpand(this)">
             Show all 19 anomalies
         </button>
-        <div id="anomaly-extra" style="display:none"><div class="anomaly-item warning">
+        <div id="anomaly-extra" style="display:none"><div class="anomaly-item warning" data-anomaly-id="anomaly-5">
             <span class="anomaly-severity">WARNING</span>
             <span class="anomaly-domain">health</span>
             <span class="anomaly-title">Dan's weight (165 lbs) — no downward progress toward 145 lb target</span>
             <span class="anomaly-action">Log current weight. If still 165+, flag as goal deviation. Schedule gym 3x/week minimum.</span>
         </div>
-<div class="anomaly-item warning">
+<div class="anomaly-item warning" data-anomaly-id="anomaly-6">
             <span class="anomaly-severity">WARNING</span>
             <span class="anomaly-domain">relationships</span>
             <span class="anomaly-title">No recent email contact with Hannah in 30+ days</span>
             <span class="anomaly-action">Reach out to Hannah. Primary caregiver — should have regular contact.</span>
         </div>
-<div class="anomaly-item info">
+<div class="anomaly-item info" data-anomaly-id="anomaly-7">
             <span class="anomaly-severity">INFO</span>
             <span class="anomaly-domain">health</span>
             <span class="anomaly-title">Medical follow-up status unclear: Eustachian tube balloon dilation (Dr. Keschner)</span>
             <span class="anomaly-action">Check if ET balloon dilation was scheduled and completed. If not, schedule with Dr. Keschner.</span>
         </div>
-<div class="anomaly-item info">
+<div class="anomaly-item info" data-anomaly-id="anomaly-8">
             <span class="anomaly-severity">INFO</span>
             <span class="anomaly-domain">calendar</span>
             <span class="anomaly-title">Retire at 55 / Business Exit: ZERO calendar events in 30 days</span>
             <span class="anomaly-action">Schedule recurring time blocks for 'Retire at 55 / Business Exit'. This goal is invisible in your calendar.</span>
         </div>
-<div class="anomaly-item info">
+<div class="anomaly-item info" data-anomaly-id="anomaly-9">
             <span class="anomaly-severity">INFO</span>
             <span class="anomaly-domain">care</span>
             <span class="anomaly-title">Single active caregiver (Hannah) — backup: Angela Seo</span>
             <span class="anomaly-action">Verify backup availability monthly. Consider recruiting a second backup.</span>
         </div>
-<div class="anomaly-item info">
+<div class="anomaly-item info" data-anomaly-id="anomaly-10">
             <span class="anomaly-severity">INFO</span>
             <span class="anomaly-domain">health</span>
             <span class="anomaly-title">Minako pelvic ultrasound — due in 70 days (2026-06-01)</span>
             <span class="anomaly-action">Schedule Kaiser appointment immediately. GI scheduling: 714-279-4200.</span>
         </div>
-<div class="anomaly-item info">
+<div class="anomaly-item info" data-anomaly-id="anomaly-11">
             <span class="anomaly-severity">INFO</span>
             <span class="anomaly-domain">health</span>
             <span class="anomaly-title">Minako echocardiogram — due in 38 days (2026-04-30)</span>
             <span class="anomaly-action">Schedule Kaiser cardiology appointment. Should have been done 10+ months ago.</span>
         </div>
-<div class="anomaly-item info">
+<div class="anomaly-item info" data-anomaly-id="anomaly-12">
             <span class="anomaly-severity">INFO</span>
             <span class="anomaly-domain">care</span>
             <span class="anomaly-title">IHSS reassessment request — mother mobility decline — due in 53 days (2026-05-15)</span>
             <span class="anomaly-action">Request IHSS reassessment through county social worker.</span>
         </div>
-<div class="anomaly-item info">
+<div class="anomaly-item info" data-anomaly-id="anomaly-13">
             <span class="anomaly-severity">INFO</span>
             <span class="anomaly-domain">health</span>
             <span class="anomaly-title">Medical follow-up status unclear: GI follow-up post-colonoscopy (Dr. Niho)</span>
             <span class="anomaly-action">Confirm if GI follow-up was scheduled and attended after Jan 30, 2026 colonoscopy.</span>
         </div>
-<div class="anomaly-item info">
+<div class="anomaly-item info" data-anomaly-id="anomaly-14">
             <span class="anomaly-severity">INFO</span>
             <span class="anomaly-domain">health</span>
             <span class="anomaly-title">Medical follow-up status unclear: Fatty liver weight loss follow-up</span>
             <span class="anomaly-action">Schedule liver function follow-up if weight loss goal not achieved (165 → target 145 lbs).</span>
         </div>
-<div class="anomaly-item info">
+<div class="anomaly-item info" data-anomaly-id="anomaly-15">
             <span class="anomaly-severity">INFO</span>
             <span class="anomaly-domain">relationships</span>
             <span class="anomaly-title">No recent email contact with Eddie in 30+ days</span>
             <span class="anomaly-action">Reach out to Eddie. Close friend since 1999.</span>
         </div>
-<div class="anomaly-item info">
+<div class="anomaly-item info" data-anomaly-id="anomaly-16">
             <span class="anomaly-severity">INFO</span>
             <span class="anomaly-domain">relationships</span>
             <span class="anomaly-title">No recent email contact with Calvin in 30+ days</span>
             <span class="anomaly-action">Reach out to Calvin. Close friend, yokly colleague.</span>
         </div>
-<div class="anomaly-item info">
+<div class="anomaly-item info" data-anomaly-id="anomaly-17">
             <span class="anomaly-severity">INFO</span>
             <span class="anomaly-domain">relationships</span>
             <span class="anomaly-title">No recent email contact with Angela Seo in 30+ days</span>
             <span class="anomaly-action">Reach out to Angela Seo. Backup caregiver.</span>
         </div>
-<div class="anomaly-item info">
+<div class="anomaly-item info" data-anomaly-id="anomaly-18">
             <span class="anomaly-severity">INFO</span>
             <span class="anomaly-domain">relationships</span>
             <span class="anomaly-title">No recent email contact with Pastor Samuel in 30+ days</span>
@@ -1593,6 +1743,7 @@ canvas { max-width: 100%; }
 </div>
         </div>
     </div>
+    <div class="anomaly-swipe-counter" id="anomalySwipeCounter" style="display:none"></div>
     </div>
 
     <!-- ══════════════ TABBED: DEADLINES + CALENDAR ══════════════ -->
@@ -1759,18 +1910,18 @@ canvas { max-width: 100%; }
     <div class="section-title" id="sec-system" onclick="toggleSectionCollapse(this)">System Stats <span class="section-chevron">&#9660;</span></div>
     <div class="section-content" data-section="sec-system">
     <div class="sysstat-grid">
-        <div class="sysstat-item"><span class="sysstat-val">32</span><span class="sysstat-lbl">Agents</span></div>
+        <div class="sysstat-item"><span class="sysstat-val">36</span><span class="sysstat-lbl">Agents</span></div>
         <div class="sysstat-item"><span class="sysstat-val">0</span><span class="sysstat-lbl">Skills</span></div>
         <div class="sysstat-item"><span class="sysstat-val">77</span><span class="sysstat-lbl">Tools</span></div>
         <div class="sysstat-item"><span class="sysstat-val">44</span><span class="sysstat-lbl">Timers</span></div>
         <div class="sysstat-item sysstat-wide"><span class="sysstat-val">45,000 / 363,000</span><span class="sysstat-lbl">Graph nodes / rels</span></div>
-        <div class="sysstat-item sysstat-wide"><span class="sysstat-val">2026-03-23 17:52</span><span class="sysstat-lbl">Last render</span></div>
+        <div class="sysstat-item sysstat-wide"><span class="sysstat-val">2026-03-23 18:08</span><span class="sysstat-lbl">Last render</span></div>
     </div>
     </div>
 
     <!-- ══════════════ FOOTER ══════════════ -->
     <div class="dash-footer">
-        Generated March 23, 2026 at 05:52 PM<br>
+        Generated March 23, 2026 at 06:08 PM<br>
         Phoebe Life Intelligence &middot; <a href="../">Trip Planner</a>
     </div>
 
@@ -1817,10 +1968,44 @@ canvas { max-width: 100%; }
     </div>
 </div>
 
+<!-- ══════════════ UNDO TOAST ══════════════ -->
+<div class="undo-toast" id="undoToast">
+    <span id="undoToastText">1 task completed.</span>
+    <button class="undo-toast-btn" onclick="undoLastCheck()">Undo <span class="undo-toast-countdown" id="undoCountdown">5</span></button>
+</div>
+
 <!-- ══════════════════════════════════════════════════════════════════════ -->
 <!--  SCRIPTS                                                              -->
 <!-- ══════════════════════════════════════════════════════════════════════ -->
 <script>
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  0. INDEXEDDB STORAGE (idb-keyval with localStorage fallback)            */
+/* ══════════════════════════════════════════════════════════════════════════ */
+var _idb = (typeof idbKeyval !== "undefined") ? idbKeyval : null;
+
+/* Async get with localStorage fallback */
+function storageGet(key, fallback) {
+    if (_idb) {
+        return _idb.get(key).then(function(v) { return v !== undefined ? v : fallback; }).catch(function() {
+            try { var v = localStorage.getItem(key); return v !== null ? JSON.parse(v) : fallback; } catch(e) { return fallback; }
+        });
+    }
+    return Promise.resolve(function() {
+        try { var v = localStorage.getItem(key); return v !== null ? JSON.parse(v) : fallback; } catch(e) { return fallback; }
+    }());
+}
+
+/* Async set with localStorage fallback */
+function storageSet(key, value) {
+    if (_idb) {
+        return _idb.set(key, value).catch(function() {
+            try { localStorage.setItem(key, JSON.stringify(value)); } catch(e) {}
+        });
+    }
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch(e) {}
+    return Promise.resolve();
+}
+
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  1. THEME TOGGLE                                                         */
 /* ══════════════════════════════════════════════════════════════════════════ */
@@ -1828,33 +2013,54 @@ function toggleTheme() {
     var html = document.documentElement;
     var isDark = html.getAttribute("data-theme") === "dark";
     html.setAttribute("data-theme", isDark ? "" : "dark");
-    try { localStorage.setItem("phoebe-theme", isDark ? "light" : "dark"); } catch(e) {}
+    storageSet("phoebe-theme", isDark ? "light" : "dark");
     initCharts();
 }
+/* Sync theme restore (needs to be immediate to avoid flash) */
 (function() {
     try {
-        if (localStorage.getItem("phoebe-theme") === "dark") {
-            document.documentElement.setAttribute("data-theme", "dark");
+        var raw = localStorage.getItem("phoebe-theme");
+        if (raw) {
+            var val = raw;
+            try { val = JSON.parse(raw); } catch(e) {}
+            if (val === "dark") document.documentElement.setAttribute("data-theme", "dark");
         }
     } catch(e) {}
+    /* Also try idb async restore */
+    if (_idb) {
+        _idb.get("phoebe-theme").then(function(v) {
+            if (v === "dark") document.documentElement.setAttribute("data-theme", "dark");
+        }).catch(function() {});
+    }
 })();
 
 /* ══════════════════════════════════════════════════════════════════════════ */
-/*  2. TASK CHECKBOXES                                                      */
+/*  2. TASK CHECKBOXES + HAPTIC FEEDBACK + UNDO TOAST                       */
 /* ══════════════════════════════════════════════════════════════════════════ */
+var _checkedCache = [];  /* synced from IndexedDB on load */
+var _undoTimer = null;
+var _undoTaskId = null;
+var _undoCard = null;
+var _undoCb = null;
+
 function getCheckedTasks() {
-    try { return JSON.parse(localStorage.getItem("phoebe_checked_tasks") || "[]"); } catch(e) { return []; }
+    return _checkedCache;
 }
 function saveCheckedTasks(arr) {
-    try { localStorage.setItem("phoebe_checked_tasks", JSON.stringify(arr)); } catch(e) {}
+    _checkedCache = arr;
+    storageSet("phoebe_checked_tasks", arr);
 }
 function handleCheck(cb) {
     var taskId = cb.getAttribute("data-task-id");
     var card = cb.closest("[data-checkable]");
-    var checked = getCheckedTasks();
+    var checked = getCheckedTasks().slice();
     if (cb.checked) {
         card.classList.add("checked");
         if (checked.indexOf(taskId) === -1) checked.push(taskId);
+        /* Haptic feedback — short pulse on task completion */
+        if (navigator.vibrate) navigator.vibrate(50);
+        /* Show undo toast */
+        showUndoToast(taskId, card, cb);
     } else {
         card.classList.remove("checked");
         checked = checked.filter(function(id) { return id !== taskId; });
@@ -1863,16 +2069,18 @@ function handleCheck(cb) {
     updateClearBtn();
 }
 function restoreCheckedTasks() {
-    var checked = getCheckedTasks();
-    checked.forEach(function(taskId) {
-        var cb = document.querySelector('[data-task-id="' + taskId + '"]');
-        if (cb) {
-            cb.checked = true;
-            var card = cb.closest("[data-checkable]");
-            if (card) card.classList.add("checked");
-        }
+    storageGet("phoebe_checked_tasks", []).then(function(checked) {
+        _checkedCache = checked || [];
+        _checkedCache.forEach(function(taskId) {
+            var cb = document.querySelector('[data-task-id="' + taskId + '"]');
+            if (cb) {
+                cb.checked = true;
+                var card = cb.closest("[data-checkable]");
+                if (card) card.classList.add("checked");
+            }
+        });
+        updateClearBtn();
     });
-    updateClearBtn();
 }
 function clearChecked() {
     saveCheckedTasks([]);
@@ -1891,21 +2099,76 @@ function updateClearBtn() {
     }
 }
 
+/* ── Undo Toast ─────────────────────────────────────────────────────────── */
+function showUndoToast(taskId, card, cb) {
+    /* Cancel any existing timer */
+    if (_undoTimer) clearInterval(_undoTimer);
+    _undoTaskId = taskId;
+    _undoCard = card;
+    _undoCb = cb;
+
+    var toast = document.getElementById("undoToast");
+    var textEl = document.getElementById("undoToastText");
+    var countEl = document.getElementById("undoCountdown");
+    if (!toast) return;
+
+    textEl.textContent = "Task completed.";
+    var seconds = 5;
+    countEl.textContent = seconds;
+    toast.classList.add("visible");
+
+    _undoTimer = setInterval(function() {
+        seconds--;
+        countEl.textContent = seconds;
+        if (seconds <= 0) {
+            clearInterval(_undoTimer);
+            _undoTimer = null;
+            toast.classList.remove("visible");
+            _undoTaskId = null;
+            _undoCard = null;
+            _undoCb = null;
+        }
+    }, 1000);
+}
+function undoLastCheck() {
+    if (!_undoTaskId) return;
+    if (_undoTimer) { clearInterval(_undoTimer); _undoTimer = null; }
+
+    /* Restore the task */
+    if (_undoCb) _undoCb.checked = false;
+    if (_undoCard) _undoCard.classList.remove("checked");
+    var checked = getCheckedTasks().filter(function(id) { return id !== _undoTaskId; });
+    saveCheckedTasks(checked);
+    updateClearBtn();
+
+    /* Haptic double-pulse (error pattern — undo is a correction) */
+    if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+
+    /* Hide toast */
+    var toast = document.getElementById("undoToast");
+    if (toast) toast.classList.remove("visible");
+    _undoTaskId = null;
+    _undoCard = null;
+    _undoCb = null;
+}
+
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  3. COLLAPSIBLE SECTION TITLES                                           */
 /* ══════════════════════════════════════════════════════════════════════════ */
+var _collapsedCache = [];
 function getCollapsedSections() {
-    try { return JSON.parse(localStorage.getItem("phoebe_collapsed_sections") || "[]"); } catch(e) { return []; }
+    return _collapsedCache;
 }
 function saveCollapsedSections(arr) {
-    try { localStorage.setItem("phoebe_collapsed_sections", JSON.stringify(arr)); } catch(e) {}
+    _collapsedCache = arr;
+    storageSet("phoebe_collapsed_sections", arr);
 }
 function toggleSectionCollapse(titleEl) {
     var sectionId = titleEl.id;
     var contentEl = document.querySelector('[data-section="' + sectionId + '"]');
     if (!contentEl) return;
     var isCollapsed = titleEl.classList.contains("collapsed");
-    var collapsed = getCollapsedSections();
+    var collapsed = getCollapsedSections().slice();
     if (isCollapsed) {
         titleEl.classList.remove("collapsed");
         contentEl.classList.remove("collapsed");
@@ -1918,14 +2181,16 @@ function toggleSectionCollapse(titleEl) {
     saveCollapsedSections(collapsed);
 }
 function restoreCollapsedSections() {
-    var collapsed = getCollapsedSections();
-    collapsed.forEach(function(sectionId) {
-        var titleEl = document.getElementById(sectionId);
-        var contentEl = document.querySelector('[data-section="' + sectionId + '"]');
-        if (titleEl && contentEl) {
-            titleEl.classList.add("collapsed");
-            contentEl.classList.add("collapsed");
-        }
+    storageGet("phoebe_collapsed_sections", []).then(function(collapsed) {
+        _collapsedCache = collapsed || [];
+        _collapsedCache.forEach(function(sectionId) {
+            var titleEl = document.getElementById(sectionId);
+            var contentEl = document.querySelector('[data-section="' + sectionId + '"]');
+            if (titleEl && contentEl) {
+                titleEl.classList.add("collapsed");
+                contentEl.classList.add("collapsed");
+            }
+        });
     });
 }
 
@@ -2095,32 +2360,36 @@ function executeCommand(cmd) {
     alert("Commands: call [name], note: [text], find [term]");
 }
 
-/* Quick notes localStorage */
+/* Quick notes — IndexedDB backed */
+var _notesCache = [];
 function getQuickNotes() {
-    try { return JSON.parse(localStorage.getItem("phoebe_quick_notes") || "[]"); } catch(e) { return []; }
+    return _notesCache;
 }
 function saveQuickNotes(arr) {
-    try { localStorage.setItem("phoebe_quick_notes", JSON.stringify(arr)); } catch(e) {}
+    _notesCache = arr;
+    storageSet("phoebe_quick_notes", arr);
 }
 function renderQuickNotes() {
     var container = document.getElementById("quickNotes");
     if (!container) return;
-    var notes = getQuickNotes();
-    if (notes.length === 0) {
-        container.innerHTML = "";
-        return;
-    }
-    var html = "";
-    notes.slice(0, 10).forEach(function(n, i) {
-        var d = new Date(n.time);
-        var timeStr = d.toLocaleDateString() + " " + d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
-        html += '<div class="quick-note-item">' +
-            '<span class="quick-note-text">' + escHtml(n.text) + '</span>' +
-            '<span class="quick-note-time">' + timeStr + '</span>' +
-            '<button class="quick-note-del" onclick="deleteNote(' + i + ')" aria-label="Delete note">&times;</button>' +
-            '</div>';
+    storageGet("phoebe_quick_notes", []).then(function(notes) {
+        _notesCache = notes || [];
+        if (_notesCache.length === 0) {
+            container.innerHTML = "";
+            return;
+        }
+        var html = "";
+        _notesCache.slice(0, 10).forEach(function(n, i) {
+            var d = new Date(n.time);
+            var timeStr = d.toLocaleDateString() + " " + d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+            html += '<div class="quick-note-item">' +
+                '<span class="quick-note-text">' + escHtml(n.text) + '</span>' +
+                '<span class="quick-note-time">' + timeStr + '</span>' +
+                '<button class="quick-note-del" onclick="deleteNote(' + i + ')" aria-label="Delete note">&times;</button>' +
+                '</div>';
+        });
+        container.innerHTML = html;
     });
-    container.innerHTML = html;
 }
 function deleteNote(idx) {
     var notes = getQuickNotes();
@@ -2379,6 +2648,117 @@ function initCharts() {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
+/*  11. SWIPE TO DISMISS / SNOOZE ANOMALY CARDS                             */
+/* ══════════════════════════════════════════════════════════════════════════ */
+function initAnomalySwipe() {
+    if (typeof Hammer === "undefined") return;
+
+    /* Restore dismissed/snoozed state from IndexedDB */
+    storageGet("phoebe_anomaly_dismissed", []).then(function(dismissed) {
+        storageGet("phoebe_anomaly_snoozed", {}).then(function(snoozed) {
+            dismissed = dismissed || [];
+            snoozed = snoozed || {};
+            var now = Date.now();
+            var activeSnoozed = 0;
+
+            /* Clean expired snoozes */
+            var cleaned = {};
+            Object.keys(snoozed).forEach(function(k) {
+                if (snoozed[k] > now) {
+                    cleaned[k] = snoozed[k];
+                    activeSnoozed++;
+                }
+            });
+            if (Object.keys(cleaned).length !== Object.keys(snoozed).length) {
+                storageSet("phoebe_anomaly_snoozed", cleaned);
+                snoozed = cleaned;
+            }
+
+            /* Hide dismissed and snoozed cards */
+            var items = document.querySelectorAll(".anomaly-item[data-anomaly-id]");
+            items.forEach(function(el) {
+                var aid = el.getAttribute("data-anomaly-id");
+                if (dismissed.indexOf(aid) !== -1) {
+                    el.style.display = "none";
+                } else if (snoozed[aid] && snoozed[aid] > now) {
+                    el.style.display = "none";
+                }
+            });
+
+            updateSwipeCounter(dismissed.length, activeSnoozed);
+
+            /* Attach Hammer.js swipe to each visible anomaly card */
+            items.forEach(function(el) {
+                if (el.style.display === "none") return;
+                var mc = new Hammer(el, { touchAction: "pan-y" });
+                mc.get("pan").set({ direction: Hammer.DIRECTION_HORIZONTAL, threshold: 40 });
+
+                mc.on("panleft panright", function(ev) {
+                    el.classList.add("swiping");
+                    el.style.transform = "translateX(" + ev.deltaX + "px)";
+                    el.style.opacity = Math.max(1 - Math.abs(ev.deltaX) / 200, 0.2);
+                });
+
+                mc.on("panend pancancel", function(ev) {
+                    el.classList.remove("swiping");
+                    if (Math.abs(ev.deltaX) > 100) {
+                        if (ev.deltaX < 0) {
+                            /* Swipe LEFT = dismiss */
+                            el.classList.add("swipe-dismiss");
+                            if (navigator.vibrate) navigator.vibrate(50);
+                            var aid = el.getAttribute("data-anomaly-id");
+                            storageGet("phoebe_anomaly_dismissed", []).then(function(d) {
+                                d = d || [];
+                                if (d.indexOf(aid) === -1) d.push(aid);
+                                storageSet("phoebe_anomaly_dismissed", d);
+                                updateSwipeCounter(d.length, null);
+                            });
+                            setTimeout(function() { el.style.display = "none"; }, 350);
+                        } else {
+                            /* Swipe RIGHT = snooze 24h */
+                            el.classList.add("swipe-snooze");
+                            if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+                            var aid = el.getAttribute("data-anomaly-id");
+                            var expiry = Date.now() + 24 * 60 * 60 * 1000;
+                            storageGet("phoebe_anomaly_snoozed", {}).then(function(s) {
+                                s = s || {};
+                                s[aid] = expiry;
+                                storageSet("phoebe_anomaly_snoozed", s);
+                                updateSwipeCounter(null, Object.keys(s).length);
+                            });
+                            setTimeout(function() { el.style.display = "none"; }, 350);
+                        }
+                    } else {
+                        /* Snap back */
+                        el.style.transform = "";
+                        el.style.opacity = "";
+                    }
+                });
+            });
+        });
+    });
+}
+
+function updateSwipeCounter(dismissed, snoozed) {
+    var counter = document.getElementById("anomalySwipeCounter");
+    if (!counter) return;
+    /* Use cached values if null passed */
+    if (dismissed === null) dismissed = parseInt(counter.getAttribute("data-dismissed") || "0");
+    if (snoozed === null) snoozed = parseInt(counter.getAttribute("data-snoozed") || "0");
+    counter.setAttribute("data-dismissed", dismissed);
+    counter.setAttribute("data-snoozed", snoozed);
+    if (dismissed + snoozed > 0) {
+        var parts = [];
+        if (dismissed > 0) parts.push(dismissed + " dismissed");
+        if (snoozed > 0) parts.push(snoozed + " snoozed (24h)");
+        counter.textContent = parts.join(", ");
+        counter.style.display = "block";
+    } else {
+        counter.style.display = "none";
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
 /*  INIT ON DOM READY                                                       */
 /* ══════════════════════════════════════════════════════════════════════════ */
 document.addEventListener("DOMContentLoaded", function() {
@@ -2386,6 +2766,7 @@ document.addEventListener("DOMContentLoaded", function() {
     restoreCheckedTasks();
     restoreCollapsedSections();
     setTimeOfDay();
+    initAnomalySwipe();
 });
 
 /* ── PWA Service Worker ────────────────────────────────────────────────── */

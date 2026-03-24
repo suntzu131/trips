@@ -1,11 +1,13 @@
 // Phoebe Dashboard Service Worker
-const CACHE_NAME = "phoebe-dashboard-v2";
+const CACHE_NAME = "phoebe-dashboard-v3";
 const URLS_TO_CACHE = [
     "./",
     "./index.html",
     "./manifest.json",
     "https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js",
     "https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js",
+    "https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js",
+    "https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js",
     "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap",
 ];
 
