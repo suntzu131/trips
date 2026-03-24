@@ -44,6 +44,13 @@
     --shadow-lg: 0 4px 12px rgba(40,36,30,0.08), 0 16px 40px rgba(40,36,30,0.10);
     --shadow-card: 0 1px 2px rgba(40,36,30,0.04), 0 4px 12px rgba(40,36,30,0.06);
     --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --sidebar-w: 240px;
+    --sidebar-collapsed-w: 56px;
+    --sidebar-bg: #1c1810;
+    --sidebar-ink: #d4c8b8;
+    --sidebar-ink-active: #ffffff;
+    --sidebar-hover: rgba(255,255,255,0.06);
+    --sidebar-active-bg: rgba(168,95,63,0.20);
 }
 [data-theme="dark"] {
     --bg: #111111;
@@ -67,6 +74,11 @@
     --shadow: 0 1px 3px rgba(0,0,0,0.2);
     --shadow-lg: 0 4px 12px rgba(0,0,0,0.3);
     --shadow-card: 0 1px 2px rgba(0,0,0,0.15);
+    --sidebar-bg: #0d0d0d;
+    --sidebar-ink: #a0a0a0;
+    --sidebar-ink-active: #e5e5e5;
+    --sidebar-hover: rgba(255,255,255,0.04);
+    --sidebar-active-bg: rgba(212,132,90,0.18);
 }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
@@ -82,84 +94,271 @@ body {
     min-height: 100dvh;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
-/*  LAYOUT                                                                   */
+/*  APP SHELL — SIDEBAR + MAIN CONTENT                                      */
 /* ══════════════════════════════════════════════════════════════════════════ */
-.dashboard {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 16px 100px;
+.app-shell {
+    display: flex;
+    min-height: 100vh;
+    min-height: 100dvh;
 }
 
-/* ── Header ────────────────────────────────────────────────────────────── */
-.dash-header {
-    position: sticky;
+/* ── SIDEBAR ──────────────────────────────────────────────────────────── */
+.sidebar {
+    position: fixed;
     top: 0;
-    z-index: 50;
-    background: linear-gradient(135deg, #2c1810 0%, var(--accent) 60%, #c47a55 100%);
-    margin: 0 -16px;
-    padding: 14px 20px;
+    left: 0;
+    bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.25s ease, transform 0.25s ease;
+    overflow: hidden;
+    box-shadow: 2px 0 16px rgba(0,0,0,0.15);
+}
+.sidebar-brand {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 12px;
+    padding: 20px 16px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    flex-shrink: 0;
+}
+.sidebar-brand-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 900;
     color: #fff;
-    box-shadow: 0 2px 12px rgba(44,24,16,0.25);
+    flex-shrink: 0;
 }
-.dash-header h1 {
-    font-size: 20px;
+.sidebar-brand-text {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.sidebar-brand-name {
+    font-size: 16px;
     font-weight: 800;
-    letter-spacing: -0.5px;
+    color: #fff;
+    letter-spacing: -0.3px;
 }
-.header-right {
+.sidebar-brand-sub {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--sidebar-ink);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 8px 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+.sidebar-nav::-webkit-scrollbar { display: none; }
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 16px;
+    margin: 2px 8px;
+    border-radius: 10px;
+    border: none;
+    background: none;
+    width: calc(100% - 16px);
+    text-align: left;
+    cursor: pointer;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sidebar-ink);
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    min-height: 44px;
+    position: relative;
+}
+.sidebar-item:hover {
+    background: var(--sidebar-hover);
+    color: var(--sidebar-ink-active);
+}
+.sidebar-item.active {
+    background: var(--sidebar-active-bg);
+    color: var(--sidebar-ink-active);
+}
+.sidebar-item.active::before {
+    content: "";
+    position: absolute;
+    left: -8px;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--accent);
+}
+.sidebar-item-icon {
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 24px;
+    text-align: center;
+}
+.sidebar-item-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sidebar-item-badge {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--accent);
+    color: #fff;
+    padding: 1px 7px;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.sidebar-footer {
+    padding: 12px 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     gap: 10px;
+    overflow: hidden;
+    white-space: nowrap;
 }
-.stress-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    background: rgba(255,255,255,0.18);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+.sidebar-footer-text {
+    font-size: 10px;
+    color: var(--sidebar-ink);
+    opacity: 0.6;
 }
-.date-label {
-    font-size: 11px;
-    opacity: 0.8;
-}
-.theme-btn {
-    background: rgba(255,255,255,0.15);
+.sidebar-theme-btn {
+    background: rgba(255,255,255,0.08);
     border: none;
-    border-radius: 50%;
+    border-radius: 8px;
     width: 32px;
     height: 32px;
-    color: #fff;
-    font-size: 14px;
+    color: var(--sidebar-ink);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: background 0.15s;
+    flex-shrink: 0;
 }
-.theme-btn:hover { background: rgba(255,255,255,0.25); }
+.sidebar-theme-btn:hover { background: rgba(255,255,255,0.15); }
 
-/* ── Section Titles ────────────────────────────────────────────────────── */
+/* ── MAIN CONTENT ─────────────────────────────────────────────────────── */
+.main-content {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    min-height: 100vh;
+    min-height: 100dvh;
+    transition: margin-left 0.25s ease;
+    position: relative;
+}
+
+/* ── MOBILE HEADER (visible on mobile only) ──────────────────────────── */
+.mobile-header {
+    display: none;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: linear-gradient(135deg, #2c1810 0%, var(--accent) 60%, #c47a55 100%);
+    padding: 10px 14px;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    box-shadow: 0 2px 12px rgba(44,24,16,0.25);
+}
+.mobile-header h1 { font-size: 17px; font-weight: 800; letter-spacing: -0.5px; }
+.mobile-header-right { display: flex; align-items: center; gap: 8px; }
+.hamburger-btn {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── SIDEBAR OVERLAY (mobile) ─────────────────────────────────────────── */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 199;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+.sidebar-overlay.open { display: block; }
+
+/* ── PANELS — one visible at a time ───────────────────────────────────── */
+.panel {
+    display: none;
+    padding: 32px;
+    max-width: 960px;
+    animation: panelFadeIn 0.2s ease;
+}
+.panel.active {
+    display: block;
+}
+@keyframes panelFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.panel-header {
+    margin-bottom: 24px;
+}
+.panel-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -0.5px;
+}
+.panel-subtitle {
+    font-size: 12px;
+    color: var(--ink-secondary);
+    margin-top: 2px;
+}
+
+/* ── Section Titles (within panels) ───────────────────────────────────── */
 .section-title {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.8px;
     color: var(--accent);
-    margin: 28px 0 12px;
+    margin: 24px 0 12px;
     display: flex;
     align-items: center;
     gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    min-height: 44px;
+    padding: 4px 0;
 }
 .section-title .count-badge {
     font-size: 11px;
@@ -168,6 +367,27 @@ body {
     color: #fff;
     padding: 1px 8px;
     border-radius: 10px;
+}
+.section-title .section-chevron {
+    font-size: 10px;
+    transition: transform 0.2s ease;
+    color: var(--ink-secondary);
+    margin-left: auto;
+}
+.section-title.collapsed .section-chevron {
+    transform: rotate(-90deg);
+}
+.section-content {
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.2s ease;
+    max-height: 5000px;
+    opacity: 1;
+}
+.section-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
 }
 
 /* ── Cards ─────────────────────────────────────────────────────────────── */
@@ -272,7 +492,7 @@ body {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
-/*  FAMILY CARDS (horizontal scroll)                                         */
+/*  FAMILY CARDS                                                             */
 /* ══════════════════════════════════════════════════════════════════════════ */
 .family-scroll {
     display: flex;
@@ -285,7 +505,7 @@ body {
 }
 .family-scroll::-webkit-scrollbar { display: none; }
 .family-card {
-    flex: 0 0 140px;
+    flex: 0 0 160px;
     scroll-snap-align: start;
     background: var(--paper);
     border-radius: var(--radius);
@@ -294,10 +514,11 @@ body {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
-.family-card.has-alert {
-    border: 1px solid var(--amber);
-}
+.family-card:active { transform: scale(0.97); }
+.family-card.has-alert { border: 1px solid var(--amber); }
 .family-card strong {
     font-size: 14px;
     font-weight: 700;
@@ -318,6 +539,18 @@ body {
     color: var(--ink-secondary);
     line-height: 1.4;
 }
+.family-detail {
+    display: none;
+    padding: 8px 0 0;
+    margin-top: 8px;
+    border-top: 1px solid var(--line);
+    font-size: 11px;
+    color: var(--ink-secondary);
+    line-height: 1.5;
+}
+.family-card.expanded { flex: 0 0 220px; }
+.family-card.expanded .family-detail { display: block; }
+.family-detail-row { padding: 2px 0; }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  RISK CLUSTERS                                                            */
@@ -333,16 +566,8 @@ body {
     align-items: center;
     margin-bottom: 6px;
 }
-.cluster-name {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--ink);
-}
-.cluster-score {
-    font-size: 12px;
-    font-weight: 800;
-    color: var(--ink-secondary);
-}
+.cluster-name { font-size: 12px; font-weight: 700; color: var(--ink); }
+.cluster-score { font-size: 12px; font-weight: 800; color: var(--ink-secondary); }
 .cluster-bar-track {
     height: 8px;
     background: var(--bg);
@@ -366,7 +591,7 @@ body {
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  ANOMALIES                                                                */
 /* ══════════════════════════════════════════════════════════════════════════ */
-.anomalies-list { max-height: 400px; overflow-y: auto; }
+.anomalies-list { max-height: 600px; overflow-y: auto; }
 .anomaly-item {
     display: grid;
     grid-template-columns: 70px 70px 1fr;
@@ -375,33 +600,34 @@ body {
     padding: 10px 0;
     border-bottom: 1px solid var(--line);
     font-size: 12px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;
 }
 .anomaly-item:last-child { border-bottom: none; }
 .anomaly-severity {
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    align-self: center;
+    font-size: 10px; font-weight: 800; text-transform: uppercase; align-self: center;
 }
 .anomaly-item.critical .anomaly-severity { color: var(--red); }
 .anomaly-item.warning .anomaly-severity { color: var(--amber); }
 .anomaly-item.info .anomaly-severity { color: var(--blue); }
 .anomaly-domain {
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--ink-secondary);
-    text-transform: uppercase;
-    align-self: center;
+    font-size: 10px; font-weight: 600; color: var(--ink-secondary); text-transform: uppercase; align-self: center;
 }
-.anomaly-title {
-    font-weight: 600;
-    color: var(--ink);
-    grid-column: 1 / -1;
+.anomaly-title { font-weight: 600; color: var(--ink); grid-column: 1 / -1; }
+.anomaly-action { font-size: 11px; color: var(--ink-secondary); grid-column: 1 / -1; }
+.anomaly-item.swiping { transition: none; }
+.anomaly-item.swipe-dismiss {
+    transform: translateX(-120%); opacity: 0; max-height: 0; padding: 0; margin: 0; border: none; overflow: hidden;
+    transition: transform 0.3s ease, opacity 0.3s ease, max-height 0.3s ease 0.1s, padding 0.3s ease 0.1s;
 }
-.anomaly-action {
-    font-size: 11px;
-    color: var(--ink-secondary);
-    grid-column: 1 / -1;
+.anomaly-item.swipe-snooze {
+    transform: translateX(120%); opacity: 0; max-height: 0; padding: 0; margin: 0; border: none; overflow: hidden;
+    transition: transform 0.3s ease, opacity 0.3s ease, max-height 0.3s ease 0.1s, padding 0.3s ease 0.1s;
+}
+.anomaly-swipe-counter {
+    font-size: 11px; color: var(--ink-secondary); padding: 6px 0 2px; text-align: center;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
@@ -416,32 +642,14 @@ body {
 }
 .timeline-item:last-child { border-bottom: none; }
 .timeline-date {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--ink-secondary);
-    min-width: 80px;
-    flex-shrink: 0;
+    font-size: 11px; font-weight: 700; color: var(--ink-secondary); min-width: 100px; flex-shrink: 0;
 }
 .timeline-content {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 1;
-    min-width: 0;
+    display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;
 }
-.timeline-title {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--ink);
-    flex: 1;
-    min-width: 0;
-}
+.timeline-title { font-size: 12px; font-weight: 600; color: var(--ink); flex: 1; min-width: 0; }
 .timeline-days {
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 8px;
-    flex-shrink: 0;
+    font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 8px; flex-shrink: 0;
 }
 .timeline-item.critical .timeline-days { background: var(--red-bg); color: var(--red); }
 .timeline-item.warning .timeline-days { background: var(--amber-bg); color: var(--amber); }
@@ -452,7 +660,7 @@ body {
 /* ══════════════════════════════════════════════════════════════════════════ */
 .goals-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 10px;
 }
 .goal-card {
@@ -464,26 +672,9 @@ body {
 }
 .goal-card.active { border-left-color: var(--green); }
 .goal-card.planning { border-left-color: var(--accent-2); }
-.goal-label {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--ink);
-    display: block;
-}
-.goal-target {
-    font-size: 11px;
-    color: var(--ink-secondary);
-    display: block;
-    margin-top: 2px;
-}
-.goal-status {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--sea);
-    display: block;
-    margin-top: 4px;
-}
+.goal-label { font-size: 13px; font-weight: 700; color: var(--ink); display: block; }
+.goal-target { font-size: 11px; color: var(--ink-secondary); display: block; margin-top: 2px; }
+.goal-status { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--sea); display: block; margin-top: 4px; }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  ACTIVE TASKS                                                             */
@@ -505,22 +696,10 @@ body {
 .task-item.warning  { border-left-color: var(--amber); background: var(--amber-bg); }
 .task-item.info     { border-left-color: var(--blue); background: var(--blue-bg); }
 .task-id {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--ink-secondary);
-    background: var(--bg);
-    padding: 1px 6px;
-    border-radius: 6px;
-    flex-shrink: 0;
-    align-self: center;
+    font-size: 10px; font-weight: 700; color: var(--ink-secondary);
+    background: var(--bg); padding: 1px 6px; border-radius: 6px; flex-shrink: 0; align-self: center;
 }
-.task-text {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--ink);
-    flex: 1;
-    min-width: 0;
-}
+.task-text { font-size: 13px; font-weight: 500; color: var(--ink); flex: 1; min-width: 0; }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  RCFE STATUS                                                              */
@@ -532,29 +711,11 @@ body {
     padding: 14px 16px;
     border-left: 4px solid var(--sea);
 }
-.rcfe-row {
-    display: flex;
-    gap: 12px;
-    padding: 6px 0;
-    border-bottom: 1px solid var(--line);
-    font-size: 13px;
-}
+.rcfe-row { display: flex; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
 .rcfe-row:last-child { border-bottom: none; }
-.rcfe-label {
-    font-weight: 700;
-    color: var(--ink-secondary);
-    min-width: 90px;
-    flex-shrink: 0;
-    font-size: 12px;
-}
-.rcfe-value {
-    color: var(--ink);
-    flex: 1;
-}
-.rcfe-value.rcfe-active {
-    color: var(--amber);
-    font-weight: 700;
-}
+.rcfe-label { font-weight: 700; color: var(--ink-secondary); min-width: 90px; flex-shrink: 0; font-size: 12px; }
+.rcfe-value { color: var(--ink); flex: 1; }
+.rcfe-value.rcfe-active { color: var(--amber); font-weight: 700; }
 .rcfe-card a { color: var(--accent); text-decoration: none; }
 .rcfe-card a:hover { text-decoration: underline; }
 
@@ -570,53 +731,30 @@ body {
     box-shadow: var(--shadow-card);
     padding: 14px;
 }
-.sysstat-item {
-    text-align: center;
-    padding: 8px 4px;
-}
-.sysstat-item.sysstat-wide {
-    grid-column: span 2;
-    border-top: 1px solid var(--line);
-    padding-top: 10px;
-    margin-top: 2px;
-}
-.sysstat-val {
-    display: block;
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--accent);
-    line-height: 1.2;
-}
-.sysstat-lbl {
-    display: block;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--ink-secondary);
-    margin-top: 2px;
-}
+.sysstat-item { text-align: center; padding: 8px 4px; }
+.sysstat-item.sysstat-wide { grid-column: span 2; border-top: 1px solid var(--line); padding-top: 10px; margin-top: 2px; }
+.sysstat-val { display: block; font-size: 18px; font-weight: 800; color: var(--accent); line-height: 1.2; }
+.sysstat-lbl { display: block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink-secondary); margin-top: 2px; }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
-/*  SHOW MORE BUTTON                                                         */
+/*  SHOW MORE / COLLAPSIBLE                                                  */
 /* ══════════════════════════════════════════════════════════════════════════ */
 .show-more-btn {
-    display: block;
-    width: 100%;
-    padding: 8px;
-    font-size: 12px;
-    font-weight: 600;
-    font-family: var(--font);
-    color: var(--accent);
-    background: var(--accent-light);
-    border: 1px solid var(--accent);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    margin-top: 6px;
-    min-height: 44px;
-    transition: background 0.15s;
+    display: block; width: 100%; padding: 8px; font-size: 12px; font-weight: 600;
+    font-family: var(--font); color: var(--accent); background: var(--accent-light);
+    border: 1px solid var(--accent); border-radius: var(--radius-sm); cursor: pointer;
+    margin-top: 6px; min-height: 44px; transition: background 0.15s;
 }
 .show-more-btn:hover { background: var(--accent); color: #fff; }
+.collapsible-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; background: none; border: none; padding: 12px 16px;
+    cursor: pointer; font-family: var(--font); color: var(--ink);
+}
+.collapsible-toggle .chevron { transition: transform 0.2s; font-size: 12px; color: var(--ink-secondary); }
+.collapsible-toggle[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+.collapsible-body { display: none; padding: 0 16px 16px; }
+.collapsible-body.open { display: block; }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  CHARTS                                                                   */
@@ -632,725 +770,443 @@ body {
     border-radius: var(--radius);
     box-shadow: var(--shadow-card);
     padding: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
-.chart-title {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 8px;
-}
+.chart-card:active { transform: scale(0.98); }
+.chart-card.expanded { grid-column: 1 / -1; padding: 20px; }
+.chart-card.expanded canvas { max-height: 350px; }
+.chart-title { font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
 canvas { max-width: 100%; }
+.chart-expand-hint {
+    font-size: 10px; color: var(--ink-secondary); text-align: center;
+    margin-top: 6px; opacity: 0; transition: opacity 0.2s;
+}
+.chart-card:hover .chart-expand-hint { opacity: 1; }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
-/*  TAB NAVIGATION                                                           */
+/*  TAB NAVIGATION (deadlines/calendar)                                      */
 /* ══════════════════════════════════════════════════════════════════════════ */
 .tab-bar {
-    display: flex;
-    gap: 2px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    margin-bottom: 12px;
-    padding: 4px 0;
+    display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; margin-bottom: 12px; padding: 4px 0;
 }
 .tab-bar::-webkit-scrollbar { display: none; }
 .tab-btn {
-    flex-shrink: 0;
-    padding: 7px 14px;
-    font-size: 12px;
-    font-weight: 600;
-    font-family: var(--font);
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    background: var(--paper);
-    color: var(--ink-secondary);
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
+    flex-shrink: 0; padding: 7px 14px; font-size: 12px; font-weight: 600;
+    font-family: var(--font); border: 1px solid var(--line); border-radius: 20px;
+    background: var(--paper); color: var(--ink-secondary); cursor: pointer;
+    transition: all 0.15s; white-space: nowrap;
 }
 .tab-btn:hover { border-color: var(--accent); color: var(--accent); }
-.tab-btn.active {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
-}
+.tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
-
-/* ══════════════════════════════════════════════════════════════════════════ */
-/*  FOOTER                                                                   */
-/* ══════════════════════════════════════════════════════════════════════════ */
-.dash-footer {
-    text-align: center;
-    padding: 24px 16px;
-    font-size: 11px;
-    color: var(--ink-secondary);
-}
-.dash-footer a {
-    color: var(--accent);
-    text-decoration: none;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════ */
-/*  COLLAPSIBLE SECTIONS                                                     */
-/* ══════════════════════════════════════════════════════════════════════════ */
-.collapsible-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    background: none;
-    border: none;
-    padding: 12px 16px;
-    cursor: pointer;
-    font-family: var(--font);
-    color: var(--ink);
-}
-.collapsible-toggle .chevron {
-    transition: transform 0.2s;
-    font-size: 12px;
-    color: var(--ink-secondary);
-}
-.collapsible-toggle[aria-expanded="true"] .chevron {
-    transform: rotate(180deg);
-}
-.collapsible-body {
-    display: none;
-    padding: 0 16px 16px;
-}
-.collapsible-body.open {
-    display: block;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════ */
-/*  RESPONSIVE — 480px (Phone)                                               */
-/* ══════════════════════════════════════════════════════════════════════════ */
-@media (max-width: 480px) {
-    .dash-header {
-        padding: 10px 14px;
-        flex-wrap: wrap;
-        gap: 6px;
-    }
-    .dash-header h1 { font-size: 17px; }
-    .date-label { font-size: 10px; }
-    .stress-pill { font-size: 11px; padding: 3px 8px; }
-
-    .dashboard { padding: 0 10px 80px; }
-
-    .metrics-grid {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-    .metric-card {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        text-align: left;
-        padding: 12px 14px;
-    }
-    .metric-label { margin-bottom: 0; }
-    .metric-value { font-size: 18px; }
-
-    .charts-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .action-meta { padding-left: 0; }
-
-    .anomaly-item {
-        grid-template-columns: 1fr;
-    }
-    .anomaly-severity, .anomaly-domain {
-        display: inline;
-    }
-
-    .family-card { flex: 0 0 120px; padding: 10px; }
-    .family-card strong { font-size: 13px; }
-
-    .goals-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .timeline-date { min-width: 65px; font-size: 10px; }
-    .timeline-title { font-size: 11px; }
-
-    .section-title { font-size: 12px; margin: 20px 0 8px; }
-
-    .sysstat-grid {
-        grid-template-columns: repeat(2, 1fr);
-        padding: 10px;
-    }
-    .sysstat-item.sysstat-wide {
-        grid-column: span 2;
-    }
-    .sysstat-val { font-size: 15px; }
-
-    .rcfe-label { min-width: 72px; font-size: 11px; }
-    .rcfe-row { font-size: 12px; }
-}
-
-/* ══════════════════════════════════════════════════════════════════════════ */
-/*  RESPONSIVE — 900px (Tablet)                                              */
-/* ══════════════════════════════════════════════════════════════════════════ */
-@media (max-width: 900px) and (min-width: 481px) {
-    .charts-grid { grid-template-columns: 1fr 1fr; }
-    .metrics-grid { grid-template-columns: repeat(3, 1fr); }
-}
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  TASK CHECKBOXES                                                         */
 /* ══════════════════════════════════════════════════════════════════════════ */
 .task-checkbox {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 22px;
-    height: 22px;
-    border: 2px solid var(--line);
-    border-radius: 6px;
-    flex-shrink: 0;
-    cursor: pointer;
-    position: relative;
-    background: var(--paper);
-    transition: all 0.2s ease;
-    align-self: center;
-    min-width: 22px;
-    min-height: 22px;
+    appearance: none; -webkit-appearance: none;
+    width: 22px; height: 22px; border: 2px solid var(--line); border-radius: 6px;
+    flex-shrink: 0; cursor: pointer; position: relative; background: var(--paper);
+    transition: all 0.2s ease; align-self: center; min-width: 22px; min-height: 22px;
 }
-.task-checkbox:checked {
-    background: var(--accent);
-    border-color: var(--accent);
-}
+.task-checkbox:checked { background: var(--accent); border-color: var(--accent); }
 .task-checkbox:checked::after {
-    content: "";
-    position: absolute;
-    left: 6px;
-    top: 2px;
-    width: 6px;
-    height: 12px;
-    border: solid #fff;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
+    content: ""; position: absolute; left: 6px; top: 2px;
+    width: 6px; height: 12px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg);
 }
-.action-card.checked,
-.task-item.checked {
-    text-decoration: line-through;
-    opacity: 0.5;
-    transition: opacity 0.2s ease;
+.action-card.checked, .task-item.checked {
+    text-decoration: line-through; opacity: 0.5; transition: opacity 0.2s ease;
 }
 .clear-completed-btn {
-    display: none;
-    margin: 8px 0;
-    padding: 8px 16px;
-    font-size: 12px;
-    font-weight: 600;
-    font-family: var(--font);
-    color: var(--ink-secondary);
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    min-height: 44px;
-    transition: all 0.15s;
+    display: none; margin: 8px 0; padding: 8px 16px; font-size: 12px; font-weight: 600;
+    font-family: var(--font); color: var(--ink-secondary); background: var(--paper);
+    border: 1px solid var(--line); border-radius: var(--radius-sm); cursor: pointer;
+    min-height: 44px; transition: all 0.15s;
 }
-.clear-completed-btn.visible {
-    display: inline-block;
-}
-.clear-completed-btn:hover {
-    background: var(--accent-light);
-    color: var(--accent);
-    border-color: var(--accent);
-}
+.clear-completed-btn.visible { display: inline-block; }
+.clear-completed-btn:hover { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
-/*  COLLAPSIBLE SECTION TITLES                                              */
+/*  PROGRESS RINGS                                                          */
 /* ══════════════════════════════════════════════════════════════════════════ */
-.section-title {
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    min-height: 44px;
-    padding: 4px 0;
-}
-.section-title .section-chevron {
-    font-size: 10px;
-    transition: transform 0.2s ease;
-    color: var(--ink-secondary);
-    margin-left: auto;
-}
-.section-title.collapsed .section-chevron {
-    transform: rotate(-90deg);
-}
-.section-content {
-    overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.2s ease;
-    max-height: 5000px;
-    opacity: 1;
-}
-.section-content.collapsed {
-    max-height: 0;
-    opacity: 0;
-    margin: 0;
-    padding: 0;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════ */
-/*  FAMILY DETAIL VIEW                                                      */
-/* ══════════════════════════════════════════════════════════════════════════ */
-.family-card {
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.family-card:active {
-    transform: scale(0.97);
-}
-.family-detail {
-    display: none;
-    padding: 8px 0 0;
-    margin-top: 8px;
-    border-top: 1px solid var(--line);
-    font-size: 11px;
-    color: var(--ink-secondary);
-    line-height: 1.5;
-}
-.family-card.expanded {
-    flex: 0 0 220px;
-}
-.family-card.expanded .family-detail {
-    display: block;
-}
-.family-detail-row {
-    padding: 2px 0;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════ */
-/*  BOTTOM NAV BAR                                                          */
-/* ══════════════════════════════════════════════════════════════════════════ */
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    height: 56px;
-    background: var(--paper);
-    border-top: 1px solid var(--line);
-    box-shadow: 0 -2px 12px rgba(40,36,30,0.08);
-    padding-bottom: env(safe-area-inset-bottom, 0);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-}
-[data-theme="dark"] .bottom-nav {
-    background: rgba(28,28,28,0.92);
-    box-shadow: 0 -2px 12px rgba(0,0,0,0.3);
-}
-.nav-tab {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    padding: 6px 12px;
-    min-width: 48px;
-    min-height: 48px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-family: var(--font);
-    color: var(--ink-secondary);
-    font-size: 10px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: color 0.15s;
-    justify-content: center;
-    border-radius: 8px;
-}
-.nav-tab:hover, .nav-tab.active {
-    color: var(--accent);
-}
-.nav-tab.active {
-    background: var(--accent-light);
-}
-.nav-tab-icon {
-    font-size: 20px;
-    line-height: 1;
-}
-.nav-tab-label {
-    font-size: 10px;
-    line-height: 1;
-}
-@media (min-width: 769px) {
-    .bottom-nav { display: none; }
-}
-@media (max-width: 768px) {
-    .dashboard { padding-bottom: 140px; }
-}
-
-/* ══════════════════════════════════════════════════════════════════════════ */
-/*  FLOATING ACTION BUTTON + COMMAND BAR                                    */
-/* ══════════════════════════════════════════════════════════════════════════ */
-.fab {
-    position: fixed;
-    bottom: 72px;
-    right: 16px;
-    z-index: 110;
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    border: none;
-    background: var(--accent);
-    color: #fff;
-    font-size: 24px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: var(--shadow-lg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.15s, background 0.15s;
-}
-.fab:hover { transform: scale(1.08); }
-.fab:active { transform: scale(0.95); }
-.fab.open {
-    background: var(--red);
-    transform: rotate(45deg);
-}
-@media (min-width: 769px) {
-    .fab { bottom: 24px; right: 24px; }
-}
-
-.command-overlay {
-    display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: 105;
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-}
-.command-overlay.open { display: flex; align-items: flex-end; }
-.command-panel {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    background: var(--paper);
-    border-radius: var(--radius) var(--radius) 0 0;
-    box-shadow: var(--shadow-lg);
-    padding: 16px;
-    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0));
-}
-.command-input-wrap {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-.command-input {
-    flex: 1;
-    padding: 12px 14px;
-    font-size: 15px;
-    font-family: var(--font);
-    border: 2px solid var(--line);
-    border-radius: var(--radius-sm);
-    background: var(--bg);
-    color: var(--ink);
-    outline: none;
-    min-height: 48px;
-}
-.command-input:focus { border-color: var(--accent); }
-.command-input::placeholder { color: var(--ink-secondary); }
-.command-hints {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-top: 10px;
-}
-.command-hint {
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 12px;
-    background: var(--accent-light);
-    color: var(--accent);
-    border: 1px solid transparent;
-    cursor: pointer;
-    font-family: var(--font);
-    min-height: 32px;
-    display: flex;
-    align-items: center;
-}
-.command-hint:hover { border-color: var(--accent); }
-
-/* Quick notes panel */
-.quick-notes {
-    margin-top: 10px;
-    max-height: 150px;
-    overflow-y: auto;
-    font-size: 12px;
-}
-.quick-note-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 6px 0;
-    border-bottom: 1px solid var(--line);
-    gap: 8px;
-}
-.quick-note-item:last-child { border-bottom: none; }
-.quick-note-text { color: var(--ink); flex: 1; }
-.quick-note-time { color: var(--ink-secondary); font-size: 10px; flex-shrink: 0; white-space: nowrap; }
-.quick-note-del {
-    background: none;
-    border: none;
-    color: var(--red);
-    cursor: pointer;
-    font-size: 14px;
-    padding: 0 4px;
-    min-width: 28px;
-    min-height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Text highlight from find command */
-.cmd-highlight {
-    background: var(--amber-bg);
-    color: var(--ink);
-    outline: 2px solid var(--amber);
-    border-radius: 2px;
-    animation: highlight-pulse 0.6s ease-out;
-}
-@keyframes highlight-pulse {
-    0% { outline-width: 4px; }
-    100% { outline-width: 2px; }
+.metric-ring-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.metric-ring-wrap svg { display: block; }
+.metric-ring-wrap .metric-ring-value {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; line-height: 1.1; text-align: center; pointer-events: none;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  TIME-OF-DAY BANNER                                                      */
 /* ══════════════════════════════════════════════════════════════════════════ */
 .tod-banner {
-    padding: 12px 16px 8px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--ink);
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    padding: 0 0 4px;
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    display: flex; align-items: center; gap: 8px;
 }
-.tod-banner .tod-icon {
-    font-size: 20px;
-}
-.tod-banner .tod-text {
-    opacity: 0.85;
-}
-.tod-emphasis {
-    display: none;
-}
+.tod-banner .tod-icon { font-size: 20px; }
+.tod-banner .tod-text { opacity: 0.85; }
+.tod-emphasis { display: none; }
 .tod-emphasis.active {
-    display: block;
-    padding: 4px 16px 8px;
-    font-size: 12px;
-    color: var(--ink-secondary);
-    font-style: italic;
+    display: block; padding: 0 0 16px; font-size: 12px; color: var(--ink-secondary); font-style: italic;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
-/*  CHART DRILL-DOWN                                                        */
+/*  BOTTOM NAV BAR (mobile only)                                            */
 /* ══════════════════════════════════════════════════════════════════════════ */
-.chart-card {
-    cursor: pointer;
-    transition: all 0.3s ease;
+.bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    display: none;
+    align-items: center; justify-content: space-around;
+    height: 56px; background: var(--paper); border-top: 1px solid var(--line);
+    box-shadow: 0 -2px 12px rgba(40,36,30,0.08);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
 }
-.chart-card:active {
-    transform: scale(0.98);
+[data-theme="dark"] .bottom-nav { background: rgba(28,28,28,0.92); box-shadow: 0 -2px 12px rgba(0,0,0,0.3); }
+.nav-tab {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 6px 8px; min-width: 44px; min-height: 48px;
+    border: none; background: none; cursor: pointer; font-family: var(--font);
+    color: var(--ink-secondary); font-size: 10px; font-weight: 600;
+    text-decoration: none; transition: color 0.15s; justify-content: center; border-radius: 8px;
 }
-.chart-card.expanded {
-    grid-column: 1 / -1;
-    padding: 20px;
-}
-.chart-card.expanded canvas {
-    max-height: 350px;
-}
-.chart-expand-hint {
-    font-size: 10px;
-    color: var(--ink-secondary);
-    text-align: center;
-    margin-top: 6px;
-    opacity: 0;
-    transition: opacity 0.2s;
-}
-.chart-card:hover .chart-expand-hint {
-    opacity: 1;
-}
+.nav-tab:hover, .nav-tab.active { color: var(--accent); }
+.nav-tab.active { background: var(--accent-light); }
+.nav-tab-icon { font-size: 18px; line-height: 1; }
+.nav-tab-label { font-size: 9px; line-height: 1; }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
-/*  PHONE RESPONSIVE ADDITIONS                                              */
+/*  FLOATING ACTION BUTTON + COMMAND BAR                                    */
 /* ══════════════════════════════════════════════════════════════════════════ */
-@media (max-width: 480px) {
-    .fab { bottom: 68px; right: 12px; width: 48px; height: 48px; font-size: 22px; }
-    .command-panel { border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
-    .family-card.expanded { flex: 0 0 200px; }
-    .tod-banner { font-size: 13px; padding: 10px 12px 6px; }
+.fab {
+    position: fixed; bottom: 24px; right: 24px; z-index: 110;
+    width: 52px; height: 52px; border-radius: 50%; border: none;
+    background: var(--accent); color: #fff; font-size: 24px; font-weight: 700;
+    cursor: pointer; box-shadow: var(--shadow-lg);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.15s, background 0.15s;
+}
+.fab:hover { transform: scale(1.08); }
+.fab:active { transform: scale(0.95); }
+.fab.open { background: var(--red); transform: rotate(45deg); }
+
+.command-overlay {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0; top: 0;
+    z-index: 105; background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+}
+.command-overlay.open { display: flex; align-items: flex-end; }
+.command-panel {
+    width: 100%; max-width: 500px; margin: 0 auto;
+    background: var(--paper); border-radius: var(--radius) var(--radius) 0 0;
+    box-shadow: var(--shadow-lg); padding: 16px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0));
+}
+.command-input-wrap { display: flex; gap: 8px; align-items: center; }
+.command-input {
+    flex: 1; padding: 12px 14px; font-size: 15px; font-family: var(--font);
+    border: 2px solid var(--line); border-radius: var(--radius-sm);
+    background: var(--bg); color: var(--ink); outline: none; min-height: 48px;
+}
+.command-input:focus { border-color: var(--accent); }
+.command-input::placeholder { color: var(--ink-secondary); }
+.command-hints { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.command-hint {
+    font-size: 11px; padding: 4px 10px; border-radius: 12px;
+    background: var(--accent-light); color: var(--accent);
+    border: 1px solid transparent; cursor: pointer; font-family: var(--font);
+    min-height: 32px; display: flex; align-items: center;
+}
+.command-hint:hover { border-color: var(--accent); }
+.quick-notes { margin-top: 10px; max-height: 150px; overflow-y: auto; font-size: 12px; }
+.quick-note-item {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 6px 0; border-bottom: 1px solid var(--line); gap: 8px;
+}
+.quick-note-item:last-child { border-bottom: none; }
+.quick-note-text { color: var(--ink); flex: 1; }
+.quick-note-time { color: var(--ink-secondary); font-size: 10px; flex-shrink: 0; white-space: nowrap; }
+.quick-note-del {
+    background: none; border: none; color: var(--red); cursor: pointer;
+    font-size: 14px; padding: 0 4px; min-width: 28px; min-height: 28px;
+    display: flex; align-items: center; justify-content: center;
 }
 
-/* ══════════════════════════════════════════════════════════════════════════ */
-/*  PROGRESS RINGS                                                          */
-/* ══════════════════════════════════════════════════════════════════════════ */
-.metric-ring-wrap {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+/* Text highlight from find command */
+.cmd-highlight {
+    background: var(--amber-bg); color: var(--ink);
+    outline: 2px solid var(--amber); border-radius: 2px;
+    animation: highlight-pulse 0.6s ease-out;
 }
-.metric-ring-wrap svg {
-    display: block;
-}
-.metric-ring-wrap .metric-ring-value {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 800;
-    line-height: 1.1;
-    text-align: center;
-    pointer-events: none;
-}
-@media (max-width: 480px) {
-    .metric-ring-wrap svg { width: 56px; height: 56px; }
-    .metric-ring-wrap .metric-ring-value { font-size: 12px; }
-}
-
-/* ══════════════════════════════════════════════════════════════════════════ */
-/*  SWIPE TO DISMISS / SNOOZE                                               */
-/* ══════════════════════════════════════════════════════════════════════════ */
-.anomaly-item {
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    touch-action: pan-y;
-}
-.anomaly-item.swiping {
-    transition: none;
-}
-.anomaly-item.swipe-dismiss {
-    transform: translateX(-120%);
-    opacity: 0;
-    max-height: 0;
-    padding: 0;
-    margin: 0;
-    border: none;
-    overflow: hidden;
-    transition: transform 0.3s ease, opacity 0.3s ease, max-height 0.3s ease 0.1s, padding 0.3s ease 0.1s;
-}
-.anomaly-item.swipe-snooze {
-    transform: translateX(120%);
-    opacity: 0;
-    max-height: 0;
-    padding: 0;
-    margin: 0;
-    border: none;
-    overflow: hidden;
-    transition: transform 0.3s ease, opacity 0.3s ease, max-height 0.3s ease 0.1s, padding 0.3s ease 0.1s;
-}
-.anomaly-swipe-counter {
-    font-size: 11px;
-    color: var(--ink-secondary);
-    padding: 6px 0 2px;
-    text-align: center;
-}
+@keyframes highlight-pulse { 0% { outline-width: 4px; } 100% { outline-width: 2px; } }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  UNDO TOAST                                                              */
 /* ══════════════════════════════════════════════════════════════════════════ */
 .undo-toast {
-    position: fixed;
-    bottom: 72px;
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    z-index: 120;
-    background: var(--ink);
-    color: var(--paper);
-    padding: 10px 18px;
-    border-radius: 24px;
-    font-size: 13px;
-    font-weight: 600;
-    font-family: var(--font);
-    box-shadow: var(--shadow-lg);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    pointer-events: none;
-    white-space: nowrap;
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(100px); z-index: 120;
+    background: var(--ink); color: var(--paper); padding: 10px 18px;
+    border-radius: 24px; font-size: 13px; font-weight: 600;
+    font-family: var(--font); box-shadow: var(--shadow-lg);
+    display: flex; align-items: center; gap: 12px;
+    opacity: 0; transition: transform 0.3s ease, opacity 0.3s ease;
+    pointer-events: none; white-space: nowrap;
 }
-.undo-toast.visible {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-    pointer-events: auto;
-}
+.undo-toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
 .undo-toast-btn {
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 14px;
-    padding: 4px 14px;
-    font-size: 12px;
-    font-weight: 700;
-    font-family: var(--font);
-    cursor: pointer;
-    min-height: 32px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    background: var(--accent); color: #fff; border: none; border-radius: 14px;
+    padding: 4px 14px; font-size: 12px; font-weight: 700; font-family: var(--font);
+    cursor: pointer; min-height: 32px; display: flex; align-items: center; gap: 6px;
     transition: background 0.15s;
 }
 .undo-toast-btn:hover { background: var(--red); }
-.undo-toast-countdown {
-    display: inline-block;
-    min-width: 16px;
-    text-align: center;
+.undo-toast-countdown { display: inline-block; min-width: 16px; text-align: center; }
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  RESPONSIVE — Tablet (481-768px): sidebar icon-only                      */
+/* ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) and (min-width: 481px) {
+    .sidebar {
+        width: var(--sidebar-collapsed-w);
+    }
+    .sidebar-brand-text { display: none; }
+    .sidebar-item-label { display: none; }
+    .sidebar-item-badge { display: none; }
+    .sidebar-item { justify-content: center; padding: 10px 0; margin: 2px 4px; width: calc(100% - 8px); }
+    .sidebar-item.active::before { left: -4px; }
+    .sidebar-item-icon { width: auto; }
+    .sidebar-footer-text { display: none; }
+    .sidebar-footer { justify-content: center; padding: 12px 8px; }
+    .main-content { margin-left: var(--sidebar-collapsed-w); }
+    .panel { padding: 24px; }
+    /* Tooltip on hover */
+    .sidebar-item { position: relative; }
+    .sidebar-item::after {
+        content: attr(data-label);
+        position: absolute;
+        left: calc(100% + 8px);
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--ink);
+        color: var(--paper);
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 11px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s;
+        z-index: 210;
+    }
+    .sidebar-item:hover::after { opacity: 1; }
+    .charts-grid { grid-template-columns: 1fr; }
 }
-@media (max-width: 768px) {
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  RESPONSIVE — Phone (<=480px): sidebar hidden, bottom nav + hamburger    */
+/* ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+    }
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+    .main-content {
+        margin-left: 0;
+    }
+    .mobile-header {
+        display: flex;
+    }
+    .bottom-nav {
+        display: flex;
+    }
+    .panel {
+        padding: 16px 12px 100px;
+    }
+    .fab { bottom: 68px; right: 12px; width: 48px; height: 48px; font-size: 22px; }
     .undo-toast { bottom: 68px; font-size: 12px; padding: 8px 14px; }
+
+    .metrics-grid { grid-template-columns: 1fr; gap: 8px; }
+    .metric-card {
+        display: grid; grid-template-columns: 56px 1fr; grid-template-rows: auto auto;
+        gap: 2px 14px; align-items: center; text-align: left; padding: 12px 14px;
+    }
+    .metric-card .metric-label { grid-column: 2; grid-row: 1; margin-bottom: 0; font-size: 11px; align-self: end; }
+    .metric-card .metric-ring-wrap { grid-column: 1; grid-row: 1 / 3; justify-self: center; }
+    .metric-card .metric-detail { grid-column: 2; grid-row: 2; font-size: 11px; align-self: start; }
+    .metric-value { font-size: 18px; }
+    .metric-ring-wrap svg { width: 56px; height: 56px; }
+    .metric-ring-wrap .metric-ring-value { font-size: 12px; }
+
+    .charts-grid { grid-template-columns: 1fr; }
+    .action-meta { padding-left: 0; }
+
+    .anomaly-item { grid-template-columns: 1fr; }
+    .anomaly-severity, .anomaly-domain { display: inline; }
+
+    .family-card { flex: 0 0 120px; padding: 10px; }
+    .family-card strong { font-size: 13px; }
+    .family-card.expanded { flex: 0 0 200px; }
+
+    .goals-grid { grid-template-columns: 1fr; }
+    .timeline-date { min-width: 65px; font-size: 10px; }
+    .timeline-title { font-size: 11px; }
+    .section-title { font-size: 12px; margin: 16px 0 8px; }
+
+    .sysstat-grid { grid-template-columns: repeat(2, 1fr); padding: 10px; }
+    .sysstat-val { font-size: 15px; }
+    .rcfe-label { min-width: 72px; font-size: 11px; }
+    .rcfe-row { font-size: 12px; }
+    .command-panel { border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
 }
 </style>
 </head>
 <body>
 
-<div class="dashboard">
+<div class="app-shell">
 
-    <!-- ══════════════ HEADER ══════════════ -->
-    <header class="dash-header">
-        <div>
-            <h1>Phoebe</h1>
-            <span class="date-label">March 23, 2026 at 06:08 PM</span>
+<!-- ══════════════ SIDEBAR ══════════════ -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">P</div>
+        <div class="sidebar-brand-text">
+            <span class="sidebar-brand-name">Phoebe</span>
+            <span class="sidebar-brand-sub">Life Intelligence</span>
         </div>
-        <div class="header-right">
-            <span class="stress-pill warning">
-                Stress: 54.8
+    </div>
+    <nav class="sidebar-nav">
+        <button class="sidebar-item active" data-panel="panel-home" data-label="Home" onclick="showPanel('panel-home', this)">
+            <span class="sidebar-item-icon">&#127968;</span>
+            <span class="sidebar-item-label">Home</span>
+        </button>
+        <button class="sidebar-item" data-panel="panel-tasks" data-label="Tasks" onclick="showPanel('panel-tasks', this)">
+            <span class="sidebar-item-icon">&#9989;</span>
+            <span class="sidebar-item-label">Tasks</span>
+            <span class="sidebar-item-badge">12</span>
+        </button>
+        <button class="sidebar-item" data-panel="panel-calendar" data-label="Calendar" onclick="showPanel('panel-calendar', this)">
+            <span class="sidebar-item-icon">&#128197;</span>
+            <span class="sidebar-item-label">Calendar</span>
+        </button>
+        <button class="sidebar-item" data-panel="panel-family" data-label="Family" onclick="showPanel('panel-family', this)">
+            <span class="sidebar-item-icon">&#128106;</span>
+            <span class="sidebar-item-label">Family</span>
+        </button>
+        <button class="sidebar-item" data-panel="panel-intel" data-label="Intelligence" onclick="showPanel('panel-intel', this)">
+            <span class="sidebar-item-icon">&#128202;</span>
+            <span class="sidebar-item-label">Intelligence</span>
+        </button>
+        <button class="sidebar-item" data-panel="panel-risks" data-label="Risks" onclick="showPanel('panel-risks', this)">
+            <span class="sidebar-item-icon">&#9888;&#65039;</span>
+            <span class="sidebar-item-label">Risks</span>
+            <span class="sidebar-item-badge">6</span>
+        </button>
+        <button class="sidebar-item" data-panel="panel-rcfe" data-label="RCFE" onclick="showPanel('panel-rcfe', this)">
+            <span class="sidebar-item-icon">&#127973;</span>
+            <span class="sidebar-item-label">RCFE</span>
+        </button>
+        <button class="sidebar-item" data-panel="panel-goals" data-label="Goals" onclick="showPanel('panel-goals', this)">
+            <span class="sidebar-item-icon">&#127919;</span>
+            <span class="sidebar-item-label">Goals</span>
+        </button>
+        <button class="sidebar-item" data-panel="panel-system" data-label="System" onclick="showPanel('panel-system', this)">
+            <span class="sidebar-item-icon">&#9881;&#65039;</span>
+            <span class="sidebar-item-label">System</span>
+        </button>
+    </nav>
+    <div class="sidebar-footer">
+        <button class="sidebar-theme-btn" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <span class="sidebar-footer-text">Phoebe v2026.3 &middot; 2026-03-23 18:51</span>
+    </div>
+</aside>
+
+<!-- ══════════════ SIDEBAR OVERLAY (mobile) ══════════════ -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileSidebar()"></div>
+
+<!-- ══════════════ MAIN CONTENT ══════════════ -->
+<div class="main-content" id="mainContent">
+
+    <!-- ═══ MOBILE HEADER ═══ -->
+    <header class="mobile-header">
+        <div style="display:flex;align-items:center;gap:10px">
+            <button class="hamburger-btn" onclick="openMobileSidebar()" aria-label="Open menu">&#9776;</button>
+            <h1>Phoebe</h1>
+        </div>
+        <div class="mobile-header-right">
+            <span class="stress-pill warning" style="font-size:11px;padding:3px 8px;background:rgba(255,255,255,0.18);border-radius:20px;font-weight:700">
+                54.8
             </span>
-            <button class="theme-btn" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-            </button>
         </div>
     </header>
 
-    <!-- ══════════════ TIME-OF-DAY BANNER ══════════════ -->
-    <div class="tod-banner" id="tod-banner">
-        <span class="tod-icon" id="tod-icon"></span>
-        <span class="tod-text" id="tod-text"></span>
-    </div>
-    <div class="tod-emphasis" id="tod-emphasis"></div>
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!--  PANEL: HOME                                                       -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div class="panel active" id="panel-home">
+        <div class="panel-header">
+            <div class="tod-banner" id="tod-banner">
+                <span class="tod-icon" id="tod-icon"></span>
+                <span class="tod-text" id="tod-text"></span>
+            </div>
+            <div class="tod-emphasis" id="tod-emphasis"></div>
+        </div>
 
-    <!-- ══════════════ QUICK ACTIONS ══════════════ -->
-    <div class="section-title" id="sec-priorities" onclick="toggleSectionCollapse(this)">Today's Priorities <span class="count-badge">8</span> <span class="section-chevron">&#9660;</span></div>
-    <div class="section-content" data-section="sec-priorities">
-    <div class="action-card urgent" data-index="action-0" data-checkable="true">
+        <div class="section-title" id="sec-metrics" onclick="toggleSectionCollapse(this)">Key Metrics <span class="section-chevron">&#9660;</span></div>
+        <div class="section-content" data-section="sec-metrics">
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <span class="metric-label">Cash Flow</span>
+                <div class="metric-ring-wrap">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--line)" stroke-width="4"/>
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--green)" stroke-width="4"
+                    stroke-dasharray="175.93" stroke-dashoffset="88.3"
+                    stroke-linecap="round" transform="rotate(-90 32 32)"/>
+            </svg>
+            <span class="metric-ring-value"><span class="metric-value positive" style="font-size:inherit">+${abs(surplus):,.0f}</span></span>
+        </div>
+                <span class="metric-detail">Income $13,059</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-label">Care Stage</span>
+                <div class="metric-ring-wrap">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--line)" stroke-width="4"/>
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--amber)" stroke-width="4"
+                    stroke-dasharray="175.93" stroke-dashoffset="124.9"
+                    stroke-linecap="round" transform="rotate(-90 32 32)"/>
+            </svg>
+            <span class="metric-ring-value"><span class="metric-value warning" style="font-size:inherit">2/7</span></span>
+        </div>
+                <span class="metric-detail">FAST 6e &middot; RCFE 29%</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-label">Runway</span>
+                <div class="metric-ring-wrap">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--line)" stroke-width="4"/>
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--green)" stroke-width="4"
+                    stroke-dasharray="175.93" stroke-dashoffset="65.1"
+                    stroke-linecap="round" transform="rotate(-90 32 32)"/>
+            </svg>
+            <span class="metric-ring-value"><span class="metric-value positive" style="font-size:inherit">38mo</span></span>
+        </div>
+                <span class="metric-detail">of 60 month target</span>
+            </div>
+        </div>
+        </div>
+
+        <div class="section-title" id="sec-home-priorities" onclick="toggleSectionCollapse(this)">Today's Priorities <span class="count-badge">8</span> <span class="section-chevron">&#9660;</span></div>
+        <div class="section-content" data-section="sec-home-priorities">
+        <div class="action-card urgent" data-index="action-0" data-checkable="true">
             <input type="checkbox" class="task-checkbox" data-task-id="action-0" onchange="handleCheck(this)" aria-label="Mark complete">
             <span class="action-badge">URGENT</span>
             <span class="action-text">Call Osamu Hashizu <a href="tel:7142582819">(714) 258-2819</a></span>
@@ -1393,13 +1249,75 @@ canvas { max-width: 100%; }
             <span class="action-meta">Free &middot; Blocked</span>
         </div>
 
-    <button class="clear-completed-btn" id="clearCompleted" onclick="clearChecked()">Clear completed</button>
+        <button class="clear-completed-btn" id="clearCompleted" onclick="clearChecked()">Clear completed</button>
+        </div>
+
+        <div style="text-align:center;padding:24px 0;font-size:11px;color:var(--ink-secondary)">
+            Generated March 23, 2026 at 06:51 PM &middot;
+            Phoebe Life Intelligence &middot; <a href="../" style="color:var(--accent);text-decoration:none">Trip Planner</a>
+        </div>
     </div>
 
-    <!-- ══════════════ ACTIVE TASKS ══════════════ -->
-    <div class="section-title" id="sec-tasks" onclick="toggleSectionCollapse(this)">Active Tasks <span class="count-badge">4</span> <span class="section-chevron">&#9660;</span></div>
-    <div class="section-content" data-section="sec-tasks">
-    <div class="task-item critical" data-index="task-0" data-checkable="true">
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!--  PANEL: TASKS                                                      -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div class="panel" id="panel-tasks">
+        <div class="panel-header">
+            <div class="panel-title">Tasks</div>
+            <div class="panel-subtitle">Active tasks and priority actions</div>
+        </div>
+
+        <div class="section-title" id="sec-tasks-priorities" onclick="toggleSectionCollapse(this)">Priority Actions <span class="count-badge">8</span> <span class="section-chevron">&#9660;</span></div>
+        <div class="section-content" data-section="sec-tasks-priorities">
+        <div class="action-card urgent" data-index="action-0" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="action-0" onchange="handleCheck(this)" aria-label="Mark complete">
+            <span class="action-badge">URGENT</span>
+            <span class="action-text">Call Osamu Hashizu <a href="tel:7142582819">(714) 258-2819</a></span>
+            <span class="action-meta">CPA fees ~$1K-$3K &middot; 1 phone call</span>
+        </div>
+<div class="action-card high" data-index="action-1" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="action-1" onchange="handleCheck(this)" aria-label="Mark complete">
+            <span class="action-badge">HIGH</span>
+            <span class="action-text">Pause distributions via Security Benefit</span>
+            <span class="action-meta">Free &middot; 1 phone call</span>
+        </div>
+<div class="action-card high" data-index="action-2" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="action-2" onchange="handleCheck(this)" aria-label="Mark complete">
+            <span class="action-badge">HIGH</span>
+            <span class="action-text">Schedule Minako appointment via Kaiser</span>
+            <span class="action-meta">Covered by Kaiser &middot; 1 call</span>
+        </div>
+<div class="action-card high" data-index="action-3" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="action-3" onchange="handleCheck(this)" aria-label="Mark complete">
+            <span class="action-badge">HIGH</span>
+            <span class="action-text">Schedule Minako pelvic ultrasound via Kaiser</span>
+            <span class="action-meta">Covered by Kaiser &middot; 1 call</span>
+        </div>
+<div class="action-card high" data-index="action-4" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="action-4" onchange="handleCheck(this)" aria-label="Mark complete">
+            <span class="action-badge">HIGH</span>
+            <span class="action-text">Submit bond for mother's assets</span>
+            <span class="action-meta">Bond premium ~$500-$1K &middot; 1-2 weeks</span>
+        </div>
+<div class="action-card high" data-index="action-5" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="action-5" onchange="handleCheck(this)" aria-label="Mark complete">
+            <span class="action-badge">HIGH</span>
+            <span class="action-text">Provide 7 expense amounts + 4 balances</span>
+            <span class="action-meta">Free &middot; 20 min of Dan's time</span>
+        </div>
+<div class="action-card high" data-index="action-6" data-checkable="true">
+            <input type="checkbox" class="task-checkbox" data-task-id="action-6" onchange="handleCheck(this)" aria-label="Mark complete">
+            <span class="action-badge">HIGH</span>
+            <span class="action-text">Pause IRA (requires conservatorship)</span>
+            <span class="action-meta">Free &middot; Blocked</span>
+        </div>
+
+        <button class="clear-completed-btn" id="clearCompleted2" onclick="clearChecked()">Clear completed</button>
+        </div>
+
+        <div class="section-title" id="sec-tasks-active" onclick="toggleSectionCollapse(this)">Active Tasks <span class="count-badge">4</span> <span class="section-chevron">&#9660;</span></div>
+        <div class="section-content" data-section="sec-tasks-active">
+        <div class="task-item critical" data-index="task-0" data-checkable="true">
             <input type="checkbox" class="task-checkbox" data-task-id="task-0" onchange="handleCheck(this)" aria-label="Mark complete">
             <span class="action-badge">URGENT</span>
             <span class="task-id">Bond</span>
@@ -1424,59 +1342,202 @@ canvas { max-width: 100%; }
             <span class="task-text">Call Osamu Hashizu (714) 258-2819 to confirm engagement. Due April 15 = 23 days.</span>
         </div>
 
+        </div>
     </div>
 
-    <!-- ══════════════ METRICS ══════════════ -->
-    <div class="section-title" id="sec-metrics" onclick="toggleSectionCollapse(this)">Key Metrics <span class="section-chevron">&#9660;</span></div>
-    <div class="section-content" data-section="sec-metrics">
-    <div class="metrics-grid">
-        <div class="metric-card">
-            <span class="metric-label">Cash Flow</span>
-            <div class="metric-ring-wrap">
-            <svg width="64" height="64" viewBox="0 0 64 64">
-                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--line)" stroke-width="4"/>
-                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--green)" stroke-width="4"
-                    stroke-dasharray="175.93" stroke-dashoffset="88.3"
-                    stroke-linecap="round" transform="rotate(-90 32 32)"/>
-            </svg>
-            <span class="metric-ring-value"><span class="metric-value positive" style="font-size:inherit">+${abs(surplus):,.0f}</span></span>
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!--  PANEL: CALENDAR                                                   -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div class="panel" id="panel-calendar">
+        <div class="panel-header">
+            <div class="panel-title">Calendar</div>
+            <div class="panel-subtitle">Upcoming events and compliance deadlines</div>
         </div>
-            <span class="metric-detail">Income $13,059</span>
+
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab(event, 'tab-calendar-events')">Calendar</button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-calendar-deadlines')">Deadlines</button>
         </div>
-        <div class="metric-card">
-            <span class="metric-label">Care Stage</span>
-            <div class="metric-ring-wrap">
-            <svg width="64" height="64" viewBox="0 0 64 64">
-                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--line)" stroke-width="4"/>
-                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--amber)" stroke-width="4"
-                    stroke-dasharray="175.93" stroke-dashoffset="124.9"
-                    stroke-linecap="round" transform="rotate(-90 32 32)"/>
-            </svg>
-            <span class="metric-ring-value"><span class="metric-value warning" style="font-size:inherit">2/7</span></span>
+        <div class="card">
+            <div class="card-body tab-panel active" id="tab-calendar-events">
+                <div class="timeline-item info">
+            <div class="timeline-date">2026-03-28</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Wedding Anniversary</span>
+            </div>
         </div>
-            <span class="metric-detail">FAST 6e &middot; RCFE 29%</span>
+<div class="timeline-item info">
+            <div class="timeline-date">2026-03-30</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Stay at The Hadsten Solvang, Tapestry Collection by Hilton</span>
+            </div>
         </div>
-        <div class="metric-card">
-            <span class="metric-label">Runway</span>
-            <div class="metric-ring-wrap">
-            <svg width="64" height="64" viewBox="0 0 64 64">
-                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--line)" stroke-width="4"/>
-                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--green)" stroke-width="4"
-                    stroke-dasharray="175.93" stroke-dashoffset="65.1"
-                    stroke-linecap="round" transform="rotate(-90 32 32)"/>
-            </svg>
-            <span class="metric-ring-value"><span class="metric-value positive" style="font-size:inherit">38mo</span></span>
+<div class="timeline-item info">
+            <div class="timeline-date">Apr 05, 08:00 AM</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Trim Hair</span>
+            </div>
         </div>
-            <span class="metric-detail">of 60 month target</span>
+<div class="timeline-item info">
+            <div class="timeline-date">Apr 05, 09:00 AM</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Prepare tithe</span>
+            </div>
         </div>
-    </div>
+<div class="timeline-item info">
+            <div class="timeline-date">Apr 10, 04:00 PM</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Updated invitation: Send koko video  @ Monthly from 4pm to 5pm on day 10 (PDT) (corp131@hotmail.com)</span>
+            </div>
+        </div>
+<div class="timeline-item info">
+            <div class="timeline-date">2026-04-11</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Grandpa Han's Birthday</span>
+            </div>
+        </div>
+<div class="timeline-item info">
+            <div class="timeline-date">2026-04-12</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Chris Eun's Birthday</span>
+            </div>
+        </div>
+<div class="timeline-item info">
+            <div class="timeline-date">Apr 12, 04:00 PM</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Vacuum all filters for air purifiers</span>
+            </div>
+        </div>
+<div class="timeline-item info">
+            <div class="timeline-date">2026-04-21</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Plan for Summer Trip</span>
+            </div>
+        </div>
+
+            </div>
+            <div class="card-body tab-panel" id="tab-calendar-deadlines">
+                <div class="timeline-item critical">
+            <div class="timeline-date">2023-03-28</div>
+            <div class="timeline-content">
+                <span class="timeline-title">CCW license renewal</span>
+                <span class="timeline-days">-1091d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2023-05-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Nanny status — is the nanny still employed? What's the monthly cost?</span>
+                <span class="timeline-days">-1043d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2024-09-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Dental work — receding gums, crowns, missing teeth. Any upcoming procedures? Does Kaiser cover?</span>
+                <span class="timeline-days">-554d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2024-10-10</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Lease renewal — Irvine house at $5,745/mo, lease start Oct 2024</span>
+                <span class="timeline-days">-529d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2024-12-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">IHSS back-tracking application (Dan as joint provider)</span>
+                <span class="timeline-days">-463d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2025-01-03</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Funeral pre-payment reimbursement from mother's account</span>
+                <span class="timeline-days">-444d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2025-01-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Father's van title transfer to aunt (gomo)</span>
+                <span class="timeline-days">-432d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2025-05-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Minako echocardiogram (follow-up to CT cardiomegaly finding)</span>
+                <span class="timeline-days">-312d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2025-05-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">~~Medi-Cal DHCS appeal (filed ~May 2025 after $1,350 SOC)~~</span>
+                <span class="timeline-days">-312d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2025-06-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Second vehicle confirmation — vehicles status</span>
+                <span class="timeline-days">-281d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2025-10-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Anaheim Villa RCFE application — 2-3 month wait after approval</span>
+                <span class="timeline-days">-159d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2025-12-12</div>
+            <div class="timeline-content">
+                <span class="timeline-title">IRA annuity pause request (Security Benefit, $973.48/mo distributions)</span>
+                <span class="timeline-days">-101d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2025-12-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Minako pelvic ultrasound follow-up (6-12 months post June 2025)</span>
+                <span class="timeline-days">-98d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2026-02-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">Insurance broker contact (Tyler Joseph/AJG) — find ~$100/mo premium to reduce mother's income below Medi-Cal threshold</span>
+                <span class="timeline-days">-36d</span>
+            </div>
+        </div>
+<div class="timeline-item critical">
+            <div class="timeline-date">2026-03-15</div>
+            <div class="timeline-content">
+                <span class="timeline-title">TKD belt test — red/black to red/black w/ stripe</span>
+                <span class="timeline-days">-8d</span>
+            </div>
+        </div>
+
+            </div>
+        </div>
     </div>
 
-    <!-- ══════════════ FAMILY ══════════════ -->
-    <div class="section-title" id="sec-family" onclick="toggleSectionCollapse(this)">Family <span class="section-chevron">&#9660;</span></div>
-    <div class="section-content" data-section="sec-family">
-    <div class="family-scroll">
-        <div class="family-card" onclick="toggleFamilyDetail(this)">
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!--  PANEL: FAMILY                                                     -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div class="panel" id="panel-family">
+        <div class="panel-header">
+            <div class="panel-title">Family</div>
+            <div class="panel-subtitle">Tap a card for details</div>
+        </div>
+
+        <div class="family-scroll">
+            <div class="family-card" onclick="toggleFamilyDetail(this)">
             <strong>Dan </strong>
             <span class="family-notes">Weight: 165 lbs, TKD goal 145 lbs, piriformis syndrome</span>
             <div class="family-detail"><div class="family-detail-row">Weight: 165 lbs</div><div class="family-detail-row">TKD goal 145 lbs</div><div class="family-detail-row">piriformis syndrome</div></div>
@@ -1502,54 +1563,54 @@ canvas { max-width: 100%; }
             <div class="family-detail"><div class="family-detail-row">FAST 6e</div><div class="family-detail-row">93.8 lbs</div><div class="family-detail-row">RCFE decision made</div></div>
         </div>
 
-    </div>
+        </div>
     </div>
 
-    <!-- ══════════════ RCFE STATUS ══════════════ -->
-    <div class="section-title" id="sec-rcfe" onclick="toggleSectionCollapse(this)">RCFE Transition <span class="section-chevron">&#9660;</span></div>
-    <div class="section-content" data-section="sec-rcfe">
-    <div class="rcfe-card">
-        <div class="rcfe-row"><span class="rcfe-label">Facility</span><span class="rcfe-value">Anaheim Villa</span></div>
-        <div class="rcfe-row"><span class="rcfe-label">Status</span><span class="rcfe-value rcfe-active">Application in progress</span></div>
-        <div class="rcfe-row"><span class="rcfe-label">Contact</span><span class="rcfe-value"><a href="tel:7143089800">Yumi Kim (714) 308-9800</a></span></div>
-        <div class="rcfe-row"><span class="rcfe-label">Next Step</span><span class="rcfe-value">Medication list from Dr. Chang</span></div>
-        <div class="rcfe-row"><span class="rcfe-label">Timeline</span><span class="rcfe-value">~3 months (Korean-run, CalOptima)</span></div>
-    </div>
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!--  PANEL: INTELLIGENCE                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div class="panel" id="panel-intel">
+        <div class="panel-header">
+            <div class="panel-title">Intelligence</div>
+            <div class="panel-subtitle">Stress: 54.8 (MODERATE) &middot; Runway: 38 months</div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card" onclick="toggleChartExpand(this)">
+                <div class="chart-title">Stress Components</div>
+                <canvas id="stressChart" height="200"></canvas>
+                <div class="chart-expand-hint">Tap to expand</div>
+            </div>
+            <div class="chart-card" onclick="toggleChartExpand(this)">
+                <div class="chart-title">Risk Clusters</div>
+                <canvas id="riskChart" height="200"></canvas>
+                <div class="chart-expand-hint">Tap to expand</div>
+            </div>
+            <div class="chart-card" onclick="toggleChartExpand(this)">
+                <div class="chart-title">Income Breakdown</div>
+                <canvas id="incomeChart" height="200"></canvas>
+                <div class="chart-expand-hint">Tap to expand</div>
+            </div>
+            <div class="chart-card" onclick="toggleChartExpand(this)">
+                <div class="chart-title">Risk Cluster Probability</div>
+                <canvas id="probChart" height="200"></canvas>
+                <div class="chart-expand-hint">Tap to expand</div>
+            </div>
+        </div>
     </div>
 
-    <!-- ══════════════ CHARTS ══════════════ -->
-    <div class="section-title" id="sec-charts" onclick="toggleSectionCollapse(this)">Intelligence <span class="section-chevron">&#9660;</span></div>
-    <div class="section-content" data-section="sec-charts">
-    <div class="charts-grid">
-        <div class="chart-card" onclick="toggleChartExpand(this)">
-            <div class="chart-title">Stress Components</div>
-            <canvas id="stressChart" height="200"></canvas>
-            <div class="chart-expand-hint">Tap to expand</div>
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!--  PANEL: RISKS                                                      -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div class="panel" id="panel-risks">
+        <div class="panel-header">
+            <div class="panel-title">Risk Clusters</div>
+            <div class="panel-subtitle">6 clusters &middot; 20 risk factors tracked</div>
         </div>
-        <div class="chart-card" onclick="toggleChartExpand(this)">
-            <div class="chart-title">Risk Clusters</div>
-            <canvas id="riskChart" height="200"></canvas>
-            <div class="chart-expand-hint">Tap to expand</div>
-        </div>
-        <div class="chart-card" onclick="toggleChartExpand(this)">
-            <div class="chart-title">Income Breakdown</div>
-            <canvas id="incomeChart" height="200"></canvas>
-            <div class="chart-expand-hint">Tap to expand</div>
-        </div>
-        <div class="chart-card" onclick="toggleChartExpand(this)">
-            <div class="chart-title">Risk Cluster Probability</div>
-            <canvas id="probChart" height="200"></canvas>
-            <div class="chart-expand-hint">Tap to expand</div>
-        </div>
-    </div>
-    </div>
 
-    <!-- ══════════════ RISK CLUSTERS ══════════════ -->
-    <div class="section-title" id="sec-risks" onclick="toggleSectionCollapse(this)">Risk Clusters <span class="count-badge">6</span> <span class="section-chevron">&#9660;</span></div>
-    <div class="section-content" data-section="sec-risks">
-    <div class="card">
-        <div class="card-body">
-            <div class="cluster-row">
+        <div class="section-title" id="sec-risk-clusters" onclick="toggleSectionCollapse(this)">Clusters <span class="count-badge">6</span> <span class="section-chevron">&#9660;</span></div>
+        <div class="section-content" data-section="sec-risk-clusters">
+        <div class="card"><div class="card-body"><div class="cluster-row">
             <div class="cluster-header">
                 <span class="cluster-name">MINAKO HEALTH BACKLOG</span>
                 <span class="cluster-score">88/100</span>
@@ -1609,21 +1670,18 @@ canvas { max-width: 100%; }
             </div>
             <div class="cluster-meta">legal, finances, goals &middot; 24% compound probability</div>
         </div>
-
+</div></div>
         </div>
-    </div>
-    </div>
 
-    <!-- ══════════════ ANOMALIES ══════════════ -->
-    <div class="section-title" id="sec-anomalies" onclick="toggleSectionCollapse(this)">Anomalies <span class="count-badge">19</span> <span class="section-chevron">&#9660;</span></div>
-    <div class="section-content" data-section="sec-anomalies">
-    <div class="card">
-        <button class="collapsible-toggle" onclick="event.stopPropagation(); toggleSection(this)" aria-expanded="false">
-            <span style="font-size:12px;font-weight:600;color:var(--ink)">Show details</span>
-            <span class="chevron">&#9660;</span>
-        </button>
-        <div class="collapsible-body anomalies-list">
-            <div class="anomaly-item warning" data-anomaly-id="anomaly-0">
+        <div class="section-title" id="sec-risk-anomalies" onclick="toggleSectionCollapse(this)">Anomalies <span class="count-badge">19</span> <span class="section-chevron">&#9660;</span></div>
+        <div class="section-content" data-section="sec-risk-anomalies">
+        <div class="card">
+            <button class="collapsible-toggle" onclick="event.stopPropagation(); toggleSection(this)" aria-expanded="false">
+                <span style="font-size:12px;font-weight:600;color:var(--ink)">Show details</span>
+                <span class="chevron">&#9660;</span>
+            </button>
+            <div class="collapsible-body anomalies-list">
+                <div class="anomaly-item warning" data-anomaly-id="anomaly-0">
             <span class="anomaly-severity">WARNING</span>
             <span class="anomaly-domain">calendar</span>
             <span class="anomaly-title">TKD Black Belt test ~7 months away — ZERO training events in 30 days</span>
@@ -1741,138 +1799,39 @@ canvas { max-width: 100%; }
             <span class="anomaly-action">Reach out to Pastor Samuel. Church leadership.</span>
         </div>
 </div>
+            </div>
         </div>
-    </div>
-    <div class="anomaly-swipe-counter" id="anomalySwipeCounter" style="display:none"></div>
+        <div class="anomaly-swipe-counter" id="anomalySwipeCounter" style="display:none"></div>
+        </div>
     </div>
 
-    <!-- ══════════════ TABBED: DEADLINES + CALENDAR ══════════════ -->
-    <div class="section-title" id="sec-calendar" onclick="toggleSectionCollapse(this)">Upcoming <span class="section-chevron">&#9660;</span></div>
-    <div class="section-content" data-section="sec-calendar">
-    <div class="tab-bar">
-        <button class="tab-btn active" onclick="switchTab(event, 'tab-deadlines')">Deadlines</button>
-        <button class="tab-btn" onclick="switchTab(event, 'tab-calendar')">Calendar</button>
-    </div>
-    <div class="card">
-        <div class="card-body tab-panel active" id="tab-deadlines">
-            <div class="timeline-item critical">
-            <div class="timeline-date">2023-03-28</div>
-            <div class="timeline-content">
-                <span class="timeline-title">CCW license renewal</span>
-                <span class="timeline-days">-1091d</span>
-            </div>
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!--  PANEL: RCFE                                                       -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div class="panel" id="panel-rcfe">
+        <div class="panel-header">
+            <div class="panel-title">RCFE Transition</div>
+            <div class="panel-subtitle">Residential care facility placement for Mother</div>
         </div>
-<div class="timeline-item critical">
-            <div class="timeline-date">2023-05-15</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Nanny status — is the nanny still employed? What's the monthly cost?</span>
-                <span class="timeline-days">-1043d</span>
-            </div>
-        </div>
-<div class="timeline-item critical">
-            <div class="timeline-date">2024-09-15</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Dental work — receding gums, crowns, missing teeth. Any upcoming procedures? Does Kaiser cover?</span>
-                <span class="timeline-days">-554d</span>
-            </div>
-        </div>
-<div class="timeline-item critical">
-            <div class="timeline-date">2024-10-10</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Lease renewal — Irvine house at $5,745/mo, lease start Oct 2024</span>
-                <span class="timeline-days">-529d</span>
-            </div>
-        </div>
-<div class="timeline-item critical">
-            <div class="timeline-date">2024-12-15</div>
-            <div class="timeline-content">
-                <span class="timeline-title">IHSS back-tracking application (Dan as joint provider)</span>
-                <span class="timeline-days">-463d</span>
-            </div>
-        </div>
-<div class="timeline-item critical">
-            <div class="timeline-date">2025-01-03</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Funeral pre-payment reimbursement from mother's account</span>
-                <span class="timeline-days">-444d</span>
-            </div>
-        </div>
-<div class="timeline-item critical">
-            <div class="timeline-date">2025-01-15</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Father's van title transfer to aunt (gomo)</span>
-                <span class="timeline-days">-432d</span>
-            </div>
-        </div>
-<div class="timeline-item critical">
-            <div class="timeline-date">2025-05-15</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Minako echocardiogram (follow-up to CT cardiomegaly finding)</span>
-                <span class="timeline-days">-312d</span>
-            </div>
-        </div>
-<div class="timeline-item critical">
-            <div class="timeline-date">2025-05-15</div>
-            <div class="timeline-content">
-                <span class="timeline-title">~~Medi-Cal DHCS appeal (filed ~May 2025 after $1,350 SOC)~~</span>
-                <span class="timeline-days">-312d</span>
-            </div>
-        </div>
-<div class="timeline-item critical">
-            <div class="timeline-date">2025-06-15</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Second vehicle confirmation — vehicles status</span>
-                <span class="timeline-days">-281d</span>
-            </div>
-        </div>
-<div class="timeline-item critical">
-            <div class="timeline-date">2025-10-15</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Anaheim Villa RCFE application — 2-3 month wait after approval</span>
-                <span class="timeline-days">-159d</span>
-            </div>
-        </div>
-<div class="timeline-item critical">
-            <div class="timeline-date">2025-12-12</div>
-            <div class="timeline-content">
-                <span class="timeline-title">IRA annuity pause request (Security Benefit, $973.48/mo distributions)</span>
-                <span class="timeline-days">-101d</span>
-            </div>
-        </div>
-<div class="timeline-item critical">
-            <div class="timeline-date">2025-12-15</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Minako pelvic ultrasound follow-up (6-12 months post June 2025)</span>
-                <span class="timeline-days">-98d</span>
-            </div>
-        </div>
-<div class="timeline-item critical">
-            <div class="timeline-date">2026-02-15</div>
-            <div class="timeline-content">
-                <span class="timeline-title">Insurance broker contact (Tyler Joseph/AJG) — find ~$100/mo premium to reduce mother's income below Medi-Cal threshold</span>
-                <span class="timeline-days">-36d</span>
-            </div>
-        </div>
-<div class="timeline-item critical">
-            <div class="timeline-date">2026-03-15</div>
-            <div class="timeline-content">
-                <span class="timeline-title">TKD belt test — red/black to red/black w/ stripe</span>
-                <span class="timeline-days">-8d</span>
-            </div>
-        </div>
-
-        </div>
-        <div class="card-body tab-panel" id="tab-calendar">
-            <div style="padding:12px;font-size:13px;color:var(--ink-secondary)">Calendar not connected. Run <code>reauth_expanded_scopes.py</code> to enable.</div>
-        </div>
+        <div class="rcfe-card">
+        <div class="rcfe-row"><span class="rcfe-label">Facility</span><span class="rcfe-value">Anaheim Villa</span></div>
+        <div class="rcfe-row"><span class="rcfe-label">Status</span><span class="rcfe-value rcfe-active">Application in progress</span></div>
+        <div class="rcfe-row"><span class="rcfe-label">Contact</span><span class="rcfe-value"><a href="tel:7143089800">Yumi Kim (714) 308-9800</a></span></div>
+        <div class="rcfe-row"><span class="rcfe-label">Next Step</span><span class="rcfe-value">Medication list from Dr. Chang</span></div>
+        <div class="rcfe-row"><span class="rcfe-label">Timeline</span><span class="rcfe-value">~3 months (Korean-run, CalOptima)</span></div>
     </div>
     </div>
 
-    <!-- ══════════════ GOALS ══════════════ -->
-    <div class="section-title" id="sec-goals" onclick="toggleSectionCollapse(this)">Goals <span class="section-chevron">&#9660;</span></div>
-    <div class="section-content" data-section="sec-goals">
-    <div class="goals-grid">
-        <div class="goal-card active">
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!--  PANEL: GOALS                                                      -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div class="panel" id="panel-goals">
+        <div class="panel-header">
+            <div class="panel-title">Goals</div>
+            <div class="panel-subtitle">6 goals tracked</div>
+        </div>
+        <div class="goals-grid">
+            <div class="goal-card active">
             <span class="goal-label">TKD Black Belt</span>
             <span class="goal-target">Black belt test Nov 2026</span>
             <span class="goal-status">active</span>
@@ -1903,51 +1862,51 @@ canvas { max-width: 100%; }
             <span class="goal-status">active</span>
         </div>
 
-    </div>
+        </div>
     </div>
 
-    <!-- ══════════════ SYSTEM STATS ══════════════ -->
-    <div class="section-title" id="sec-system" onclick="toggleSectionCollapse(this)">System Stats <span class="section-chevron">&#9660;</span></div>
-    <div class="section-content" data-section="sec-system">
-    <div class="sysstat-grid">
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!--  PANEL: SYSTEM                                                     -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div class="panel" id="panel-system">
+        <div class="panel-header">
+            <div class="panel-title">System</div>
+            <div class="panel-subtitle">Phoebe infrastructure status</div>
+        </div>
+        <div class="sysstat-grid">
         <div class="sysstat-item"><span class="sysstat-val">36</span><span class="sysstat-lbl">Agents</span></div>
         <div class="sysstat-item"><span class="sysstat-val">0</span><span class="sysstat-lbl">Skills</span></div>
         <div class="sysstat-item"><span class="sysstat-val">77</span><span class="sysstat-lbl">Tools</span></div>
         <div class="sysstat-item"><span class="sysstat-val">44</span><span class="sysstat-lbl">Timers</span></div>
         <div class="sysstat-item sysstat-wide"><span class="sysstat-val">45,000 / 363,000</span><span class="sysstat-lbl">Graph nodes / rels</span></div>
-        <div class="sysstat-item sysstat-wide"><span class="sysstat-val">2026-03-23 18:08</span><span class="sysstat-lbl">Last render</span></div>
+        <div class="sysstat-item sysstat-wide"><span class="sysstat-val">2026-03-23 18:51</span><span class="sysstat-lbl">Last render</span></div>
     </div>
     </div>
 
-    <!-- ══════════════ FOOTER ══════════════ -->
-    <div class="dash-footer">
-        Generated March 23, 2026 at 06:08 PM<br>
-        Phoebe Life Intelligence &middot; <a href="../">Trip Planner</a>
-    </div>
+</div><!-- /main-content -->
+</div><!-- /app-shell -->
 
-</div>
-
-<!-- ══════════════ BOTTOM NAV BAR ══════════════ -->
+<!-- ══════════════ BOTTOM NAV BAR (mobile) ══════════════ -->
 <nav class="bottom-nav" id="bottomNav">
-    <button class="nav-tab active" onclick="navTo('sec-priorities', this)" aria-label="Home">
+    <button class="nav-tab active" data-panel="panel-home" onclick="showPanel('panel-home', null, this)" aria-label="Home">
         <span class="nav-tab-icon">&#127968;</span>
         <span class="nav-tab-label">Home</span>
     </button>
-    <button class="nav-tab" onclick="navTo('sec-tasks', this)" aria-label="Tasks">
+    <button class="nav-tab" data-panel="panel-tasks" onclick="showPanel('panel-tasks', null, this)" aria-label="Tasks">
         <span class="nav-tab-icon">&#9989;</span>
         <span class="nav-tab-label">Tasks</span>
     </button>
-    <button class="nav-tab" onclick="navTo('sec-calendar', this)" aria-label="Calendar">
+    <button class="nav-tab" data-panel="panel-calendar" onclick="showPanel('panel-calendar', null, this)" aria-label="Calendar">
         <span class="nav-tab-icon">&#128197;</span>
         <span class="nav-tab-label">Calendar</span>
     </button>
-    <button class="nav-tab" onclick="navTo('sec-family', this)" aria-label="Family">
+    <button class="nav-tab" data-panel="panel-family" onclick="showPanel('panel-family', null, this)" aria-label="Family">
         <span class="nav-tab-icon">&#128106;</span>
         <span class="nav-tab-label">Family</span>
     </button>
-    <button class="nav-tab" onclick="navTo('sec-charts', this)" aria-label="Charts">
+    <button class="nav-tab" data-panel="panel-intel" onclick="showPanel('panel-intel', null, this)" aria-label="Intel">
         <span class="nav-tab-icon">&#128202;</span>
-        <span class="nav-tab-label">Charts</span>
+        <span class="nav-tab-label">Intel</span>
     </button>
 </nav>
 
@@ -1983,7 +1942,6 @@ canvas { max-width: 100%; }
 /* ══════════════════════════════════════════════════════════════════════════ */
 var _idb = (typeof idbKeyval !== "undefined") ? idbKeyval : null;
 
-/* Async get with localStorage fallback */
 function storageGet(key, fallback) {
     if (_idb) {
         return _idb.get(key).then(function(v) { return v !== undefined ? v : fallback; }).catch(function() {
@@ -1995,7 +1953,6 @@ function storageGet(key, fallback) {
     }());
 }
 
-/* Async set with localStorage fallback */
 function storageSet(key, value) {
     if (_idb) {
         return _idb.set(key, value).catch(function() {
@@ -2016,7 +1973,6 @@ function toggleTheme() {
     storageSet("phoebe-theme", isDark ? "light" : "dark");
     initCharts();
 }
-/* Sync theme restore (needs to be immediate to avoid flash) */
 (function() {
     try {
         var raw = localStorage.getItem("phoebe-theme");
@@ -2026,7 +1982,6 @@ function toggleTheme() {
             if (val === "dark") document.documentElement.setAttribute("data-theme", "dark");
         }
     } catch(e) {}
-    /* Also try idb async restore */
     if (_idb) {
         _idb.get("phoebe-theme").then(function(v) {
             if (v === "dark") document.documentElement.setAttribute("data-theme", "dark");
@@ -2035,21 +1990,76 @@ function toggleTheme() {
 })();
 
 /* ══════════════════════════════════════════════════════════════════════════ */
-/*  2. TASK CHECKBOXES + HAPTIC FEEDBACK + UNDO TOAST                       */
+/*  2. PANEL NAVIGATION (sidebar + bottom nav)                              */
 /* ══════════════════════════════════════════════════════════════════════════ */
-var _checkedCache = [];  /* synced from IndexedDB on load */
+var _currentPanel = "panel-home";
+
+function showPanel(panelId, sidebarBtn, bottomBtn) {
+    /* Hide all panels */
+    document.querySelectorAll(".panel").forEach(function(p) { p.classList.remove("active"); });
+    /* Show target */
+    var target = document.getElementById(panelId);
+    if (target) target.classList.add("active");
+    _currentPanel = panelId;
+
+    /* Update sidebar active state */
+    document.querySelectorAll(".sidebar-item").forEach(function(b) { b.classList.remove("active"); });
+    if (sidebarBtn) {
+        sidebarBtn.classList.add("active");
+    } else {
+        /* Find matching sidebar button */
+        var match = document.querySelector('.sidebar-item[data-panel="' + panelId + '"]');
+        if (match) match.classList.add("active");
+    }
+
+    /* Update bottom nav active state */
+    document.querySelectorAll(".nav-tab").forEach(function(b) { b.classList.remove("active"); });
+    if (bottomBtn) {
+        bottomBtn.classList.add("active");
+    } else {
+        var bmatch = document.querySelector('.nav-tab[data-panel="' + panelId + '"]');
+        if (bmatch) bmatch.classList.add("active");
+    }
+
+    /* Close mobile sidebar if open */
+    closeMobileSidebar();
+
+    /* Scroll to top of main content */
+    document.getElementById("mainContent").scrollTo(0, 0);
+    window.scrollTo(0, 0);
+
+    /* Re-init charts if intelligence panel is being shown */
+    if (panelId === "panel-intel") {
+        setTimeout(function() { initCharts(); }, 50);
+    }
+
+    /* Save to storage */
+    storageSet("phoebe_active_panel", panelId);
+}
+
+/* ── Mobile Sidebar ───────────────────────────────────────────────────── */
+function openMobileSidebar() {
+    document.getElementById("sidebar").classList.add("mobile-open");
+    document.getElementById("sidebarOverlay").classList.add("open");
+    document.body.style.overflow = "hidden";
+}
+function closeMobileSidebar() {
+    document.getElementById("sidebar").classList.remove("mobile-open");
+    document.getElementById("sidebarOverlay").classList.remove("open");
+    document.body.style.overflow = "";
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  3. TASK CHECKBOXES + HAPTIC FEEDBACK + UNDO TOAST                       */
+/* ══════════════════════════════════════════════════════════════════════════ */
+var _checkedCache = [];
 var _undoTimer = null;
 var _undoTaskId = null;
 var _undoCard = null;
 var _undoCb = null;
 
-function getCheckedTasks() {
-    return _checkedCache;
-}
-function saveCheckedTasks(arr) {
-    _checkedCache = arr;
-    storageSet("phoebe_checked_tasks", arr);
-}
+function getCheckedTasks() { return _checkedCache; }
+function saveCheckedTasks(arr) { _checkedCache = arr; storageSet("phoebe_checked_tasks", arr); }
 function handleCheck(cb) {
     var taskId = cb.getAttribute("data-task-id");
     var card = cb.closest("[data-checkable]");
@@ -2057,9 +2067,7 @@ function handleCheck(cb) {
     if (cb.checked) {
         card.classList.add("checked");
         if (checked.indexOf(taskId) === -1) checked.push(taskId);
-        /* Haptic feedback — short pulse on task completion */
         if (navigator.vibrate) navigator.vibrate(50);
-        /* Show undo toast */
         showUndoToast(taskId, card, cb);
     } else {
         card.classList.remove("checked");
@@ -2092,77 +2100,52 @@ function clearChecked() {
     updateClearBtn();
 }
 function updateClearBtn() {
-    var btn = document.getElementById("clearCompleted");
-    if (btn) {
-        var hasChecked = getCheckedTasks().length > 0;
-        btn.classList.toggle("visible", hasChecked);
-    }
+    document.querySelectorAll(".clear-completed-btn").forEach(function(btn) {
+        btn.classList.toggle("visible", getCheckedTasks().length > 0);
+    });
 }
 
-/* ── Undo Toast ─────────────────────────────────────────────────────────── */
 function showUndoToast(taskId, card, cb) {
-    /* Cancel any existing timer */
     if (_undoTimer) clearInterval(_undoTimer);
-    _undoTaskId = taskId;
-    _undoCard = card;
-    _undoCb = cb;
-
+    _undoTaskId = taskId; _undoCard = card; _undoCb = cb;
     var toast = document.getElementById("undoToast");
     var textEl = document.getElementById("undoToastText");
     var countEl = document.getElementById("undoCountdown");
     if (!toast) return;
-
     textEl.textContent = "Task completed.";
     var seconds = 5;
     countEl.textContent = seconds;
     toast.classList.add("visible");
-
     _undoTimer = setInterval(function() {
         seconds--;
         countEl.textContent = seconds;
         if (seconds <= 0) {
-            clearInterval(_undoTimer);
-            _undoTimer = null;
+            clearInterval(_undoTimer); _undoTimer = null;
             toast.classList.remove("visible");
-            _undoTaskId = null;
-            _undoCard = null;
-            _undoCb = null;
+            _undoTaskId = null; _undoCard = null; _undoCb = null;
         }
     }, 1000);
 }
 function undoLastCheck() {
     if (!_undoTaskId) return;
     if (_undoTimer) { clearInterval(_undoTimer); _undoTimer = null; }
-
-    /* Restore the task */
     if (_undoCb) _undoCb.checked = false;
     if (_undoCard) _undoCard.classList.remove("checked");
     var checked = getCheckedTasks().filter(function(id) { return id !== _undoTaskId; });
     saveCheckedTasks(checked);
     updateClearBtn();
-
-    /* Haptic double-pulse (error pattern — undo is a correction) */
     if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-
-    /* Hide toast */
     var toast = document.getElementById("undoToast");
     if (toast) toast.classList.remove("visible");
-    _undoTaskId = null;
-    _undoCard = null;
-    _undoCb = null;
+    _undoTaskId = null; _undoCard = null; _undoCb = null;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
-/*  3. COLLAPSIBLE SECTION TITLES                                           */
+/*  4. COLLAPSIBLE SECTION TITLES                                           */
 /* ══════════════════════════════════════════════════════════════════════════ */
 var _collapsedCache = [];
-function getCollapsedSections() {
-    return _collapsedCache;
-}
-function saveCollapsedSections(arr) {
-    _collapsedCache = arr;
-    storageSet("phoebe_collapsed_sections", arr);
-}
+function getCollapsedSections() { return _collapsedCache; }
+function saveCollapsedSections(arr) { _collapsedCache = arr; storageSet("phoebe_collapsed_sections", arr); }
 function toggleSectionCollapse(titleEl) {
     var sectionId = titleEl.id;
     var contentEl = document.querySelector('[data-section="' + sectionId + '"]');
@@ -2195,14 +2178,12 @@ function restoreCollapsedSections() {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
-/*  4. FAMILY DETAIL VIEW                                                   */
+/*  5. FAMILY DETAIL VIEW                                                   */
 /* ══════════════════════════════════════════════════════════════════════════ */
-function toggleFamilyDetail(card) {
-    card.classList.toggle("expanded");
-}
+function toggleFamilyDetail(card) { card.classList.toggle("expanded"); }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
-/*  5. COLLAPSIBLE CARD SECTIONS (anomalies)                                */
+/*  6. COLLAPSIBLE CARD SECTIONS (anomalies)                                */
 /* ══════════════════════════════════════════════════════════════════════════ */
 function toggleSection(btn) {
     var body = btn.nextElementSibling;
@@ -2210,17 +2191,13 @@ function toggleSection(btn) {
     btn.setAttribute("aria-expanded", !expanded);
     body.classList.toggle("open");
 }
-
-/* ── Anomaly Expand ────────────────────────────────────────────────────── */
 function toggleAnomalyExpand(btn) {
     var extra = document.getElementById("anomaly-extra");
     if (!extra) return;
     var visible = extra.style.display !== "none";
     extra.style.display = visible ? "none" : "block";
     btn.textContent = visible ? btn.getAttribute("data-show") || btn.textContent : "Show fewer anomalies";
-    if (!btn.getAttribute("data-show")) {
-        btn.setAttribute("data-show", btn.textContent);
-    }
+    if (!btn.getAttribute("data-show")) btn.setAttribute("data-show", btn.textContent);
 }
 
 /* ── Tabs ──────────────────────────────────────────────────────────────── */
@@ -2232,49 +2209,6 @@ function switchTab(e, id) {
     panels.forEach(function(p) { p.classList.remove("active"); });
     document.getElementById(id).classList.add("active");
 }
-
-/* ══════════════════════════════════════════════════════════════════════════ */
-/*  6. BOTTOM NAVIGATION                                                    */
-/* ══════════════════════════════════════════════════════════════════════════ */
-function navTo(sectionId, btn) {
-    // Ensure section is expanded first
-    var titleEl = document.getElementById(sectionId);
-    var contentEl = document.querySelector('[data-section="' + sectionId + '"]');
-    if (titleEl && titleEl.classList.contains("collapsed")) {
-        titleEl.classList.remove("collapsed");
-        if (contentEl) contentEl.classList.remove("collapsed");
-        var collapsed = getCollapsedSections().filter(function(id) { return id !== sectionId; });
-        saveCollapsedSections(collapsed);
-    }
-    // Scroll to section
-    if (sectionId === "sec-priorities") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    } else if (titleEl) {
-        titleEl.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-    // Update active state
-    document.querySelectorAll(".nav-tab").forEach(function(t) { t.classList.remove("active"); });
-    if (btn) btn.classList.add("active");
-}
-
-// Auto-highlight bottom nav on scroll
-var _navSections = ["sec-priorities","sec-tasks","sec-calendar","sec-family","sec-charts"];
-var _navDebounce = null;
-window.addEventListener("scroll", function() {
-    clearTimeout(_navDebounce);
-    _navDebounce = setTimeout(function() {
-        var scrollY = window.scrollY + 120;
-        var activeIdx = 0;
-        _navSections.forEach(function(id, idx) {
-            var el = document.getElementById(id);
-            if (el && el.offsetTop <= scrollY) activeIdx = idx;
-        });
-        var tabs = document.querySelectorAll(".nav-tab");
-        tabs.forEach(function(t, i) {
-            t.classList.toggle("active", i === activeIdx);
-        });
-    }, 80);
-});
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  7. COMMAND BAR (FAB)                                                    */
@@ -2291,24 +2225,14 @@ function toggleCommandBar() {
         renderQuickNotes();
     }
 }
-function setCommand(text) {
-    var input = document.getElementById("commandInput");
-    input.value = text;
-    input.focus();
-}
+function setCommand(text) { var input = document.getElementById("commandInput"); input.value = text; input.focus(); }
 function handleCommandKey(e) {
-    if (e.key === "Enter") {
-        executeCommand(e.target.value.trim());
-        e.target.value = "";
-    } else if (e.key === "Escape") {
-        toggleCommandBar();
-    }
+    if (e.key === "Enter") { executeCommand(e.target.value.trim()); e.target.value = ""; }
+    else if (e.key === "Escape") { toggleCommandBar(); }
 }
 function executeCommand(cmd) {
     if (!cmd) return;
     var lower = cmd.toLowerCase();
-
-    // call [name] — find phone number
     if (lower.startsWith("call ")) {
         var name = cmd.substring(5).trim();
         var links = document.querySelectorAll('a[href^="tel:"]');
@@ -2317,20 +2241,13 @@ function executeCommand(cmd) {
             if (a.textContent.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
                 a.closest(".family-card, .rcfe-card, .action-card, .anomaly-item") &&
                 a.closest(".family-card, .rcfe-card, .action-card, .anomaly-item").textContent.toLowerCase().indexOf(name.toLowerCase()) !== -1) {
-                if (!found) {
-                    window.location.href = a.href;
-                    found = true;
-                }
+                if (!found) { window.location.href = a.href; found = true; }
             }
         });
-        if (!found) {
-            alert("No phone number found for: " + name);
-        }
+        if (!found) alert("No phone number found for: " + name);
         toggleCommandBar();
         return;
     }
-
-    // note: [text] — save a quick note
     if (lower.startsWith("note:") || lower.startsWith("note ")) {
         var noteText = cmd.replace(/^note[: ]*/i, "").trim();
         if (noteText) {
@@ -2342,42 +2259,28 @@ function executeCommand(cmd) {
         }
         return;
     }
-
-    // find [term] — highlight text on page
     if (lower.startsWith("find ")) {
         var term = cmd.substring(5).trim();
         clearHighlights();
         if (term.length < 2) return;
-        highlightText(document.querySelector(".dashboard"), term);
+        highlightText(document.getElementById("mainContent"), term);
         toggleCommandBar();
-        // Scroll to first highlight
         var first = document.querySelector(".cmd-highlight");
         if (first) first.scrollIntoView({ behavior: "smooth", block: "center" });
         return;
     }
-
-    // Unknown command
     alert("Commands: call [name], note: [text], find [term]");
 }
 
-/* Quick notes — IndexedDB backed */
 var _notesCache = [];
-function getQuickNotes() {
-    return _notesCache;
-}
-function saveQuickNotes(arr) {
-    _notesCache = arr;
-    storageSet("phoebe_quick_notes", arr);
-}
+function getQuickNotes() { return _notesCache; }
+function saveQuickNotes(arr) { _notesCache = arr; storageSet("phoebe_quick_notes", arr); }
 function renderQuickNotes() {
     var container = document.getElementById("quickNotes");
     if (!container) return;
     storageGet("phoebe_quick_notes", []).then(function(notes) {
         _notesCache = notes || [];
-        if (_notesCache.length === 0) {
-            container.innerHTML = "";
-            return;
-        }
+        if (_notesCache.length === 0) { container.innerHTML = ""; return; }
         var html = "";
         _notesCache.slice(0, 10).forEach(function(n, i) {
             var d = new Date(n.time);
@@ -2391,19 +2294,9 @@ function renderQuickNotes() {
         container.innerHTML = html;
     });
 }
-function deleteNote(idx) {
-    var notes = getQuickNotes();
-    notes.splice(idx, 1);
-    saveQuickNotes(notes);
-    renderQuickNotes();
-}
-function escHtml(s) {
-    var d = document.createElement("div");
-    d.textContent = s;
-    return d.innerHTML;
-}
+function deleteNote(idx) { var notes = getQuickNotes(); notes.splice(idx, 1); saveQuickNotes(notes); renderQuickNotes(); }
+function escHtml(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
 
-/* Text highlighting for find command */
 function highlightText(root, term) {
     if (!root) return;
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
@@ -2413,7 +2306,6 @@ function highlightText(root, term) {
         var idx = node.textContent.toLowerCase().indexOf(term.toLowerCase());
         if (idx !== -1) matches.push({ node: node, index: idx, length: term.length });
     }
-    // Process in reverse to avoid offset issues
     matches.reverse().forEach(function(m) {
         var range = document.createRange();
         range.setStart(m.node, m.index);
@@ -2466,15 +2358,11 @@ function setTimeOfDay() {
 /* ══════════════════════════════════════════════════════════════════════════ */
 function toggleChartExpand(card) {
     var wasExpanded = card.classList.contains("expanded");
-    // Close all expanded charts first
-    document.querySelectorAll(".chart-card.expanded").forEach(function(c) {
-        c.classList.remove("expanded");
-    });
+    document.querySelectorAll(".chart-card.expanded").forEach(function(c) { c.classList.remove("expanded"); });
     if (!wasExpanded) {
         card.classList.add("expanded");
         card.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
-    // Rebuild charts to resize properly
     setTimeout(function() { initCharts(); }, 100);
 }
 
@@ -2762,7 +2650,14 @@ function updateSwipeCounter(dismissed, snoozed) {
 /*  INIT ON DOM READY                                                       */
 /* ══════════════════════════════════════════════════════════════════════════ */
 document.addEventListener("DOMContentLoaded", function() {
-    initCharts();
+    /* Restore last active panel */
+    storageGet("phoebe_active_panel", "panel-home").then(function(panelId) {
+        if (panelId && document.getElementById(panelId)) {
+            showPanel(panelId);
+        }
+    });
+    /* Init charts (deferred — only when intel panel is shown) */
+    setTimeout(function() { initCharts(); }, 200);
     restoreCheckedTasks();
     restoreCollapsedSections();
     setTimeOfDay();
