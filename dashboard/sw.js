@@ -1,5 +1,5 @@
 // Phoebe Dashboard Service Worker
-const CACHE_NAME = "phoebe-dashboard-v5";
+const CACHE_NAME = "phoebe-dashboard-v6";
 const URLS_TO_CACHE = [
     "./",
     "./index.html",
@@ -9,6 +9,7 @@ const URLS_TO_CACHE = [
     "https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js",
     "https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js",
     "https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js",
+    "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js",
     "https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js",
     "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap",
 ];
