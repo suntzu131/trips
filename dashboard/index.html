@@ -15,6 +15,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 <style>
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  CSS VARIABLES — Johnny's Design DNA                                      */
@@ -1064,7 +1066,224 @@ canvas { max-width: 100%; }
     .rcfe-label { min-width: 72px; font-size: 11px; }
     .rcfe-row { font-size: 12px; }
     .command-panel { border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+    /* Chat panel: override panel padding and size for full-height chat */
+    #panel-chat { padding: 0 0 56px; }
+    #panel-chat .chat-container { height: calc(100dvh - 56px - 44px); max-height: none; border-radius: 0; box-shadow: none; }
+    .chat-input-area { padding: 8px; }
+    .chat-input-area input { padding: 8px 12px; font-size: 16px; }
+    .chat-input-area button { padding: 8px 16px; }
+    .chat-status { font-size: 10px; }
+    .report-card { padding: 14px; }
+    .report-section-title { font-size: 12px; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  CHAT PANEL                                                              */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 80px);
+    max-height: 700px;
+    background: var(--paper);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+}
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+}
+.chat-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+}
+.chat-status {
+    font-size: 12px;
+    color: var(--ink-secondary);
+    font-weight: 600;
+}
+.chat-status.connected { color: var(--green); }
+.chat-status.error { color: var(--red); }
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+}
+.chat-messages::-webkit-scrollbar { width: 4px; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+.chat-msg {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    animation: chatMsgIn 0.2s ease;
+}
+@keyframes chatMsgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.chat-msg.phoebe {
+    align-self: flex-start;
+    background: var(--bg);
+    border-bottom-left-radius: 4px;
+    color: var(--ink);
+}
+.chat-msg.user {
+    align-self: flex-end;
+    background: var(--accent);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+}
+.chat-msg .msg-time {
+    font-size: 10px;
+    opacity: 0.6;
+    margin-top: 4px;
+    display: block;
+}
+.chat-msg .msg-sender {
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 2px;
+    display: block;
+    opacity: 0.8;
+}
+.chat-msg.phoebe .msg-sender { color: var(--accent); }
+.chat-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--ink-secondary);
+    gap: 12px;
+}
+.chat-empty-icon { font-size: 48px; opacity: 0.3; }
+.chat-empty-text { font-size: 14px; line-height: 1.6; }
+.chat-empty-sub { font-size: 12px; opacity: 0.7; }
+.chat-input-area {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--line);
+    flex-shrink: 0;
+    background: var(--paper);
+}
+.chat-input-area input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 24px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 14px;
+    font-family: var(--font);
+    outline: none;
+    min-height: 44px;
+    transition: border-color 0.15s;
+}
+.chat-input-area input:focus {
+    border-color: var(--accent);
+}
+.chat-input-area input::placeholder { color: var(--ink-secondary); }
+.chat-input-area button {
+    padding: 10px 20px;
+    border-radius: 24px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    font-family: var(--font);
+    font-size: 14px;
+    cursor: pointer;
+    min-width: 60px;
+    min-height: 44px;
+    transition: background 0.15s, transform 0.1s;
+}
+.chat-input-area button:hover { background: #8b4e33; }
+.chat-input-area button:active { transform: scale(0.95); }
+.chat-input-area button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  REPORTS PANEL                                                           */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.reports-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.report-card {
+    background: var(--paper);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    padding: 20px;
+    border-left: 4px solid var(--accent);
+}
+.report-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+}
+.report-meta {
+    font-size: 11px;
+    color: var(--ink-secondary);
+    margin-bottom: 14px;
+}
+.report-content {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.6;
+}
+.report-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--accent);
+    margin: 16px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--line);
+}
+.report-section-title:first-child { margin-top: 0; }
+.report-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 0;
+    font-size: 13px;
+}
+.report-item-bullet {
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-top: 6px;
+}
+.report-item-bullet.critical { background: var(--red); }
+.report-item-bullet.warning { background: var(--amber); }
+.report-item-bullet.info { background: var(--blue); }
+.report-item-bullet.good { background: var(--green); }
+.report-item-text { flex: 1; min-width: 0; }
 </style>
 </head>
 <body>
@@ -1084,6 +1303,10 @@ canvas { max-width: 100%; }
         <button class="sidebar-item active" data-panel="panel-home" data-label="Home" onclick="showPanel('panel-home', this)">
             <span class="sidebar-item-icon">&#127968;</span>
             <span class="sidebar-item-label">Home</span>
+        </button>
+        <button class="sidebar-item" data-panel="panel-chat" data-label="Chat" onclick="showPanel('panel-chat', this)">
+            <span class="sidebar-item-icon">&#128172;</span>
+            <span class="sidebar-item-label">Chat</span>
         </button>
         <button class="sidebar-item" data-panel="panel-tasks" data-label="Tasks" onclick="showPanel('panel-tasks', this)">
             <span class="sidebar-item-icon">&#9989;</span>
@@ -1115,6 +1338,10 @@ canvas { max-width: 100%; }
             <span class="sidebar-item-icon">&#127919;</span>
             <span class="sidebar-item-label">Goals</span>
         </button>
+        <button class="sidebar-item" data-panel="panel-reports" data-label="Reports" onclick="showPanel('panel-reports', this)">
+            <span class="sidebar-item-icon">&#128196;</span>
+            <span class="sidebar-item-label">Reports</span>
+        </button>
         <button class="sidebar-item" data-panel="panel-system" data-label="System" onclick="showPanel('panel-system', this)">
             <span class="sidebar-item-icon">&#9881;&#65039;</span>
             <span class="sidebar-item-label">System</span>
@@ -1124,7 +1351,7 @@ canvas { max-width: 100%; }
         <button class="sidebar-theme-btn" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
-        <span class="sidebar-footer-text">Phoebe v2026.3 &middot; 2026-03-24 06:30</span>
+        <span class="sidebar-footer-text">Phoebe v2026.3 &middot; 2026-03-24 07:35</span>
     </div>
 </aside>
 
@@ -1259,8 +1486,31 @@ canvas { max-width: 100%; }
         </div>
 
         <div style="text-align:center;padding:24px 0;font-size:11px;color:var(--ink-secondary)">
-            Generated March 24, 2026 at 06:30 AM &middot;
+            Generated March 24, 2026 at 07:35 AM &middot;
             Phoebe Life Intelligence &middot; <a href="../" style="color:var(--accent);text-decoration:none">Trip Planner</a>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!--  PANEL: CHAT                                                       -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div class="panel" id="panel-chat">
+        <div class="chat-container">
+            <div class="chat-header">
+                <h3>Phoebe Chat</h3>
+                <span class="chat-status" id="chat-status">Connecting...</span>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="chat-empty" id="chat-empty">
+                    <div class="chat-empty-icon">&#128172;</div>
+                    <div class="chat-empty-text">Phoebe Family Chat</div>
+                    <div class="chat-empty-sub">Messages sync in real-time across all family devices</div>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Message Phoebe..." autocomplete="off">
+                <button id="chat-send" onclick="sendChatMessage()">Send</button>
+            </div>
         </div>
     </div>
 
@@ -1824,6 +2074,52 @@ canvas { max-width: 100%; }
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!--  PANEL: REPORTS                                                    -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div class="panel" id="panel-reports">
+        <div class="panel-header">
+            <div class="panel-title">Reports</div>
+            <div class="panel-subtitle">Phoebe-generated intelligence reports</div>
+        </div>
+        <div class="reports-list">
+        <div class="report-card">
+            <div class="report-title">Morning Brief</div>
+            <div class="report-meta">Generated March 24, 2026 at 07:35 AM</div>
+            <div class="report-content" id="morning-brief-content">
+                <div class="report-item"><span class="report-item-bullet good"></span><span class="report-item-text">Cash flow: +$6,502/mo (MODERATE stress at 54.8)</span></div>
+<div class="report-item"><span class="report-item-bullet warning"></span><span class="report-item-text">Mother: FAST 6e | RCFE application in progress</span></div>
+<div class="report-item"><span class="report-item-bullet good"></span><span class="report-item-text">Financial runway: 38 months</span></div>
+<div class="report-item"><span class="report-item-bullet critical"></span><span class="report-item-text">CCW license renewal — 2023-03-28</span></div>
+<div class="report-item"><span class="report-item-bullet critical"></span><span class="report-item-text">Nanny status — is the nanny still employed? What's the monthly cost? — 2023-05-15</span></div>
+<div class="report-item"><span class="report-item-bullet critical"></span><span class="report-item-text">Dental work — receding gums, crowns, missing teeth. Any upcoming procedures? Does Kaiser cover? — 2024-09-15</span></div>
+            </div>
+        </div>
+        <div class="report-card">
+            <div class="report-title">Intelligence Report</div>
+            <div class="report-meta">Last updated: March 24, 2026 at 07:35 AM</div>
+            <div class="report-content" id="intel-report-content">
+                <div class="report-section-title">Priority Actions</div>
+<div class="report-item"><span class="report-item-bullet critical"></span><span class="report-item-text">Call Osamu Hashizu (714) 258-2819</span></div>
+<div class="report-item"><span class="report-item-bullet warning"></span><span class="report-item-text">Pause distributions via Security Benefit</span></div>
+<div class="report-item"><span class="report-item-bullet warning"></span><span class="report-item-text">Schedule Minako appointment via Kaiser</span></div>
+<div class="report-item"><span class="report-item-bullet warning"></span><span class="report-item-text">Schedule Minako pelvic ultrasound via Kaiser</span></div>
+<div class="report-item"><span class="report-item-bullet warning"></span><span class="report-item-text">Submit bond for mother's assets</span></div>
+<div class="report-section-title">Risk Clusters</div>
+<div class="report-item"><span class="report-item-bullet critical"></span><span class="report-item-text">MINAKO HEALTH BACKLOG — 88/100</span></div>
+<div class="report-item"><span class="report-item-bullet critical"></span><span class="report-item-text">IMMEDIATE LEGAL DEADLINES — 71/100</span></div>
+<div class="report-item"><span class="report-item-bullet warning"></span><span class="report-item-text">FINANCIAL VISIBILITY GAP — 65/100</span></div>
+<div class="report-item"><span class="report-item-bullet warning"></span><span class="report-item-text">MEDI-CAL / IRA CHAIN — 63/100</span></div>
+<div class="report-item"><span class="report-item-bullet warning"></span><span class="report-item-text">CARE CRISIS CLUSTER — 58/100</span></div>
+<div class="report-section-title">Financial Summary</div>
+<div class="report-item"><span class="report-item-bullet info"></span><span class="report-item-text">Income: $13,059/mo</span></div>
+<div class="report-item"><span class="report-item-bullet info"></span><span class="report-item-text">Verified expenses: $6,557/mo</span></div>
+<div class="report-item"><span class="report-item-bullet warning"></span><span class="report-item-text">Unknown expenses: $1,100 - $2,400/mo</span></div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
     <!--  PANEL: SYSTEM                                                     -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <div class="panel" id="panel-system">
@@ -1834,10 +2130,10 @@ canvas { max-width: 100%; }
         <div class="sysstat-grid">
         <div class="sysstat-item"><span class="sysstat-val">36</span><span class="sysstat-lbl">Agents</span></div>
         <div class="sysstat-item"><span class="sysstat-val">29</span><span class="sysstat-lbl">Skills</span></div>
-        <div class="sysstat-item"><span class="sysstat-val">79</span><span class="sysstat-lbl">Tools</span></div>
+        <div class="sysstat-item"><span class="sysstat-val">80</span><span class="sysstat-lbl">Tools</span></div>
         <div class="sysstat-item"><span class="sysstat-val">44</span><span class="sysstat-lbl">Timers</span></div>
         <div class="sysstat-item sysstat-wide"><span class="sysstat-val">45,000 / 363,000</span><span class="sysstat-lbl">Graph nodes / rels</span></div>
-        <div class="sysstat-item sysstat-wide"><span class="sysstat-val">2026-03-24 06:30</span><span class="sysstat-lbl">Last render</span></div>
+        <div class="sysstat-item sysstat-wide"><span class="sysstat-val">2026-03-24 07:35</span><span class="sysstat-lbl">Last render</span></div>
     </div>
     </div>
 
@@ -1850,6 +2146,10 @@ canvas { max-width: 100%; }
         <span class="nav-tab-icon">&#127968;</span>
         <span class="nav-tab-label">Home</span>
     </button>
+    <button class="nav-tab" data-panel="panel-chat" onclick="showPanel('panel-chat', null, this)" aria-label="Chat">
+        <span class="nav-tab-icon">&#128172;</span>
+        <span class="nav-tab-label">Chat</span>
+    </button>
     <button class="nav-tab" data-panel="panel-tasks" onclick="showPanel('panel-tasks', null, this)" aria-label="Tasks">
         <span class="nav-tab-icon">&#9989;</span>
         <span class="nav-tab-label">Tasks</span>
@@ -1861,10 +2161,6 @@ canvas { max-width: 100%; }
     <button class="nav-tab" data-panel="panel-family" onclick="showPanel('panel-family', null, this)" aria-label="Family">
         <span class="nav-tab-icon">&#128106;</span>
         <span class="nav-tab-label">Family</span>
-    </button>
-    <button class="nav-tab" data-panel="panel-intel" onclick="showPanel('panel-intel', null, this)" aria-label="Intel">
-        <span class="nav-tab-icon">&#128202;</span>
-        <span class="nav-tab-label">Intel</span>
     </button>
 </nav>
 
@@ -1989,6 +2285,11 @@ function showPanel(panelId, sidebarBtn, bottomBtn) {
     /* Re-init charts if intelligence panel is being shown */
     if (panelId === "panel-intel") {
         setTimeout(function() { initCharts(); }, 50);
+    }
+
+    /* Lazy-init Firebase chat when panel is first shown */
+    if (panelId === "panel-chat") {
+        initChat();
     }
 
     /* Save to storage */
@@ -2606,6 +2907,134 @@ function updateSwipeCounter(dismissed, snoozed) {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
+/*  12. FIREBASE CHAT                                                       */
+/* ══════════════════════════════════════════════════════════════════════════ */
+var FIREBASE_CONFIG = {
+    apiKey: "PLACEHOLDER",
+    authDomain: "han-personal-project.firebaseapp.com",
+    databaseURL: "https://han-personal-project-default-rtdb.firebaseio.com",
+    projectId: "han-personal-project",
+    storageBucket: "han-personal-project.appspot.com",
+    messagingSenderId: "938700169686",
+    appId: "PLACEHOLDER"
+};
+
+var chatDb = null;
+var chatRef = null;
+var CHAT_USER = "Dan";
+var _chatInitialized = false;
+var _chatMsgCount = 0;
+
+function initChat() {
+    if (_chatInitialized) return;
+    _chatInitialized = true;
+
+    var statusEl = document.getElementById("chat-status");
+    var messagesEl = document.getElementById("chat-messages");
+    var emptyEl = document.getElementById("chat-empty");
+    var sendBtn = document.getElementById("chat-send");
+
+    if (!statusEl || !messagesEl) return;
+
+    /* Check if Firebase SDK loaded */
+    if (typeof firebase === "undefined" || typeof firebase.initializeApp !== "function") {
+        statusEl.textContent = "SDK not loaded";
+        statusEl.classList.add("error");
+        if (sendBtn) sendBtn.disabled = true;
+        return;
+    }
+
+    /* Check for placeholder config */
+    if (FIREBASE_CONFIG.apiKey === "PLACEHOLDER" || FIREBASE_CONFIG.appId === "PLACEHOLDER") {
+        statusEl.textContent = "Not configured";
+        statusEl.classList.add("error");
+        if (emptyEl) {
+            emptyEl.innerHTML =
+                '<div class="chat-empty-icon">&#128274;</div>' +
+                '<div class="chat-empty-text">Firebase not configured yet</div>' +
+                '<div class="chat-empty-sub">Replace PLACEHOLDER values in render_dashboard.py with your Firebase project config,<br>or run: <code>python3 ~/.openclaw-phoebe/neo4j/phoebe_firebase_chat.py --test</code></div>';
+        }
+        if (sendBtn) sendBtn.disabled = true;
+        return;
+    }
+
+    try {
+        var app = firebase.initializeApp(FIREBASE_CONFIG);
+        chatDb = firebase.database();
+        chatRef = chatDb.ref("chat/phoebe-family");
+
+        /* Listen for new messages — last 50 */
+        chatRef.orderByChild("timestamp").limitToLast(50).on("child_added", function(snapshot) {
+            var msg = snapshot.val();
+            if (!msg) return;
+            _chatMsgCount++;
+            if (emptyEl && _chatMsgCount > 0) emptyEl.style.display = "none";
+            appendChatMessage(msg.sender, msg.text, msg.timestamp, msg.type || "user");
+        });
+
+        /* Connection state monitoring */
+        var connRef = firebase.database().ref(".info/connected");
+        connRef.on("value", function(snap) {
+            if (snap.val() === true) {
+                statusEl.textContent = "Connected";
+                statusEl.className = "chat-status connected";
+            } else {
+                statusEl.textContent = "Offline";
+                statusEl.className = "chat-status";
+            }
+        });
+
+    } catch(e) {
+        statusEl.textContent = "Error";
+        statusEl.classList.add("error");
+        console.error("Firebase init error:", e);
+        if (sendBtn) sendBtn.disabled = true;
+    }
+}
+
+function appendChatMessage(sender, text, timestamp, type) {
+    var container = document.getElementById("chat-messages");
+    if (!container) return;
+    var div = document.createElement("div");
+    var isPhoebe = (sender === "Phoebe" || type === "phoebe");
+    div.className = "chat-msg " + (isPhoebe ? "phoebe" : "user");
+
+    var time = "";
+    if (timestamp) {
+        try {
+            var d = new Date(timestamp);
+            time = d.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
+        } catch(e) { time = ""; }
+    }
+
+    var safeText = escHtml(text || "").replace(/\n/g, "<br>");
+    div.innerHTML =
+        '<span class="msg-sender">' + escHtml(sender || "Unknown") + '</span>' +
+        safeText +
+        '<span class="msg-time">' + time + '</span>';
+
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+}
+
+function sendChatMessage() {
+    var input = document.getElementById("chat-input");
+    if (!input) return;
+    var text = input.value.trim();
+    if (!text || !chatRef) return;
+
+    chatRef.push({
+        sender: CHAT_USER,
+        text: text,
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
+        type: "user"
+    });
+
+    input.value = "";
+    if (navigator.vibrate) navigator.vibrate(30);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
 /*  INIT ON DOM READY                                                       */
 /* ══════════════════════════════════════════════════════════════════════════ */
 document.addEventListener("DOMContentLoaded", function() {
@@ -2621,6 +3050,14 @@ document.addEventListener("DOMContentLoaded", function() {
     restoreCollapsedSections();
     setTimeOfDay();
     initAnomalySwipe();
+
+    /* Chat: Enter key to send + lazy init when panel shown */
+    var chatInput = document.getElementById("chat-input");
+    if (chatInput) {
+        chatInput.addEventListener("keydown", function(e) {
+            if (e.key === "Enter") sendChatMessage();
+        });
+    }
 });
 
 /* ── PWA Service Worker ────────────────────────────────────────────────── */
