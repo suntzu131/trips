@@ -3155,7 +3155,7 @@ function loadThreadList() {
 
 function buildThreadTab(threadId, name) {
     var active = (threadId === _currentThread) ? " active" : "";
-    return '<button class="thread-tab' + active + '" data-thread="' + threadId + '" onclick="switchThread('' + threadId + '', this)">' +
+    return '<button class="thread-tab' + active + '" data-thread="' + threadId + '" onclick="switchThread(\'' + threadId + '\', this)">' +
         escHtml(name) +
         '<span class="unread-badge" id="unread-' + threadId + '" style="display:none">0</span>' +
         '</button>';
