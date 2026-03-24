@@ -1,5 +1,5 @@
 // Phoebe Dashboard Service Worker
-const CACHE_NAME = "phoebe-dashboard-v4";
+const CACHE_NAME = "phoebe-dashboard-v5";
 const URLS_TO_CACHE = [
     "./",
     "./index.html",
