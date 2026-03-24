@@ -1124,7 +1124,7 @@ canvas { max-width: 100%; }
         <button class="sidebar-theme-btn" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
-        <span class="sidebar-footer-text">Phoebe v2026.3 &middot; 2026-03-23 18:51</span>
+        <span class="sidebar-footer-text">Phoebe v2026.3 &middot; 2026-03-23 19:02</span>
     </div>
 </aside>
 
@@ -1171,7 +1171,7 @@ canvas { max-width: 100%; }
                     stroke-dasharray="175.93" stroke-dashoffset="88.3"
                     stroke-linecap="round" transform="rotate(-90 32 32)"/>
             </svg>
-            <span class="metric-ring-value"><span class="metric-value positive" style="font-size:inherit">+${abs(surplus):,.0f}</span></span>
+            <span class="metric-ring-value"><span class="metric-value positive" style="font-size:inherit">+$6,502</span></span>
         </div>
                 <span class="metric-detail">Income $13,059</span>
             </div>
@@ -1253,7 +1253,7 @@ canvas { max-width: 100%; }
         </div>
 
         <div style="text-align:center;padding:24px 0;font-size:11px;color:var(--ink-secondary)">
-            Generated March 23, 2026 at 06:51 PM &middot;
+            Generated March 23, 2026 at 07:02 PM &middot;
             Phoebe Life Intelligence &middot; <a href="../" style="color:var(--accent);text-decoration:none">Trip Planner</a>
         </div>
     </div>
@@ -1879,7 +1879,7 @@ canvas { max-width: 100%; }
         <div class="sysstat-item"><span class="sysstat-val">77</span><span class="sysstat-lbl">Tools</span></div>
         <div class="sysstat-item"><span class="sysstat-val">44</span><span class="sysstat-lbl">Timers</span></div>
         <div class="sysstat-item sysstat-wide"><span class="sysstat-val">45,000 / 363,000</span><span class="sysstat-lbl">Graph nodes / rels</span></div>
-        <div class="sysstat-item sysstat-wide"><span class="sysstat-val">2026-03-23 18:51</span><span class="sysstat-lbl">Last render</span></div>
+        <div class="sysstat-item sysstat-wide"><span class="sysstat-val">2026-03-23 19:02</span><span class="sysstat-lbl">Last render</span></div>
     </div>
     </div>
 
@@ -2464,7 +2464,7 @@ function initCharts() {
     charts.income = new Chart(ctx3, {
         type: "doughnut",
         data: {
-            labels: ["Dan Salary (Agape)", "Dan Salary (Yokly/Ji", "Dan + Minako IHSS (c", "Minako Cadenza", "Mother Room & Board", "Mother SS", "Mother IRA Distribut"],
+            labels: ["Dan Salary (Agape)", "Dan Salary (Yokly/Jireh)", "Dan + Minako IHSS (combined)", "Minako Cadenza", "Mother Room & Board", "Mother SS", "Mother IRA Distribution"],
             datasets: [{
                 data: [1900, 2900, 5349, 910, 2000, 1985, 876],
                 backgroundColor: [
@@ -2474,6 +2474,7 @@ function initCharts() {
                     isDark ? "#22c55e" : "#16a34a",
                     isDark ? "#60a5fa" : "#2563eb",
                     isDark ? "#c084fc" : "#9333ea",
+                    isDark ? "#fb923c" : "#ea580c",
                 ],
                 borderWidth: 0,
             }]
